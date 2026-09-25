@@ -106,11 +106,11 @@ function updateUIStats() {
 }
 
 // Sceglie la classe del titolo in base alla sua lunghezza
-// ≤ 10 caratteri: normale | 11-14: .long | ≥ 15: .longer
+// ≤ 13 caratteri: normale | 14-17: .long | ≥ 18: .longer
 function titleClassFor(title) {
     const len = title.length;
-    if (len >= 15) return 'card-title longer';
-    if (len >= 11) return 'card-title long';
+    if (len >= 18) return 'card-title longer';
+    if (len >= 14) return 'card-title long';
     return 'card-title';
 }
 
