@@ -105,13 +105,18 @@ function updateUIStats() {
     updatePlayableState();
 }
 
-// Sceglie la classe del titolo in base alla sua lunghezza
-// ≤ 13 caratteri: normale | 14-17: .long | ≥ 18: .longer
-function titleClassFor(title) {
+// Calcola il font-size del titolo in base alla lunghezza:
+// più è lungo, più rimpicciolisce, così non viene mai troncato.
+// Massimo clampato, ma con riduzione molto aggressiva per i titoli lunghi.
+function titleFontStyle(title) {
     const len = title.length;
-    if (len >= 18) return 'card-title longer';
-    if (len >= 14) return 'card-title long';
-    return 'card-title';
+    if (len <= 8)  return 'font-size: clamp(11px, 3vw, 14px);';
+    if (len <= 11) return 'font-size: clamp(10.5px, 2.8vw, 13px);';
+    if (len <= 13) return 'font-size: clamp(10px, 2.6vw, 12px);';
+    if (len <= 15) return 'font-size: clamp(9px, 2.4vw, 11px);';
+    if (len <= 17) return 'font-size: clamp(8.5px, 2.2vw, 10px);';
+    if (len <= 19) return 'font-size: clamp(8px, 2vw, 9.5px); letter-spacing: -0.4px;';
+    return 'font-size: clamp(7.5px, 1.8vw, 9px); letter-spacing: -0.5px;';
 }
 
 function buildCardElement(cardData, extraClass) {
@@ -120,7 +125,7 @@ function buildCardElement(cardData, extraClass) {
     cardElement.innerHTML = `
         <div class="card-cost">${cardData.cost}</div>
         <div class="card-header">
-            <span class="${titleClassFor(cardData.title)}">${cardData.title}</span>
+            <span class="card-title" style="${titleFontStyle(cardData.title)}">${cardData.title}</span>
         </div>
         <div class="card-art">${cardData.art}</div>
         <div class="card-description">${cardData.desc}</div>
