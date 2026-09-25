@@ -105,9 +105,13 @@ function updateUIStats() {
     updatePlayableState();
 }
 
-function titleMaxWidth(cardData) {
-    const diamonds = [...cardData.cost].length;
-    return `calc(100% - (${diamonds} * clamp(11px, 3.1vw, 17px) * 1.25) - 3px)`;
+// Sceglie la classe del titolo in base alla sua lunghezza
+// ≤ 10 caratteri: normale | 11-14: .long | ≥ 15: .longer
+function titleClassFor(title) {
+    const len = title.length;
+    if (len >= 15) return 'card-title longer';
+    if (len >= 11) return 'card-title long';
+    return 'card-title';
 }
 
 function buildCardElement(cardData, extraClass) {
@@ -116,7 +120,7 @@ function buildCardElement(cardData, extraClass) {
     cardElement.innerHTML = `
         <div class="card-cost">${cardData.cost}</div>
         <div class="card-header">
-            <span class="card-title" style="max-width: ${titleMaxWidth(cardData)}">${cardData.title}</span>
+            <span class="${titleClassFor(cardData.title)}">${cardData.title}</span>
         </div>
         <div class="card-art">${cardData.art}</div>
         <div class="card-description">${cardData.desc}</div>
@@ -213,7 +217,7 @@ function drawCards(n) {
 function onHandPointerDown(e) {
     const cardElement = e.target.closest('.card');
     if (!cardElement) return;
-    if (cardElement.classList.contains('unplayable')) return; // niente drag sulle carte non giocabili
+    if (cardElement.classList.contains('unplayable')) return;
     const index = handEls.indexOf(cardElement);
     if (index === -1) return;
     startDrag(e, cardElement, hand[index], index);
