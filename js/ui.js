@@ -105,18 +105,68 @@ function updateUIStats() {
     updatePlayableState();
 }
 
-// Calcola il font-size del titolo in base alla lunghezza:
-// più è lungo, più rimpicciolisce, così non viene mai troncato.
-// Massimo clampato, ma con riduzione molto aggressiva per i titoli lunghi.
-function titleFontStyle(title) {
-    const len = title.length;
-    if (len <= 8)  return 'font-size: clamp(11px, 3vw, 14px);';
-    if (len <= 11) return 'font-size: clamp(10.5px, 2.8vw, 13px);';
-    if (len <= 13) return 'font-size: clamp(10px, 2.6vw, 12px);';
-    if (len <= 15) return 'font-size: clamp(9px, 2.4vw, 11px);';
-    if (len <= 17) return 'font-size: clamp(8.5px, 2.2vw, 10px);';
-    if (len <= 19) return 'font-size: clamp(8px, 2vw, 9.5px); letter-spacing: -0.4px;';
-    return 'font-size: clamp(7.5px, 1.8vw, 9px); letter-spacing: -0.5px;';
+// --- Adatta il font del titolo alla larghezza reale della carta ---
+// Usa un canvas per misurare la larghezza reale del testo (con il font corrente)
+// e riduce il font-size finché il titolo entra nello spazio disponibile.
+function measureTextWidth(text, font) {
+    if (!measureTextWidth._canvas) {
+        measureTextWidth._canvas = document.createElement('canvas');
+        measureTextWidth._ctx = measureTextWidth._canvas.getContext('2d');
+    }
+    const ctx = measureTextWidth._ctx;
+    ctx.font = font;
+    return ctx.measureText(text).width;
+}
+
+function fitCardTitles() {
+    const cards = document.querySelectorAll('.hand-container .card, .deck-grid .card');
+    cards.forEach(cardEl => {
+        const span = cardEl.querySelector('.card-title');
+        const header = span && span.parentElement;
+        if (!span || !header) return;
+
+        // Spazio disponibile nell'header (larghezza meno padding)
+        const hStyle = getComputedStyle(header);
+        const padL = parseFloat(hStyle.paddingLeft) || 0;
+        const padR = parseFloat(hStyle.paddingRight) || 0;
+        const availW = header.clientWidth - padL - padR;
+        if (availW <= 0) return;
+
+        // Reset dello stile precedente
+        span.style.fontSize = '';
+        span.style.letterSpacing = '';
+
+        // Font-size base da CSS (clamp), letto dal computed style
+        const sStyle = getComputedStyle(span);
+        let fontSize = parseFloat(sStyle.fontSize) || 12;
+        const fontFamily = sStyle.fontFamily;
+        const fontWeight = sStyle.fontWeight;
+        const text = span.textContent;
+
+        // Riduce il font-size a passi di 0.5px finché il testo entra, con minimo 7px
+        let attempts = 0;
+        while (attempts < 30) {
+            const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+            const w = measureTextWidth(text, font);
+            if (w <= availW || fontSize <= 7) break;
+            fontSize -= 0.5;
+            attempts++;
+        }
+
+        // Se dopo aver ridotto il font serve ancora restringere, applica scaleX
+        const finalFont = `${fontWeight} ${fontSize}px ${fontFamily}`;
+        const finalW = measureTextWidth(text, finalFont);
+        span.style.fontSize = fontSize + 'px';
+        span.style.letterSpacing = '-0.2px';
+
+        if (finalW > availW && availW > 0) {
+            const scale = availW / finalW;
+            span.style.transform = `scaleX(${scale})`;
+            span.style.transformOrigin = 'left center';
+        } else {
+            span.style.transform = '';
+        }
+    });
 }
 
 function buildCardElement(cardData, extraClass) {
@@ -125,7 +175,7 @@ function buildCardElement(cardData, extraClass) {
     cardElement.innerHTML = `
         <div class="card-cost">${cardData.cost}</div>
         <div class="card-header">
-            <span class="card-title" style="${titleFontStyle(cardData.title)}">${cardData.title}</span>
+            <span class="card-title">${cardData.title}</span>
         </div>
         <div class="card-art">${cardData.art}</div>
         <div class="card-description">${cardData.desc}</div>
@@ -158,7 +208,10 @@ function layoutHand() {
 let resizeTimer = null;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(layoutHand, 120);
+    resizeTimer = setTimeout(() => {
+        layoutHand();
+        fitCardTitles();
+    }, 120);
 });
 
 function renderHand() {
@@ -182,6 +235,9 @@ function renderHand() {
         el.classList.remove('card-enter');
     });
     setTimeout(() => els.forEach(el => { el.style.transitionDelay = ''; }), 450 + els.length * 70);
+
+    // Adatta i titoli dopo che il layout è stato calcolato
+    requestAnimationFrame(() => fitCardTitles());
 
     handContainer.addEventListener('pointerdown', onHandPointerDown);
     updateUIStats();
@@ -216,6 +272,7 @@ function drawCards(n) {
     });
     setTimeout(() => newEls.forEach(el => { el.style.transitionDelay = ''; }), 450 + newEls.length * 70);
 
+    requestAnimationFrame(() => fitCardTitles());
     updateUIStats();
 }
 
@@ -238,6 +295,8 @@ function renderDeckModal() {
         return;
     }
     deck.forEach((cardData) => deckGrid.appendChild(buildCardElement(cardData)));
+
+    requestAnimationFrame(() => fitCardTitles());
 }
 
 function showBanner(text) {
@@ -273,3 +332,10 @@ const openEquipBtn = document.getElementById('open-equip-btn');
 const openMapBtn = document.getElementById('open-map-btn');
 if (openEquipBtn) openEquipBtn.addEventListener('click', () => console.log("Equipaggiamento: da implementare"));
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
+
+// Ri-adatta i titoli dopo il caricamento del font Google
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+        setTimeout(fitCardTitles, 100);
+    });
+}
