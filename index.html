@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Deckbuilder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-table" id="game-table">
+
+        <div class="player-ui">
+            <div class="entity-name">Eroe (Tu)</div>
+            <div class="health-bar-container">
+                <div class="health-bar-fill" id="player-hp-bar" style="width: 100%;"></div>
+                <div class="health-text"><span><span id="player-hp">75</span> / 75 ❤️<span id="shield-display"></span></span></div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">💎 Mana: <span id="mana-current">3</span> / 3</div>
+                <div class="stat-item" id="player-strength" style="display: none;"></div>
+                <div class="stat-item" id="player-weak" style="display: none;"></div>
+                <div class="stat-item" id="player-regen" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="top-center-ui">
+            <button class="icon-btn" id="open-deck-btn" title="Mazzo">📜<span class="icon-badge" id="deck-count">0</span></button>
+            <button class="icon-btn" id="open-equip-btn" title="Equipaggiamento">📦</button>
+            <button class="icon-btn" id="open-map-btn" title="Mappa">🗺️</button>
+        </div>
+
+        <div class="monster-ui">
+            <div class="entity-name">Goblin Corrotto</div>
+            <div class="health-bar-container">
+                <div class="health-bar-fill" id="monster-hp-bar" style="width: 100%;"></div>
+                <div class="health-text"><span><span id="monster-hp">50</span> / 50 ❤️<span id="monster-shield-display"></span></span></div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item" id="monster-intent">⚔️ Intento: 6 Danni</div>
+                <div class="stat-item" id="monster-burn" style="display: none;"></div>
+                <div class="stat-item" id="monster-poison" style="display: none;"></div>
+                <div class="stat-item" id="monster-weak" style="display: none;"></div>
+                <div class="stat-item" id="monster-stun" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="fx-vignette" id="fx-vignette"></div>
+        <div class="fx-layer" id="fx-layer"></div>
+        <div class="turn-banner" id="turn-banner"></div>
+        <div class="hand-container" id="hand"></div>
+    </div>
+
+    <div class="modal-overlay" id="deck-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">Carte nel Mazzo</span>
+                <button class="modal-close-btn" id="close-deck-btn">&times;</button>
+            </div>
+            <div class="deck-grid" id="deck-grid"></div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/fx-utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
