@@ -356,12 +356,11 @@ body {
     text-overflow: ellipsis;
     flex: 1 1 auto;
     min-width: 0;
-    padding-right: clamp(24px, 7vw, 42px);
-    box-sizing: border-box;
 }
 
 .card-title.long {
     font-size: clamp(9.5px, 2.6vw, 12.5px);
+    letter-spacing: -0.3px;
 }
 
 .card-title.longer {
