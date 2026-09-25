@@ -199,7 +199,7 @@ function applyMonsterWeak(turns) {
     monsterWeakTurns = turns;
     updateUIStats();
     const p = fxPoint(monsterUi);
-    const icon = fxEl('fx-emoji', p.x, p.y, '📉');
+    const icon = fxEl('fx-emoji', p.x, p.y, '🔻');
     fxAnim(icon, [
         { transform: 'scale(0.4)', opacity: 0 },
         { transform: 'scale(1.3)', opacity: 1, offset: 0.35 },
@@ -490,7 +490,7 @@ function fxPotion(card, from) {
     burst(from.x, from.y, FX_COLOR.heal, 14, 110);
 }
 
-const fxWeakenCard = (card, from) => flyToMonster(from, '📉', FX_TIME.weaken, () => applyMonsterWeak(card.value));
+const fxWeakenCard = (card, from) => flyToMonster(from, '🔻', FX_TIME.weaken, () => applyMonsterWeak(card.value));
 const fxStunCard = (card, from) => flyToMonster(from, '💫', FX_TIME.stun, () => applyMonsterStun(card.value));
 const fxStrengthCard = (card, from) => flyToPlayer(from, '💪', '', () => applyPlayerStrength(card.value));
 const fxRegenCard = (card, from) => flyToPlayer(from, '💚', '', () => applyPlayerRegen(card.value, card.regenTurns));
@@ -604,7 +604,7 @@ function fxMonsterWeakenPlayer(turns, done) {
     later(220, () => {
         playerWeakTurns = turns;
         updateUIStats();
-        const icon = fxEl('fx-emoji', p.x, p.y, '📉');
+        const icon = fxEl('fx-emoji', p.x, p.y, '🔻');
         fxAnim(icon, [
             { transform: 'scale(0.4)', opacity: 0 },
             { transform: 'scale(1.3)', opacity: 1, offset: 0.35 },
