@@ -432,3 +432,24 @@ body {
     color: #1a252f;
     letter-spacing: -0.1px;
 }
+
+/* Titoli nella modale Mazzo: vanno a capo su 2 righe invece di troncarsi */
+.deck-grid .card-title {
+    max-width: 82% !important;
+    white-space: normal !important;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    word-break: break-word;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: unset;
+}
+
+/* Grassetto delle parole chiave nelle descrizioni: più elegante del default */
+.card-description b,
+.card-description strong {
+    font-weight: 700;
+    color: #1a252f;
+    letter-spacing: -0.1px;
+}
