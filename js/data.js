@@ -13,8 +13,8 @@ const cardDatabase = [
     { cost: "💎💎",   title: "Fulmine",            art: "Saetta",          desc: "Infligge 10 danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
     { cost: "💎💎",   title: "Freccia Multipla",   art: "Frecce",          desc: "Infligge 3 danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
     { cost: "💎💎",   title: "Lancia Perforante",  art: "Lancia",          desc: "Infligge 7 danni ⚔️. <b>Ignora lo scudo</b>",         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
-    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge 3 danni ⚔️. Applica <b>Bruciatura</b>: 3 danni per 3 turni. <b>Ignora lo scudo</b>", fx: "fire", type: "damage", value: 3, burnTurns: 3 },
-    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge 6 danni ⚔️. Applica <b>Veleno</b>: 3 danni per 3 turni. <b>Ignora lo scudo</b>",    fx: "poison", type: "damage", value: 6, poisonTurns: 3 },
+    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge 3 danni ⚔️. Applica <b>Bruciatura</b> 🔥: 3 danni per 3 turni. <b>Ignora lo scudo</b>", fx: "fire", type: "damage", value: 3, burnTurns: 3 },
+    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge 6 danni ⚔️. Applica <b>Veleno</b> 🧪: 3 danni per 3 turni. <b>Ignora lo scudo</b>",    fx: "poison", type: "damage", value: 6, poisonTurns: 3 },
     { cost: "💎💎",   title: "Rubavita",           art: "Falce",           desc: "Infligge 5 danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
     { cost: "💎💎💎", title: "Magia",              art: "Tempesta",        desc: "Infligge 4 danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
     { cost: "💎💎💎", title: "Colpo Possente",     art: "Martello",        desc: "Infligge 15 danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
@@ -50,8 +50,8 @@ const cardDatabase = [
     { cost: "💎💎💎", title: "Terrore",            art: "Spettro",         desc: "<b>Stordisci</b> il nemico 💫 per 2 turni",                      fx: "stun",     type: "stun", value: 2 },
 
     // ---------- STATUS (solo DoT) ----------
-    { cost: "💎💎",   title: "Veleno Puro",        art: "Fiala",           desc: "Applica <b>Veleno</b>: 4 danni per 3 turni. <b>Ignora lo scudo</b>. Il nemico ha il 20% di sbagliare", fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
-    { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica <b>Bruciatura</b>: 6 danni per 3 turni. <b>Ignora lo scudo</b>", fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
+    { cost: "💎💎",   title: "Veleno Puro",        art: "Fiala",           desc: "Applica <b>Veleno</b> 🧪: 4 danni per 3 turni. <b>Ignora lo scudo</b>. Il nemico ha il 20% di sbagliare", fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
+    { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica <b>Bruciatura</b> 🔥: 6 danni per 3 turni. <b>Ignora lo scudo</b>", fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
 
     // ---------- MISTI ----------
     { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge 4 danni ⚔️. Applica <b>Debolezza</b> 🔻 per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
