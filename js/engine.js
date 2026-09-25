@@ -2,7 +2,6 @@
 //  LOGICA DI GIOCO — turni, drag, battaglia
 // ============================================================
 
-// Stato del drag (solo engine lo usa)
 let activeCard = null;
 let activeCardIndex = -1;
 let activeCardData = null;
@@ -26,6 +25,8 @@ function cardPose(dx, dy, scale) {
 
 function startDrag(e, card, data, index) {
     if (activeCard || !isPlayerTurn || battleOver) return;
+    // Blocco di sicurezza: non si trascinano carte che non puoi permetterti
+    if (getCardCost(data) > playerMana) return;
 
     activeCard = card;
     activeCardIndex = index;
@@ -118,7 +119,6 @@ function startEnemyTurn() {
     if (playerWeakTurns > 0) playerWeakTurns--;
     updateUIStats();
 
-    // Scarto a cascata
     const discarded = [...handEls];
     discarded.forEach((el, i) => {
         el.style.transitionDelay = `${i * 50}ms`;
@@ -135,7 +135,6 @@ function startEnemyTurn() {
     setTimeout(hideBanner, 900);
     setTimeout(() => showBanner('Turno del Nemico'), 1150);
 
-    // Tick DoT a inizio turno nemico (con check di morte per ciascuno)
     setTimeout(() => {
         burnTick();
         if (monsterHp <= 0) { endBattle(true); return; }
@@ -152,7 +151,6 @@ function monsterTurn() {
     monsterShield = 0;
     updateUIStats();
 
-    // Consuma sempre un turno di Debolezza a fine turno del boss (anche se stordito)
     const consumeMonsterWeak = () => {
         if (monsterWeakTurns > 0) monsterWeakTurns--;
         updateUIStats();
