@@ -453,3 +453,18 @@ body {
     color: #1a252f;
     letter-spacing: -0.1px;
 }
+
+/* Carte non giocabili (mana insufficiente): spente e desaturate */
+.hand-container .card.unplayable {
+    filter: grayscale(0.75) brightness(0.72);
+    opacity: 0.8;
+}
+.hand-container .card.unplayable:hover:not(.is-dragging):not(.no-hover) {
+    transform: translateX(-50%) translate(var(--tx, 0px), var(--ty, 0px)) scale(1) rotate(var(--rot, 0deg));
+    box-shadow: 0 12px 28px rgba(0,0,0,0.45), 0 3px 8px rgba(0,0,0,0.2);
+    z-index: 1;
+    cursor: not-allowed;
+}
+.hand-container .card.unplayable:hover::after {
+    opacity: 0;
+}
