@@ -50,7 +50,7 @@ function updateUIStats() {
     const monsterWeakEl = document.getElementById('monster-weak');
     if (monsterWeakEl) {
         monsterWeakEl.style.display = monsterWeakTurns > 0 ? 'flex' : 'none';
-        monsterWeakEl.innerText = `📉 Debole: ${monsterWeakTurns} turni`;
+        monsterWeakEl.innerText = `🔻 Debole: ${monsterWeakTurns} turni`;
     }
     const monsterStunEl = document.getElementById('monster-stun');
     if (monsterStunEl) {
@@ -66,7 +66,7 @@ function updateUIStats() {
     const playerWeakEl = document.getElementById('player-weak');
     if (playerWeakEl) {
         playerWeakEl.style.display = playerWeakTurns > 0 ? 'flex' : 'none';
-        playerWeakEl.innerText = `📉 Debole: ${playerWeakTurns} turni`;
+        playerWeakEl.innerText = `🔻 Debole: ${playerWeakTurns} turni`;
     }
     const playerRegenEl = document.getElementById('player-regen');
     if (playerRegenEl) {
@@ -84,7 +84,7 @@ function updateUIStats() {
         } else if (next.type === 'shield') {
             intentEl.innerText = `🛡️ Intento: +${next.value} Scudo`;
         } else if (next.type === 'weaken') {
-            intentEl.innerText = `📉 Intento: Indebolimento`;
+            intentEl.innerText = `🔻 Intento: Indebolimento`;
         }
     }
 
