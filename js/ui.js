@@ -14,6 +14,16 @@ function updatePlayerShieldUI() {
     }
 }
 
+// Applica/rimuove la classe "unplayable" alle carte in mano in base al mana
+function updatePlayableState() {
+    handEls.forEach((el, i) => {
+        const card = hand[i];
+        if (!card) return;
+        const cost = getCardCost(card);
+        el.classList.toggle('unplayable', cost > playerMana);
+    });
+}
+
 function updateUIStats() {
     const deckCountEl = document.getElementById('deck-count');
     if (deckCountEl) deckCountEl.innerText = deck.length;
@@ -92,6 +102,7 @@ function updateUIStats() {
     if (playerManaEl) playerManaEl.innerText = playerMana;
 
     updatePlayerShieldUI();
+    updatePlayableState();
 }
 
 function titleMaxWidth(cardData) {
@@ -202,6 +213,7 @@ function drawCards(n) {
 function onHandPointerDown(e) {
     const cardElement = e.target.closest('.card');
     if (!cardElement) return;
+    if (cardElement.classList.contains('unplayable')) return; // niente drag sulle carte non giocabili
     const index = handEls.indexOf(cardElement);
     if (index === -1) return;
     startDrag(e, cardElement, hand[index], index);
