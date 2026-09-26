@@ -554,6 +554,17 @@ function playCardFx(card) {
         totalMs = FX_LAUNCH_DELAY + FX_TIME[kind] + FX_SETTLE;
     }
 
+    // Guadagno di mana (per le carte di pesca): lo applico con effetto visivo
+    if (card.manaGain) {
+        later(FX_LAUNCH_DELAY, () => {
+            playerMana += card.manaGain;
+            updateUIStats();
+            const p = fxPoint(playerUi);
+            floatText(p.x, p.y - 30, `+${card.manaGain} 💎`, 'fx-mana');
+            ring(p.x, p.y, '#5db9ff', 60, 2, 450);
+        });
+    }
+
     if (card.draw) {
         const drawDelay = Math.max(totalMs, FX_LAUNCH_DELAY + 150);
         later(drawDelay, () => drawCards(card.draw));
@@ -679,35 +690,4 @@ function endBattle(playerWon) {
         burst(p.x, p.y, '#8b0000', 18, 260);
         screenFlash('255, 0, 0', 0.45);
     }
-}
-function playCardFx(card) {
-    const kind = card.fx || defaultFx[card.type];
-    let totalMs = 0;
-
-    if (cardFx[kind]) {
-        const from = tableCenter();
-        later(FX_LAUNCH_DELAY, () => {
-            ring(from.x, from.y, FX_COLOR[castColor[kind]], 80, 2.4, 450);
-            cardFx[kind](card, from);
-        });
-        totalMs = FX_LAUNCH_DELAY + FX_TIME[kind] + FX_SETTLE;
-    }
-
-    // Guadagno di mana (per le carte di pesca): lo applico subito, con effetto visivo
-    if (card.manaGain) {
-        later(FX_LAUNCH_DELAY, () => {
-            playerMana += card.manaGain;
-            updateUIStats();
-            const p = fxPoint(playerUi);
-            floatText(p.x, p.y - 30, `+${card.manaGain} 💎`, 'fx-mana');
-            ring(p.x, p.y, '#5db9ff', 60, 2, 450);
-        });
-    }
-
-    if (card.draw) {
-        const drawDelay = Math.max(totalMs, FX_LAUNCH_DELAY + 150);
-        later(drawDelay, () => drawCards(card.draw));
-        totalMs = Math.max(totalMs, drawDelay + 350);
-    }
-    return totalMs;
 }
