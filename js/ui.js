@@ -296,6 +296,8 @@ function drawCards(n) {
 function onHandPointerDown(e) {
     const cardElement = e.target.closest('.card');
     if (!cardElement) return;
+    // Se l'utente clicca su una parola chiave, lascia gestire il tap al tooltip
+    if (e.target.closest('.kw')) return;
     if (cardElement.classList.contains('unplayable')) return;
     const index = handEls.indexOf(cardElement);
     if (index === -1) return;
@@ -347,3 +349,76 @@ const openEquipBtn = document.getElementById('open-equip-btn');
 const openMapBtn = document.getElementById('open-map-btn');
 if (openEquipBtn) openEquipBtn.addEventListener('click', () => console.log("Equipaggiamento: da implementare"));
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
+
+// ============================================================
+//  TOOLTIP PER LE PAROLE CHIAVE
+// ============================================================
+
+const tooltipPopup = document.getElementById('tooltip-popup');
+let _currentKwEl = null;
+
+function showTooltip(kwEl) {
+    if (!tooltipPopup || !kwEl) return;
+    const tipText = kwEl.dataset.tip;
+    if (!tipText) return;
+
+    _currentKwEl = kwEl;
+    kwEl.classList.add('active');
+    tooltipPopup.innerText = tipText;
+
+    // Misura il tooltip fuori schermo per non farlo lampeggiare
+    tooltipPopup.style.left = '-9999px';
+    tooltipPopup.style.top = '0';
+    tooltipPopup.classList.add('visible');
+
+    const tipRect = tooltipPopup.getBoundingClientRect();
+    const kwRect = kwEl.getBoundingClientRect();
+
+    let left = kwRect.left + kwRect.width / 2 - tipRect.width / 2;
+    let top = kwRect.top - tipRect.height - 8;
+
+    // Clamp dentro lo schermo
+    left = Math.max(8, Math.min(window.innerWidth - tipRect.width - 8, left));
+    if (top < 8) top = kwRect.bottom + 8;
+    if (top + tipRect.height > window.innerHeight - 8) {
+        top = window.innerHeight - tipRect.height - 8;
+    }
+
+    tooltipPopup.style.left = left + 'px';
+    tooltipPopup.style.top = top + 'px';
+}
+
+function hideTooltip() {
+    if (!tooltipPopup) return;
+    tooltipPopup.classList.remove('visible');
+    if (_currentKwEl) {
+        _currentKwEl.classList.remove('active');
+        _currentKwEl = null;
+    }
+}
+
+// Hover su desktop
+document.addEventListener('mouseover', (e) => {
+    const kwEl = e.target.closest('.kw');
+    if (kwEl) showTooltip(kwEl);
+});
+document.addEventListener('mouseout', (e) => {
+    const kwEl = e.target.closest('.kw');
+    if (kwEl && kwEl === _currentKwEl) hideTooltip();
+});
+
+// Tap/click (mobile + fallback desktop)
+document.addEventListener('click', (e) => {
+    const kwEl = e.target.closest('.kw');
+    if (kwEl) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (kwEl === _currentKwEl) {
+            hideTooltip();
+        } else {
+            showTooltip(kwEl);
+        }
+    } else {
+        hideTooltip();
+    }
+});
