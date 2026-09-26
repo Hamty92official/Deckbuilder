@@ -21,14 +21,14 @@ function kw(text, tipKey, keywordId) {
 const cardDatabase = [
     // ---------- ATTACCO ----------
     { cost: "💎",     title: "Taglio Rapido",      art: "Spada",           desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 6 },
-    { cost: "💎",     title: "Affondo Lineare",    art: "Lancia",          desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 5 },
-    { cost: "💎",     title: "Colpo Furtivo",      art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "slash",     type: "damage", value: 4, ignoreShield: true },
-    { cost: "💎",     title: "Affondo Rapido",     art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",              fx: "slash2",    type: "damage", value: 4, draw: 1 },
+    { cost: "💎",     title: "Affondo Lineare",    art: "Lancia",          desc: "Infligge {DMG} danni ⚔️",                                fx: "thrust",    type: "damage", value: 5 },
+    { cost: "💎",     title: "Colpo Furtivo",      art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "dagger",    type: "damage", value: 4, ignoreShield: true },
+    { cost: "💎",     title: "Affondo Rapido",     art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",              fx: "dagger",    type: "damage", value: 4, draw: 1 },
     { cost: "💎",     title: "Tiro Preciso",       art: "Arco",            desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 8, ignoreShield: true },
     { cost: "💎💎",   title: "Doppio Taglio",      art: "Spade",           desc: "Infligge {DMG} danni ⚔️ due volte",                       fx: "slash2",    type: "damage", value: 8 },
-    { cost: "💎💎",   title: "Scarica Elettrica",  art: "Saetta",          desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
-    { cost: "💎💎",   title: "Frecce Multiple",    art: "Frecce",          desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
-    { cost: "💎💎",   title: "Perforazione Letale",art: "Lancia",          desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
+    { cost: "💎💎",   title: "Scarica Elettrica",  art: "Saetta",          desc: "Infligge {DMG} danni ⚔️",                               fx: "electric",  type: "damage", value: 10 },
+    { cost: "💎💎",   title: "Frecce Multiple",    art: "Frecce",          desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "arrow3",    type: "damage", value: 9 },
+    { cost: "💎💎",   title: "Perforazione Letale",art: "Lancia",          desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "thrust",    type: "damage", value: 7, ignoreShield: true },
     { cost: "💎💎",   title: "Fiamma Divorante",   art: "Fiamma",          desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
     { cost: "💎💎",   title: "Morso Velenoso",     art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno", "poison"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
     { cost: "💎💎",   title: "Falce Mietitrice",   art: "Falce",           desc: "Infligge {DMG} danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
@@ -153,12 +153,14 @@ function getCardCost(cardData) {
     return [...cardData.cost].length;
 }
 
+// Quanti colpi fa una carta d'attacco (per calcolare il danno per colpo)
 function getCardHits(card) {
     switch (card.fx) {
-        case 'slash2': return 2;
-        case 'slash3': return 3;
-        case 'arcane': return 5;
-        default: return 1;
+        case 'slash2':  return 2;
+        case 'slash3':  return 3;
+        case 'arrow3':  return 3;
+        case 'arcane':  return 5;
+        default:        return 1;
     }
 }
 
