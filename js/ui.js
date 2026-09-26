@@ -201,6 +201,54 @@ function buildCardElement(cardData, extraClass) {
     return cardElement;
 }
 
+// ============================================================
+//  HOVER DELLE CARTE — hitbox fissa (no loop impazzito)
+// ============================================================
+// Le carte nel ventaglio si sollevano di 50px. Se usassimo :hover CSS,
+// quando il mouse è nella parte bassa della carta il sollevamento lo
+// farebbe "uscire" dall'hitbox → la carta scende → il mouse rientra → loop.
+// Soluzione: memorizziamo le hitbox A RIPOSO di ogni carta, e gestiamo
+// l'hover via JS. Così la zona che attiva l'hover non cambia mai.
+
+let handHitBoxes = [];
+
+function computeHandHitBoxes() {
+    handHitBoxes = handEls.map(el => {
+        // Misuro la posizione della carta SENZA hover applicato
+        const hadHover = el.classList.contains('hovered');
+        if (hadHover) {
+            el.style.transition = 'none';
+            el.classList.remove('hovered');
+        }
+        const r = el.getBoundingClientRect();
+        if (hadHover) {
+            void el.offsetWidth;
+            el.classList.add('hovered');
+            requestAnimationFrame(() => { el.style.transition = ''; });
+        }
+        return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+    });
+}
+
+function updateHandHover(mx, my) {
+    if (activeCard) return; // durante il drag non alterare l'hover
+    let hoveredIdx = -1;
+    for (let i = 0; i < handHitBoxes.length; i++) {
+        const b = handHitBoxes[i];
+        if (mx >= b.left && mx <= b.right && my >= b.top && my <= b.bottom) {
+            hoveredIdx = i;
+            break;
+        }
+    }
+    handEls.forEach((el, i) => {
+        el.classList.toggle('hovered', i === hoveredIdx);
+    });
+}
+
+function clearHandHover() {
+    handEls.forEach(el => el.classList.remove('hovered'));
+}
+
 function layoutHand() {
     const n = handEls.length;
     if (n === 0) return;
@@ -223,12 +271,20 @@ function layoutHand() {
     });
 }
 
+// Ricalcola le hitbox dopo che le animazioni di layout sono finite
+let _hitboxTimer = null;
+function scheduleComputeHitBoxes(delay) {
+    clearTimeout(_hitboxTimer);
+    _hitboxTimer = setTimeout(computeHandHitBoxes, delay || 700);
+}
+
 let resizeTimer = null;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
         layoutHand();
         fitCardTitles();
+        scheduleComputeHitBoxes(400);
     }, 120);
 });
 
@@ -259,6 +315,7 @@ function renderHand() {
 
     handContainer.addEventListener('pointerdown', onHandPointerDown);
     updateUIStats();
+    scheduleComputeHitBoxes(800);
 }
 
 function drawCards(n) {
@@ -291,12 +348,12 @@ function drawCards(n) {
     setTimeout(() => newEls.forEach(el => { el.style.transitionDelay = ''; }), 450 + newEls.length * 70);
 
     updateUIStats();
+    scheduleComputeHitBoxes(800);
 }
 
 function onHandPointerDown(e) {
     const cardElement = e.target.closest('.card');
     if (!cardElement) return;
-    // Se l'utente clicca su una parola chiave, lascia gestire il tap al tooltip
     if (e.target.closest('.kw')) return;
     if (cardElement.classList.contains('unplayable')) return;
     const index = handEls.indexOf(cardElement);
@@ -356,8 +413,9 @@ if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: d
 
 const tooltipPopup = document.getElementById('tooltip-popup');
 let _currentKwEl = null;
+let _mouseX = 0, _mouseY = 0;
 
-function showTooltip(kwEl) {
+function showTooltip(kwEl, x, y) {
     if (!tooltipPopup || !kwEl) return;
     const tipText = kwEl.dataset.tip;
     if (!tipText) return;
@@ -366,23 +424,20 @@ function showTooltip(kwEl) {
     kwEl.classList.add('active');
     tooltipPopup.innerText = tipText;
 
-    // Misura il tooltip fuori schermo per non farlo lampeggiare
     tooltipPopup.style.left = '-9999px';
     tooltipPopup.style.top = '0';
     tooltipPopup.classList.add('visible');
 
     const tipRect = tooltipPopup.getBoundingClientRect();
-    const kwRect = kwEl.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
-    let left = kwRect.left + kwRect.width / 2 - tipRect.width / 2;
-    let top = kwRect.top - tipRect.height - 8;
-
-    // Clamp dentro lo schermo
-    left = Math.max(8, Math.min(window.innerWidth - tipRect.width - 8, left));
-    if (top < 8) top = kwRect.bottom + 8;
-    if (top + tipRect.height > window.innerHeight - 8) {
-        top = window.innerHeight - tipRect.height - 8;
-    }
+    let left = x + 14;
+    let top = y + 14;
+    if (left + tipRect.width > vw - 8) left = x - tipRect.width - 14;
+    if (top + tipRect.height > vh - 8) top = y - tipRect.height - 14;
+    left = Math.max(8, Math.min(vw - tipRect.width - 8, left));
+    top = Math.max(8, Math.min(vh - tipRect.height - 8, top));
 
     tooltipPopup.style.left = left + 'px';
     tooltipPopup.style.top = top + 'px';
@@ -397,28 +452,50 @@ function hideTooltip() {
     }
 }
 
-// Hover su desktop
+document.addEventListener('mousemove', (e) => {
+    _mouseX = e.clientX;
+    _mouseY = e.clientY;
+});
+
 document.addEventListener('mouseover', (e) => {
     const kwEl = e.target.closest('.kw');
-    if (kwEl) showTooltip(kwEl);
+    if (kwEl) showTooltip(kwEl, _mouseX, _mouseY);
 });
 document.addEventListener('mouseout', (e) => {
     const kwEl = e.target.closest('.kw');
     if (kwEl && kwEl === _currentKwEl) hideTooltip();
 });
-
-// Tap/click (mobile + fallback desktop)
 document.addEventListener('click', (e) => {
     const kwEl = e.target.closest('.kw');
     if (kwEl) {
         e.stopPropagation();
         e.preventDefault();
-        if (kwEl === _currentKwEl) {
-            hideTooltip();
-        } else {
-            showTooltip(kwEl);
+        if (kwEl === _currentKwEl) hideTooltip();
+        else {
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            const x = touch ? touch.clientX : e.clientX;
+            const y = touch ? touch.clientY : e.clientY;
+            showTooltip(kwEl, x, y);
         }
     } else {
         hideTooltip();
     }
 });
+document.addEventListener('touchstart', (e) => {
+    const kwEl = e.target.closest('.kw');
+    if (!kwEl) hideTooltip();
+}, { passive: true });
+
+// ============================================================
+//  LISTENER GLOBALI PER L'HOVER DELLE CARTE
+// ============================================================
+
+const handContainerEl = document.getElementById('hand');
+if (handContainerEl) {
+    handContainerEl.addEventListener('mousemove', (e) => {
+        updateHandHover(e.clientX, e.clientY);
+    });
+    handContainerEl.addEventListener('mouseleave', () => {
+        clearHandHover();
+    });
+}
