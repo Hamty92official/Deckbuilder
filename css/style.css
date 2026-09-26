@@ -487,9 +487,9 @@ body {
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
 }
 
+/* Carte non giocabili (mana insufficiente): desaturate ma NON trasparenti */
 .hand-container .card.unplayable {
-    filter: grayscale(0.75) brightness(0.72);
-    opacity: 0.8;
+    filter: grayscale(0.75) brightness(0.85);
 }
 .hand-container .card.unplayable:hover:not(.is-dragging):not(.no-hover),
 .hand-container .card.unplayable.hovered:not(.is-dragging):not(.no-hover) {
