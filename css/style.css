@@ -389,7 +389,7 @@ body {
     border-bottom-color: #d35400;
 }
 
-/* Valore del danno dinamico: verde quando c'è un modificatore */
+/* Valore del danno dinamico */
 .dmg-value {
     font-weight: 700;
     cursor: pointer;
@@ -398,13 +398,23 @@ body {
     transition: color 0.15s ease, border-color 0.15s ease;
     white-space: nowrap;
 }
-.dmg-value.modified {
+/* Sopra il valore base: verde (buff netto) */
+.dmg-value.modified-buff {
     color: #27ae60;
     border-bottom: 1px dotted #27ae60;
 }
-.dmg-value.modified:hover, .dmg-value.modified.active {
+.dmg-value.modified-buff:hover, .dmg-value.modified-buff.active {
     color: #2ecc71;
     border-bottom-color: #2ecc71;
+}
+/* Sotto il valore base: rosa chiaro (debuff netto) */
+.dmg-value.modified-debuff {
+    color: #e07a92;
+    border-bottom: 1px dotted #e07a92;
+}
+.dmg-value.modified-debuff:hover, .dmg-value.modified-debuff.active {
+    color: #f5a1b4;
+    border-bottom-color: #f5a1b4;
 }
 
 .tooltip-popup {
@@ -418,7 +428,7 @@ body {
     font-family: 'Montserrat', 'Segoe UI', Tahoma, sans-serif;
     font-size: 12px;
     font-weight: 500;
-    line-height: 1.45;
+    line-height: 1.5;
     letter-spacing: 0.1px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.15);
@@ -430,6 +440,11 @@ body {
     text-align: left;
 }
 .tooltip-popup.visible { opacity: 1; }
+/* Colori nel tooltip: verde per i buff, rosa per i debuff, grigio per il neutro */
+.tooltip-popup .tip-buff { color: #6ff09a; font-weight: 700; }
+.tooltip-popup .tip-debuff { color: #f5a1b4; font-weight: 700; }
+.tooltip-popup .tip-neutral { color: #c8d0d5; }
+.tooltip-popup .tip-total { color: #ffffff; font-weight: 700; }
 
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
