@@ -11,7 +11,7 @@
     font-family: 'Montserrat', 'Segoe UI', sans-serif;
   }
   body {
-    background: radial-gradient(circle at 50% 45%, #2c3e50 0%, #1a252f 55%, #0d131a 100%);
+    background: radial-gradient(circle at 45% 40%, #263542 0%, #16202a 55%, #080d13 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,38 +19,41 @@
 
   .scene {
     position: relative;
-    width: min(92vw, 620px);
-    height: min(92vh, 640px);
+    width: min(94vw, 700px);
+    height: min(94vh, 660px);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
+  /* Alone corrotto dietro al goblin */
   .scene::before {
     content: '';
     position: absolute;
-    left: 45%;
+    left: 46%;
     top: 50%;
-    width: 70%;
-    height: 62%;
+    width: 78%;
+    height: 68%;
     transform: translate(-50%, -55%);
-    background: radial-gradient(ellipse, rgba(120, 180, 100, 0.18) 0%, rgba(120, 180, 100, 0) 70%);
+    background:
+      radial-gradient(ellipse at 55% 45%, rgba(130, 70, 180, 0.22) 0%, rgba(130, 70, 180, 0) 55%),
+      radial-gradient(ellipse at 45% 55%, rgba(90, 140, 70, 0.22) 0%, rgba(90, 140, 70, 0) 60%);
     pointer-events: none;
-    animation: glowPulse 4s ease-in-out infinite;
+    animation: glowPulse 4.5s ease-in-out infinite;
   }
   @keyframes glowPulse {
-    0%, 100% { opacity: 0.55; transform: translate(-50%, -55%) scale(1); }
-    50%      { opacity: 0.95; transform: translate(-50%, -55%) scale(1.06); }
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -55%) scale(1); }
+    50%      { opacity: 1;   transform: translate(-50%, -55%) scale(1.05); }
   }
 
   .shadow {
     position: absolute;
-    bottom: 3%;
-    left: 50%;
+    bottom: 2%;
+    left: 47%;
     transform: translateX(-50%);
-    width: 65%;
+    width: 68%;
     height: 9%;
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 72%);
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 72%);
     animation: shadowPulse 3.6s ease-in-out infinite;
   }
   @keyframes shadowPulse {
@@ -62,58 +65,57 @@
     position: relative;
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55));
+    filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.6));
   }
 
-  /* --- Animazioni --- */
+  /* Animazioni */
   .goblin-root {
     transform-box: fill-box;
     transform-origin: center bottom;
-    animation: breathe 3.6s ease-in-out infinite;
+    animation: breathe 3.8s ease-in-out infinite;
   }
   @keyframes breathe {
     0%, 100% { transform: scale(1, 1); }
-    50%      { transform: scale(0.997, 1.022); }
+    50%      { transform: scale(0.997, 1.02); }
   }
 
   .head {
     transform-box: fill-box;
-    transform-origin: center bottom;
-    animation: headSway 5s ease-in-out infinite;
+    transform-origin: center 85%;
+    animation: headSway 5.6s ease-in-out infinite;
   }
   @keyframes headSway {
-    0%, 100% { transform: rotate(-1deg); }
-    50%      { transform: rotate(1deg); }
+    0%, 100% { transform: rotate(-0.8deg) translateY(0); }
+    50%      { transform: rotate(0.8deg) translateY(-1px); }
   }
 
   .ear-left {
     transform-box: fill-box;
     transform-origin: right center;
-    animation: earTwitchL 4.2s ease-in-out infinite;
+    animation: earTwitchL 4.6s ease-in-out infinite;
   }
   @keyframes earTwitchL {
     0%, 82%, 100% { transform: rotate(0deg); }
-    85%           { transform: rotate(-8deg); }
+    85%           { transform: rotate(-9deg); }
     90%           { transform: rotate(4deg); }
     93%           { transform: rotate(0deg); }
   }
-
   .ear-right {
     transform-box: fill-box;
     transform-origin: left center;
-    animation: earTwitchR 4.7s ease-in-out infinite;
+    animation: earTwitchR 5.1s ease-in-out infinite;
   }
   @keyframes earTwitchR {
     0%, 78%, 100% { transform: rotate(0deg); }
-    81%           { transform: rotate(8deg); }
+    81%           { transform: rotate(9deg); }
     86%           { transform: rotate(-4deg); }
     89%           { transform: rotate(0deg); }
   }
 
-  .eye {
+  .eye-sane {
     transform-box: fill-box;
     transform-origin: center;
-    animation: blink 5.2s ease-in-out infinite;
+    animation: blink 5.4s ease-in-out infinite;
   }
   @keyframes blink {
     0%, 92%, 100% { transform: scaleY(1); }
@@ -121,31 +123,31 @@
     97%           { transform: scaleY(1); }
   }
 
-  .iris-glow {
+  .iris-corrupt {
     transform-box: fill-box;
     transform-origin: center;
-    animation: irisPulse 2.4s ease-in-out infinite;
+    animation: irisPulse 2.6s ease-in-out infinite;
   }
   @keyframes irisPulse {
-    0%, 100% { opacity: 0.75; }
+    0%, 100% { opacity: 0.85; }
     50%      { opacity: 1; }
   }
 
-  .wisp-1 { animation: wispRise 3.2s ease-out infinite; }
-  .wisp-2 { animation: wispRise 3.2s ease-out 1.6s infinite; }
+  .wisp-1 { animation: wispRise 3.4s ease-out infinite; }
+  .wisp-2 { animation: wispRise 3.4s ease-out 1.7s infinite; }
   @keyframes wispRise {
     0%   { transform: translateY(0) scale(0.4);  opacity: 0; }
-    20%  { opacity: 0.7; }
+    20%  { opacity: 0.65; }
     65%  { opacity: 0.3; }
-    100% { transform: translateY(-42px) scale(1.2); opacity: 0; }
+    100% { transform: translateY(-48px) scale(1.2); opacity: 0; }
   }
 
   .title {
     position: absolute;
-    bottom: 0;
+    bottom: 0.5%;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 13px;
     letter-spacing: 5px;
     text-transform: uppercase;
@@ -158,324 +160,420 @@
   <div class="scene">
     <div class="shadow"></div>
     <div class="goblin">
-      <svg viewBox="0 0 500 560" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
+      <svg viewBox="0 0 520 660" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
         <defs>
-          <!-- Pelle -->
-          <radialGradient id="skinBody" cx="40%" cy="30%" r="75%">
-            <stop offset="0%"   stop-color="#a9d68a"/>
-            <stop offset="45%"  stop-color="#6da858"/>
-            <stop offset="80%"  stop-color="#3d6629"/>
-            <stop offset="100%" stop-color="#21380f"/>
+          <!-- Pelle principale -->
+          <radialGradient id="skin" cx="38%" cy="28%" r="80%">
+            <stop offset="0%"   stop-color="#a4d182"/>
+            <stop offset="40%"  stop-color="#6ba14e"/>
+            <stop offset="75%"  stop-color="#3c6b28"/>
+            <stop offset="100%" stop-color="#1e3410"/>
           </radialGradient>
-          <radialGradient id="skinHead" cx="42%" cy="32%" r="75%">
-            <stop offset="0%"   stop-color="#b8e09a"/>
-            <stop offset="45%"  stop-color="#7cb662"/>
-            <stop offset="82%"  stop-color="#3d6629"/>
-            <stop offset="100%" stop-color="#21380f"/>
+          <radialGradient id="skinFace" cx="38%" cy="30%" r="82%">
+            <stop offset="0%"   stop-color="#b6dd94"/>
+            <stop offset="45%"  stop-color="#78ad5b"/>
+            <stop offset="80%"  stop-color="#3f6b28"/>
+            <stop offset="100%" stop-color="#1f3410"/>
           </radialGradient>
-
-          <!-- Pancia -->
-          <radialGradient id="belly" cx="50%" cy="35%" r="72%">
-            <stop offset="0%"   stop-color="#d4ecb8"/>
-            <stop offset="100%" stop-color="#9cc77e"/>
+          <radialGradient id="belly" cx="50%" cy="40%" r="75%">
+            <stop offset="0%"   stop-color="#cfe8b3"/>
+            <stop offset="100%" stop-color="#8fc16e"/>
           </radialGradient>
 
-          <!-- Iride viola -->
-          <radialGradient id="iris" cx="45%" cy="35%" r="65%">
+          <!-- Iride occhio sinistro (sano, giallo-arancio) -->
+          <radialGradient id="irisSane" cx="45%" cy="35%" r="62%">
+            <stop offset="0%"   stop-color="#ffe9a8"/>
+            <stop offset="40%"  stop-color="#ffab2e"/>
+            <stop offset="100%" stop-color="#8a3a08"/>
+          </radialGradient>
+
+          <!-- Iride occhio destro (corrotto, viola) -->
+          <radialGradient id="irisCorrupt" cx="45%" cy="35%" r="62%">
             <stop offset="0%"   stop-color="#f0c8ff"/>
-            <stop offset="25%"  stop-color="#c274ff"/>
-            <stop offset="60%"  stop-color="#7b1fa2"/>
-            <stop offset="100%" stop-color="#2e0745"/>
+            <stop offset="35%"  stop-color="#b04cff"/>
+            <stop offset="75%"  stop-color="#5a0e8c"/>
+            <stop offset="100%" stop-color="#1e0333"/>
           </radialGradient>
 
-          <!-- Legno -->
+          <!-- Legno manico -->
           <linearGradient id="wood" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stop-color="#8b6046"/>
-            <stop offset="55%"  stop-color="#5d3a25"/>
-            <stop offset="100%" stop-color="#241209"/>
+            <stop offset="0%"   stop-color="#8a5e3f"/>
+            <stop offset="50%"  stop-color="#5c3820"/>
+            <stop offset="100%" stop-color="#1e0e05"/>
           </linearGradient>
 
           <!-- Testa mazza (pietra) -->
-          <radialGradient id="clubHead" cx="35%" cy="28%" r="78%">
-            <stop offset="0%"   stop-color="#a89080"/>
-            <stop offset="55%"  stop-color="#4e342e"/>
-            <stop offset="100%" stop-color="#0f0503"/>
+          <radialGradient id="club" cx="32%" cy="25%" r="85%">
+            <stop offset="0%"   stop-color="#b6a595"/>
+            <stop offset="45%"  stop-color="#5f493c"/>
+            <stop offset="100%" stop-color="#150803"/>
           </radialGradient>
 
-          <!-- Bagliore viola (solo per iride e sbuffi) -->
-          <filter id="purpleGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <!-- Cuoio scuro -->
+          <linearGradient id="leather" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#6d4b30"/>
+            <stop offset="100%" stop-color="#2e1c0e"/>
+          </linearGradient>
+          <linearGradient id="leatherLight" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#8b6743"/>
+            <stop offset="100%" stop-color="#4a2d18"/>
+          </linearGradient>
+
+          <!-- Bagliore viola -->
+          <filter id="purpleGlow" x="-120%" y="-120%" width="340%" height="340%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
             <feMerge>
-              <feMergeNode in="blur"/>
+              <feMergeNode in="b"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
 
-          <!-- Ombra morbida sotto i pezzi -->
-          <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
+          <!-- Ombra morbida per profondità -->
+          <filter id="depth" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.55"/>
           </filter>
         </defs>
 
-        <!-- Ombra a terra dentro SVG -->
-        <ellipse cx="230" cy="528" rx="130" ry="14" fill="#000" opacity="0.4"/>
+        <!-- Ombra a terra interna -->
+        <ellipse cx="255" cy="628" rx="150" ry="18" fill="#000" opacity="0.5"/>
 
         <g class="goblin-root">
 
-          <!-- ================= GAMBE ================= -->
-          <!-- Gamba sinistra (dietro) -->
-          <path d="M 195 400 Q 190 450 195 490"
-                stroke="#3d6629" stroke-width="38" stroke-linecap="round" fill="none"/>
-          <!-- Gamba destra (dietro) -->
-          <path d="M 265 400 Q 270 450 265 490"
-                stroke="#3d6629" stroke-width="38" stroke-linecap="round" fill="none"/>
-
-          <!-- ================= PIEDI ================= -->
-          <!-- Piede sinistro -->
-          <g filter="url(#softShadow)">
-            <ellipse cx="195" cy="510" rx="52" ry="18" fill="#5a8a44"/>
-            <!-- Dita -->
-            <circle cx="152" cy="512" r="8" fill="#6b9e54"/>
-            <circle cx="168" cy="518" r="7" fill="#6b9e54"/>
-            <circle cx="184" cy="521" r="6" fill="#6b9e54"/>
-            <!-- Unghie -->
-            <ellipse cx="148" cy="509" rx="5" ry="3" fill="#e0d5b0"/>
-            <ellipse cx="166" cy="515" rx="4" ry="2.5" fill="#e0d5b0"/>
-          </g>
-          <!-- Piede destro -->
-          <g filter="url(#softShadow)">
-            <ellipse cx="265" cy="510" rx="52" ry="18" fill="#5a8a44"/>
-            <circle cx="308" cy="512" r="8" fill="#6b9e54"/>
-            <circle cx="292" cy="518" r="7" fill="#6b9e54"/>
-            <circle cx="276" cy="521" r="6" fill="#6b9e54"/>
-            <ellipse cx="312" cy="509" rx="5" ry="3" fill="#e0d5b0"/>
-            <ellipse cx="294" cy="515" rx="4" ry="2.5" fill="#e0d5b0"/>
+          <!-- ===================== GAMBA POSTERIORE (DESTRA) ===================== -->
+          <g>
+            <!-- Coscia (più scura, in ombra) -->
+            <path d="M 285 425 Q 300 470 310 520 Q 312 545 300 555 L 275 555 Q 270 545 272 520 Q 275 470 265 430 Z"
+                  fill="#2c4d1b"/>
+            <!-- Polpaccio -->
+            <path d="M 300 555 L 300 580 Q 305 590 315 588 Q 320 580 320 565 L 320 555 Z"
+                  fill="#2c4d1b"/>
+            <!-- Piede (spostato a destra, in prospettiva) -->
+            <path d="M 290 588 Q 320 583 345 590 Q 355 595 350 605 Q 340 612 320 612 L 295 612 Q 285 608 285 600 Z"
+                  fill="#3c6b28" stroke="#1f3410" stroke-width="1.5"/>
+            <!-- Dita piede -->
+            <ellipse cx="345" cy="605" rx="6" ry="8" fill="#4a7c32"/>
+            <ellipse cx="332" cy="608" rx="5" ry="7" fill="#4a7c32"/>
+            <!-- Unghie nere -->
+            <ellipse cx="347" cy="602" rx="3" ry="4.5" fill="#1a1208"/>
+            <ellipse cx="333" cy="605" rx="2.5" ry="3.5" fill="#1a1208"/>
           </g>
 
-          <!-- ================= PERIZOMA (dietro) ================= -->
-          <path d="M 155 415 Q 230 435 305 415 Q 315 445 305 465 Q 230 480 155 465 Z"
-                fill="#5d4037"/>
+          <!-- ===================== BRACCIO POSTERIORE (DESTRO) ===================== -->
+          <!-- Spalla + bicipite + avambraccio destro che regge la mazza -->
+          <g>
+            <!-- Ombra spalla destra sul petto -->
+            <ellipse cx="305" cy="245" rx="35" ry="42" fill="#2c4d1b" opacity="0.6"/>
+            <!-- Braccio destro (in parte dietro) -->
+            <path d="M 300 240 Q 340 275 355 330 Q 365 375 355 405 L 325 405 Q 330 375 322 340 Q 310 300 285 265 Z"
+                  fill="#3c6b28" stroke="#1f3410" stroke-width="1.5" stroke-linejoin="round"/>
+            <!-- Avambraccio + pugno che regge la mazza (più avanti, lo disegno dopo la mazza) -->
+          </g>
 
-          <!-- ================= BRACCIA (dietro al torso) ================= -->
-          <!-- Braccio sinistro (nostra sinistra) -->
-          <path d="M 165 300 Q 130 360 108 425"
-                stroke="#3d6629" stroke-width="42" stroke-linecap="round" fill="none"/>
-          <!-- Braccio destro (nostra destra, regge mazza) -->
-          <path d="M 295 300 Q 330 350 350 400"
-                stroke="#3d6629" stroke-width="42" stroke-linecap="round" fill="none"/>
+          <!-- ===================== MAZZA (dietro la mano posteriore) ===================== -->
+          <g transform="rotate(-32 380 400)">
+            <!-- Manico in legno (più chiaro alla sinistra) -->
+            <rect x="368" y="290" width="22" height="240" rx="7" fill="url(#wood)" filter="url(#depth)"/>
+            <!-- Venature -->
+            <path d="M 374 300 Q 376 400 374 500" stroke="#0e0502" stroke-width="1.2" fill="none" opacity="0.5"/>
+            <path d="M 384 300 Q 382 400 384 500" stroke="#0e0502" stroke-width="1" fill="none" opacity="0.4"/>
+            <!-- Legature cuoio sul manico -->
+            <rect x="365" y="350" width="28" height="12" rx="2" fill="url(#leather)"/>
+            <rect x="365" y="352" width="28" height="4" rx="1" fill="#8c6a3f"/>
+            <rect x="365" y="470" width="28" height="12" rx="2" fill="url(#leather)"/>
+            <rect x="365" y="472" width="28" height="4" rx="1" fill="#8c6a3f"/>
 
-          <!-- ================= TORSO ================= -->
-          <path d="M 165 280 Q 145 330 148 400 Q 155 445 180 455
-                   Q 230 465 280 455 Q 305 445 312 400
-                   Q 315 330 295 280 Q 230 260 165 280 Z"
-                fill="url(#skinBody)" filter="url(#softShadow)"/>
+            <!-- Testa mazza: pietra grezza, non sfera perfetta -->
+            <path d="M 340 260 Q 350 218 380 212 Q 410 210 428 240 Q 436 270 424 295 Q 410 320 380 320 Q 348 315 340 285 Z"
+                  fill="url(#club)" filter="url(#depth)"/>
+            <!-- Chiaroscuro sulla testa -->
+            <path d="M 348 250 Q 358 222 380 218 Q 400 216 414 232 Q 396 226 380 228 Q 358 232 348 250 Z"
+                  fill="#c5b8a5" opacity="0.35"/>
+            <!-- Crepe nella pietra -->
+            <path d="M 360 240 Q 372 260 368 285" stroke="#0f0503" stroke-width="1.8" fill="none" opacity="0.85" stroke-linecap="round"/>
+            <path d="M 400 235 Q 408 258 404 285" stroke="#0f0503" stroke-width="1.5" fill="none" opacity="0.75" stroke-linecap="round"/>
+
+            <!-- Chiodi/spine conficcate (con base scura = sono incastonate) -->
+            <g>
+              <!-- Su -->
+              <path d="M 378 214 L 386 185 L 370 185 Z" fill="#1c1c1c" stroke="#0a0503" stroke-width="1"/>
+              <circle cx="378" cy="212" r="3" fill="#3a3a3a"/>
+              <!-- Giù -->
+              <path d="M 380 318 L 388 348 L 370 348 Z" fill="#1c1c1c" stroke="#0a0503" stroke-width="1"/>
+              <!-- Sinistra -->
+              <path d="M 342 268 L 312 258 L 312 280 Z" fill="#1c1c1c" stroke="#0a0503" stroke-width="1"/>
+              <!-- Destra -->
+              <path d="M 425 262 L 452 252 L 452 274 Z" fill="#1c1c1c" stroke="#0a0503" stroke-width="1"/>
+              <!-- Alto-sinistra -->
+              <path d="M 350 228 L 328 202 L 346 200 Z" fill="#1c1c1c" stroke="#0a0503" stroke-width="1"/>
+              <!-- Alto-destra -->
+              <path d="M 405 222 L 428 198 L 430 218 Z" fill="#1c1c1c" stroke="#0a0503" stroke-width="1"/>
+            </g>
+          </g>
+
+          <!-- ===================== MANO DESTRA (afferra la mazza) ===================== -->
+          <g filter="url(#depth)">
+            <!-- Palmo dietro il manico -->
+            <ellipse cx="378" cy="410" rx="26" ry="30" fill="#4a7c32" transform="rotate(-32 378 410)"/>
+            <!-- 4 dita che avvolgono il manico (davanti) -->
+            <path d="M 358 388 Q 380 384 400 392 L 400 400 Q 380 394 358 398 Z" fill="#5c9040" stroke="#2c4d1b" stroke-width="1"/>
+            <path d="M 358 402 Q 380 398 402 406 L 402 414 Q 380 408 358 412 Z" fill="#5c9040" stroke="#2c4d1b" stroke-width="1"/>
+            <path d="M 360 416 Q 380 412 400 420 L 400 428 Q 380 422 360 426 Z" fill="#5c9040" stroke="#2c4d1b" stroke-width="1"/>
+            <path d="M 362 430 Q 380 426 396 434 L 396 440 Q 380 434 362 438 Z" fill="#5c9040" stroke="#2c4d1b" stroke-width="1"/>
+            <!-- Unghie nere sulle dita -->
+            <ellipse cx="400" cy="396" rx="3" ry="4" fill="#1a1208" transform="rotate(15 400 396)"/>
+            <ellipse cx="402" cy="410" rx="3" ry="4" fill="#1a1208" transform="rotate(15 402 410)"/>
+            <ellipse cx="400" cy="424" rx="3" ry="4" fill="#1a1208" transform="rotate(15 400 424)"/>
+            <ellipse cx="396" cy="437" rx="2.5" ry="3.5" fill="#1a1208" transform="rotate(15 396 437)"/>
+            <!-- Pollice sopra il manico -->
+            <path d="M 362 388 Q 352 405 366 422 Q 376 424 380 414 Q 370 402 374 390 Z"
+                  fill="#6ba14e" stroke="#2c4d1b" stroke-width="1"/>
+            <ellipse cx="366" cy="390" rx="4" ry="5" fill="#1a1208" transform="rotate(-25 366 390)"/>
+          </g>
+
+          <!-- ===================== PERIZOMA E CINTURA ===================== -->
+          <path d="M 180 425 Q 255 448 330 425 Q 340 470 325 500 Q 255 515 185 500 Q 170 470 180 425 Z"
+                fill="url(#leather)"/>
+          <!-- Toppe strappate sul perizoma -->
+          <path d="M 200 495 L 195 512 L 208 508 Z" fill="#3d2410"/>
+          <path d="M 300 490 L 305 505 L 292 503 Z" fill="#3d2410"/>
+
+          <!-- Cintura sopra il perizoma -->
+          <path d="M 178 425 Q 255 448 332 425 Q 336 445 330 455 Q 255 475 178 455 Z"
+                fill="url(#leatherLight)"/>
+          <!-- Fibbia metallica -->
+          <rect x="245" y="440" width="28" height="22" rx="3" fill="#4a4a4a" stroke="#1c1c1c" stroke-width="1.5"/>
+          <rect x="252" y="446" width="14" height="10" rx="2" fill="#0f0503"/>
+          <circle cx="259" cy="451" r="2" fill="#8a8a8a"/>
+
+          <!-- Catena appesa (dettaglio decorativo) -->
+          <path d="M 220 462 Q 230 485 245 495 Q 260 500 275 490 Q 288 478 295 462"
+                stroke="#3a3a3a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="225" cy="470" r="2.5" fill="#6a6a6a"/>
+          <circle cx="240" cy="485" r="2.5" fill="#6a6a6a"/>
+          <circle cx="260" cy="494" r="2.5" fill="#6a6a6a"/>
+          <circle cx="278" cy="484" r="2.5" fill="#6a6a6a"/>
+
+          <!-- ===================== TORSO ===================== -->
+          <!-- Il corpo non è un uovo: spalle larghe, vita stretta, fianchi torniti -->
+          <path d="M 175 235
+                   Q 160 265 168 330
+                   Q 172 380 178 425
+                   Q 200 445 255 448
+                   Q 310 445 332 425
+                   Q 338 380 342 330
+                   Q 350 265 335 235
+                   Q 320 218 285 215
+                   Q 255 210 225 215
+                   Q 190 218 175 235 Z"
+                fill="url(#skin)" filter="url(#depth)"/>
+
+          <!-- Ombra a sinistra (luce da destra) -->
+          <path d="M 175 240 Q 168 320 180 420 Q 195 430 210 432 Q 195 340 200 250 Q 190 235 175 240 Z"
+                fill="#2c4d1b" opacity="0.35"/>
 
           <!-- Pancia chiara -->
-          <ellipse cx="230" cy="380" rx="52" ry="58" fill="url(#belly)" opacity="0.9"/>
+          <ellipse cx="255" cy="355" rx="52" ry="62" fill="url(#belly)" opacity="0.85"/>
 
-          <!-- Pettorali -->
-          <path d="M 195 320 Q 205 305 220 315 Q 230 328 220 340 Q 205 345 195 320 Z"
-                fill="#4e7d38" opacity="0.45"/>
-          <path d="M 265 320 Q 255 305 240 315 Q 230 328 240 340 Q 255 345 265 320 Z"
-                fill="#4e7d38" opacity="0.45"/>
+          <!-- Solco pettorali (una V aperta) -->
+          <path d="M 220 260 Q 240 245 255 260 Q 270 245 290 260"
+                fill="none" stroke="#3f6b28" stroke-width="2.5" opacity="0.6" stroke-linecap="round"/>
 
           <!-- Ombelico -->
-          <ellipse cx="230" cy="410" rx="5" ry="6" fill="#3a5c2a" opacity="0.7"/>
+          <ellipse cx="252" cy="400" rx="4" ry="5" fill="#2c4d1b" opacity="0.75"/>
 
-          <!-- Peli sul petto -->
-          <path d="M 220 335 Q 226 330 232 335" stroke="#1f3312" stroke-width="1.2" fill="none" opacity="0.55"/>
-          <path d="M 232 337 Q 238 332 244 337" stroke="#1f3312" stroke-width="1.2" fill="none" opacity="0.55"/>
+          <!-- Peli sparsi sul petto -->
+          <path d="M 240 250 Q 244 246 248 250" stroke="#1f3410" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <path d="M 262 250 Q 266 246 270 250" stroke="#1f3410" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <path d="M 250 285 Q 255 280 260 285" stroke="#1f3410" stroke-width="1.2" fill="none" opacity="0.55"/>
 
-          <!-- Cintura frontale -->
-          <path d="M 152 448 Q 230 468 308 448 Q 318 470 306 490 Q 230 505 154 490 Z"
-                fill="#5d4037"/>
-          <rect x="222" y="448" width="16" height="55" fill="#3e2723" rx="3"/>
-          <circle cx="230" cy="472" r="5" fill="#a1887f"/>
-          <circle cx="230" cy="472" r="2" fill="#3e2723"/>
+          <!-- Vena corruzione sul petto destro (verso la spalla) -->
+          <path d="M 330 250 Q 315 275 320 305 Q 325 330 315 355"
+                fill="none" stroke="#7a3fb0" stroke-width="2" opacity="0.7" stroke-linecap="round" filter="url(#purpleGlow)"/>
+          <path d="M 322 270 Q 330 285 322 300"
+                fill="none" stroke="#7a3fb0" stroke-width="1.4" opacity="0.6" stroke-linecap="round"/>
 
-          <!-- ================= PUGNO SINISTRO ================= -->
-          <g filter="url(#softShadow)">
-            <ellipse cx="104" cy="440" rx="24" ry="26" fill="#5a8a44"/>
-            <!-- Dita della mano (4 archi) -->
-            <path d="M 86 428 Q 104 424 122 430" stroke="#2a4419" stroke-width="1.6" fill="none" opacity="0.85"/>
-            <path d="M 86 438 Q 104 434 122 440" stroke="#2a4419" stroke-width="1.6" fill="none" opacity="0.85"/>
-            <path d="M 86 448 Q 104 444 122 450" stroke="#2a4419" stroke-width="1.6" fill="none" opacity="0.85"/>
-            <path d="M 88 456 Q 104 453 120 459" stroke="#2a4419" stroke-width="1.6" fill="none" opacity="0.85"/>
-            <!-- Nocche -->
-            <circle cx="96" cy="428" r="2" fill="#3d6629"/>
-            <circle cx="104" cy="426" r="2" fill="#3d6629"/>
-            <circle cx="113" cy="428" r="2" fill="#3d6629"/>
-            <!-- Pollice piegato -->
-            <path d="M 92 458 Q 88 445 96 434 Q 100 436 100 444 Q 100 452 108 456 Z"
-                  fill="#6b9e54"/>
+          <!-- ===================== BRACCIO ANTERIORE (SINISTRO, libero) ===================== -->
+          <g>
+            <!-- Spalla sinistra -->
+            <ellipse cx="185" cy="245" rx="30" ry="38" fill="url(#skin)"/>
+            <!-- Bicipite + gomito + avambraccio -->
+            <path d="M 172 250 Q 148 300 155 350 Q 158 380 172 400 L 202 400 Q 195 375 195 345 Q 195 300 200 265 Z"
+                  fill="url(#skin)" stroke="#1f3410" stroke-width="1.5" stroke-linejoin="round"/>
+            <!-- Ombra sotto il bicipite -->
+            <path d="M 172 260 Q 165 295 170 335 Q 175 355 180 370 Q 172 350 175 310 Q 178 280 185 262 Z"
+                  fill="#2c4d1b" opacity="0.4"/>
           </g>
 
-          <!-- ================= TESTA ================= -->
+          <!-- ===================== MANO SINISTRA (pugno aperto con dita) ===================== -->
+          <g filter="url(#depth)">
+            <!-- Palmo/pugno chiuso -->
+            <path d="M 155 405 Q 165 392 185 392 Q 200 394 205 408 Q 205 425 190 432 Q 170 434 158 428 Q 150 420 155 405 Z"
+                  fill="#4a7c32" stroke="#2c4d1b" stroke-width="1.2"/>
+            <!-- Dita piegate sul davanti (4 righe) -->
+            <path d="M 162 400 Q 180 397 200 401" stroke="#1f3410" stroke-width="1.6" fill="none" opacity="0.8"/>
+            <path d="M 160 409 Q 180 406 202 410" stroke="#1f3410" stroke-width="1.6" fill="none" opacity="0.8"/>
+            <path d="M 160 418 Q 180 415 202 419" stroke="#1f3410" stroke-width="1.6" fill="none" opacity="0.8"/>
+            <path d="M 162 427 Q 180 424 200 428" stroke="#1f3410" stroke-width="1.4" fill="none" opacity="0.7"/>
+            <!-- Nocche -->
+            <circle cx="172" cy="398" r="2" fill="#3c6b28"/>
+            <circle cx="183" cy="397" r="2" fill="#3c6b28"/>
+            <circle cx="194" cy="399" r="2" fill="#3c6b28"/>
+            <!-- Pollice piegato sul lato -->
+            <path d="M 160 428 Q 152 418 158 404 Q 164 400 168 406 Q 164 414 168 424 Z"
+                  fill="#5c9040" stroke="#2c4d1b" stroke-width="1"/>
+            <!-- Unghie -->
+            <ellipse cx="176" cy="397" rx="2" ry="2.8" fill="#1a1208"/>
+            <ellipse cx="186" cy="396" rx="2" ry="2.8" fill="#1a1208"/>
+            <ellipse cx="196" cy="398" rx="2" ry="2.8" fill="#1a1208"/>
+          </g>
+
+          <!-- ===================== COLLO ===================== -->
+          <path d="M 225 200 Q 245 195 285 200 L 285 220 Q 255 225 225 220 Z"
+                fill="#2c4d1b"/>
+
+          <!-- ===================== TESTA ===================== -->
           <g class="head">
 
-            <!-- Orecchio dietro (destra) -->
+            <!-- Orecchio destro (dietro la testa) -->
             <g class="ear-right">
-              <path d="M 285 118 Q 380 78 400 122 Q 372 155 300 165 Z"
-                    fill="url(#skinHead)" filter="url(#softShadow)"/>
-              <path d="M 296 124 Q 358 100 380 126 Q 358 145 312 152 Z"
-                    fill="#b8708a" opacity="0.65"/>
-              <!-- Vena corruzione orecchio -->
-              <path d="M 320 120 Q 335 115 350 122" stroke="#6a3fa0" stroke-width="1" fill="none" opacity="0.55"/>
+              <!-- Forma a punta rivolta verso l'alto-destra -->
+              <path d="M 310 130 Q 355 92 385 78 Q 400 90 388 122 Q 372 155 340 168 Z"
+                    fill="url(#skinFace)" stroke="#1f3410" stroke-width="1.5"/>
+              <!-- Interno carnoso -->
+              <path d="M 325 135 Q 358 108 378 100 Q 380 118 372 138 Q 358 152 338 158 Z"
+                    fill="#a86a72" opacity="0.6"/>
+              <!-- Vena corruzione -->
+              <path d="M 330 148 Q 348 138 362 118" fill="none" stroke="#7a3fb0" stroke-width="1.4" opacity="0.7" stroke-linecap="round"/>
             </g>
 
-            <!-- Forma testa -->
-            <ellipse cx="230" cy="145" rx="95" ry="105" fill="url(#skinHead)" filter="url(#softShadow)"/>
+            <!-- Cranio (non un cerchio: fronte bassa, mento sporgente) -->
+            <path d="M 175 155
+                     Q 165 105 195 75
+                     Q 230 55 270 60
+                     Q 305 68 322 105
+                     Q 332 135 328 165
+                     Q 325 195 310 215
+                     Q 285 235 250 235
+                     Q 215 235 190 215
+                     Q 178 195 175 155 Z"
+                  fill="url(#skinFace)" filter="url(#depth)"/>
 
-            <!-- Rughe fronte -->
-            <path d="M 165 70 Q 230 60 295 70" fill="none" stroke="#3a5c2a" stroke-width="2.6" opacity="0.5" stroke-linecap="round"/>
-            <path d="M 175 84 Q 230 74 285 84" fill="none" stroke="#3a5c2a" stroke-width="2.2" opacity="0.38" stroke-linecap="round"/>
+            <!-- Rughe fronte (2 archi) -->
+            <path d="M 205 95 Q 245 82 285 95" fill="none" stroke="#3f6b28" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+            <path d="M 212 108 Q 245 98 278 108" fill="none" stroke="#3f6b28" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
 
-            <!-- Guance -->
-            <ellipse cx="155" cy="190" rx="20" ry="26" fill="#3a5c2a" opacity="0.28"/>
-            <ellipse cx="305" cy="190" rx="20" ry="26" fill="#3a5c2a" opacity="0.28"/>
+            <!-- Guancia destra in ombra -->
+            <ellipse cx="305" cy="180" rx="18" ry="26" fill="#2c4d1b" opacity="0.32"/>
 
-            <!-- Orecchio davanti (sinistra) -->
+            <!-- Orecchio sinistro (davanti, in primo piano) -->
             <g class="ear-left">
-              <path d="M 155 118 Q 60 78 40 122 Q 68 155 140 165 Z"
-                    fill="url(#skinHead)" filter="url(#softShadow)"/>
-              <path d="M 144 124 Q 82 100 60 126 Q 82 145 128 152 Z"
-                    fill="#b8708a" opacity="0.65"/>
-              <path d="M 100 116 Q 85 111 70 118" stroke="#6a3fa0" stroke-width="1" fill="none" opacity="0.55"/>
+              <path d="M 200 130 Q 155 92 125 78 Q 110 90 122 122 Q 138 155 170 168 Z"
+                    fill="url(#skinFace)" stroke="#1f3410" stroke-width="1.5"/>
+              <path d="M 185 135 Q 152 108 132 100 Q 130 118 138 138 Q 152 152 172 158 Z"
+                    fill="#a86a72" opacity="0.6"/>
             </g>
 
-            <!-- ============ OCCHI ============ -->
-            <!-- Occhio sinistro -->
-            <g class="eye">
-              <ellipse cx="190" cy="145" rx="26" ry="24" fill="#f5ecd8"/>
-              <!-- Iride (senza alone nero esterno) -->
-              <ellipse cx="192" cy="147" rx="15" ry="18" fill="url(#iris)"/>
-              <!-- Bagliore interno sottile -->
-              <ellipse cx="192" cy="147" rx="12" ry="15" fill="#c87aff" opacity="0.35"
-                       class="iris-glow" filter="url(#purpleGlow)"/>
-              <!-- Pupilla verticale -->
-              <ellipse cx="192" cy="147" rx="4" ry="14" fill="#0c0410"/>
+            <!-- Naso bitorzoluto: NON triangolo. Forma con narici larghe -->
+            <path d="M 245 145
+                     Q 258 145 262 165
+                     Q 264 185 258 202
+                     Q 250 212 240 202
+                     Q 232 185 234 165
+                     Q 238 145 245 145 Z"
+                  fill="#5c9040" stroke="#2c4d1b" stroke-width="1"/>
+            <!-- Narici -->
+            <ellipse cx="242" cy="198" rx="5" ry="3.5" fill="#1a1208"/>
+            <ellipse cx="256" cy="198" rx="5" ry="3.5" fill="#1a1208"/>
+            <!-- Verruca sul naso -->
+            <circle cx="250" cy="158" r="3" fill="#5c9040" stroke="#2c4d1b" stroke-width="0.8"/>
+
+            <!-- Anello al naso (dettaglio) -->
+            <circle cx="250" cy="207" r="5" fill="none" stroke="#d4c28a" stroke-width="1.8"/>
+            <circle cx="250" cy="207" r="5" fill="none" stroke="#8c7640" stroke-width="0.8"/>
+
+            <!-- ========== OCCHIO SINISTRO (sano, giallo-arancio) ========== -->
+            <g>
+              <!-- Incavo occhio -->
+              <ellipse cx="218" cy="150" rx="22" ry="17" fill="#1f3410" opacity="0.45"/>
+              <!-- Sclera -->
+              <ellipse cx="218" cy="150" rx="17" ry="14" fill="#f0e6cf"/>
+              <!-- Iride gialla -->
+              <ellipse cx="219" cy="152" rx="10" ry="12" fill="url(#irisSane)" class="eye-sane"/>
+              <!-- Pupilla verticale (goblin) -->
+              <ellipse cx="219" cy="152" rx="3" ry="10" fill="#100502"/>
               <!-- Highlight -->
-              <circle cx="186" cy="136" r="3.8" fill="#fff" opacity="0.95"/>
-              <circle cx="196" cy="158" r="1.8" fill="#fff" opacity="0.5"/>
-            </g>
-            <!-- Occhio destro (leggermente più grande, corrotto) -->
-            <g class="eye">
-              <ellipse cx="272" cy="145" rx="27" ry="25" fill="#f5ecd8"/>
-              <ellipse cx="272" cy="147" rx="16" ry="19" fill="url(#iris)"/>
-              <ellipse cx="272" cy="147" rx="13" ry="16" fill="#c87aff" opacity="0.35"
-                       class="iris-glow" filter="url(#purpleGlow)"/>
-              <ellipse cx="272" cy="147" rx="4.2" ry="15" fill="#0c0410"/>
-              <circle cx="266" cy="135" r="4" fill="#fff" opacity="0.95"/>
-              <circle cx="277" cy="159" r="2" fill="#fff" opacity="0.5"/>
+              <circle cx="214" cy="144" r="3" fill="#fff" opacity="0.9"/>
+              <!-- Palpebra superiore (abbassata per fare lo sguardo corrucciato) -->
+              <path d="M 200 143 Q 218 138 236 143" fill="none" stroke="#2c4d1b" stroke-width="3" stroke-linecap="round"/>
             </g>
 
-            <!-- Sopracciglia aggressive (sopra gli occhi) -->
-            <path d="M 160 108 Q 195 96 225 118" stroke="#1f3312" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <path d="M 300 108 Q 265 96 235 118" stroke="#1f3312" stroke-width="8" stroke-linecap="round" fill="none"/>
-
-            <!-- Sbuffi viola che salgono dagli occhi -->
-            <ellipse class="wisp-1" cx="188" cy="112" rx="10" ry="6" fill="#c266ff" opacity="0"
-                     filter="url(#purpleGlow)"/>
-            <ellipse class="wisp-2" cx="276" cy="110" rx="11" ry="6" fill="#c266ff" opacity="0"
-                     filter="url(#purpleGlow)"/>
-
-            <!-- Naso -->
-            <path d="M 230 165 Q 250 188 240 216 Q 230 226 220 216 Q 210 188 230 165 Z"
-                  fill="#5a8a44"/>
-            <ellipse cx="230" cy="213" rx="13" ry="6" fill="#3a5c2a"/>
-            <ellipse cx="224" cy="216" rx="3.2" ry="2.8" fill="#140804"/>
-            <ellipse cx="236" cy="216" rx="3.2" ry="2.8" fill="#140804"/>
-            <!-- Anello naso -->
-            <circle cx="230" cy="222" r="5" fill="none" stroke="#d4c28a" stroke-width="2"/>
-            <circle cx="230" cy="222" r="5" fill="none" stroke="#8c7640" stroke-width="0.8"/>
-
-            <!-- Bocca con zanne -->
-            <path d="M 185 240 Q 230 268 275 240 Q 230 252 185 240 Z" fill="#2a0f18"/>
-            <!-- Zanne superiori -->
-            <path d="M 193 240 L 188 262 L 208 248 Z" fill="#f5f5dc"/>
-            <path d="M 267 240 L 272 262 L 252 248 Z" fill="#f5f5dc"/>
-            <!-- Zanne inferiori -->
-            <path d="M 212 248 L 215 236 L 222 248 Z" fill="#f5f5dc" opacity="0.95"/>
-            <path d="M 248 248 L 245 236 L 238 248 Z" fill="#f5f5dc" opacity="0.95"/>
-
-            <!-- Verruche -->
-            <circle cx="160" cy="178" r="5" fill="#6b9e54"/>
-            <circle cx="158" cy="176" r="2" fill="#3a5c2a" opacity="0.6"/>
-            <circle cx="302" cy="192" r="6" fill="#6b9e54"/>
-            <circle cx="300" cy="190" r="2.5" fill="#3a5c2a" opacity="0.6"/>
-            <circle cx="258" cy="100" r="4" fill="#6b9e54"/>
-            <circle cx="198" cy="102" r="3.5" fill="#6b9e54"/>
-
-            <!-- Cicatrice -->
-            <path d="M 278 118 L 298 148" stroke="#1f3312" stroke-width="2.4" fill="none" opacity="0.9" stroke-linecap="round"/>
-            <path d="M 282 128 L 292 126" stroke="#1f3312" stroke-width="1.8" fill="none" opacity="0.9" stroke-linecap="round"/>
-            <path d="M 285 138 L 296 136" stroke="#1f3312" stroke-width="1.8" fill="none" opacity="0.9" stroke-linecap="round"/>
-
-            <!-- Vene corruzione sulla fronte -->
-            <path d="M 175 80 Q 190 70 205 80" fill="none" stroke="#6a3fa0" stroke-width="1.3" opacity="0.6" stroke-linecap="round"/>
-            <path d="M 255 78 Q 270 70 285 78" fill="none" stroke="#6a3fa0" stroke-width="1.3" opacity="0.6" stroke-linecap="round"/>
-            <path d="M 152 210 Q 165 222 155 236" fill="none" stroke="#6a3fa0" stroke-width="1.1" opacity="0.5" stroke-linecap="round"/>
-          </g>
-
-          <!-- ================= MAZZA (a destra, inclinata verso l'esterno) ================= -->
-          <g transform="rotate(22 350 400)">
-            <!-- Manico in legno -->
-            <rect x="338" y="240" width="24" height="200" rx="6"
-                  fill="url(#wood)" filter="url(#softShadow)"/>
-            <!-- Venature legno -->
-            <path d="M 344 250 L 344 430" stroke="#0f0603" stroke-width="1" opacity="0.4"/>
-            <path d="M 356 250 L 356 430" stroke="#0f0603" stroke-width="1" opacity="0.4"/>
-            <!-- Legature cuoio -->
-            <rect x="335" y="395" width="30" height="14" rx="3" fill="#2e1a12"/>
-            <rect x="335" y="260" width="30" height="14" rx="3" fill="#2e1a12"/>
-            <rect x="335" y="399" width="30" height="6" rx="2" fill="#6d5a3a"/>
-            <rect x="335" y="264" width="30" height="6" rx="2" fill="#6d5a3a"/>
-
-            <!-- Testa mazza -->
-            <ellipse cx="350" cy="215" rx="56" ry="52" fill="url(#clubHead)" filter="url(#softShadow)"/>
-            <ellipse cx="332" cy="190" rx="24" ry="16" fill="#b8a898" opacity="0.5"/>
-            <!-- Crepe -->
-            <path d="M 330 188 L 344 214 L 336 240" stroke="#0f0503" stroke-width="1.8" fill="none" opacity="0.85"/>
-            <path d="M 366 195 L 378 220" stroke="#0f0503" stroke-width="1.4" fill="none" opacity="0.75"/>
-
-            <!-- Spine (8) -->
-            <g fill="#0f0503" stroke="#3e2a20" stroke-width="1">
-              <path d="M 350 160 L 356 138 L 344 138 Z"/>
-              <path d="M 350 270 L 356 292 L 344 292 Z"/>
-              <path d="M 294 215 L 272 208 L 272 222 Z"/>
-              <path d="M 406 215 L 428 208 L 428 222 Z"/>
-              <path d="M 314 180 L 294 162 L 298 174 Z"/>
-              <path d="M 386 180 L 406 162 L 402 174 Z"/>
-              <path d="M 314 250 L 294 268 L 298 256 Z"/>
-              <path d="M 386 250 L 406 268 L 402 256 Z"/>
+            <!-- ========== OCCHIO DESTRO (corrotto, viola) ========== -->
+            <g>
+              <!-- Incavo occhio più profondo, in ombra -->
+              <ellipse cx="285" cy="150" rx="24" ry="19" fill="#150610" opacity="0.55"/>
+              <!-- Sclera leggermente violacea -->
+              <ellipse cx="285" cy="150" rx="19" ry="15" fill="#e8d8ee"/>
+              <!-- Iride viola con glow -->
+              <ellipse cx="285" cy="152" rx="12" ry="14" fill="url(#irisCorrupt)" class="iris-corrupt" filter="url(#purpleGlow)"/>
+              <!-- Pupilla più grande, sfaldata -->
+              <ellipse cx="285" cy="152" rx="4.5" ry="11" fill="#0a0210"/>
+              <!-- Riflesso ridotto (occhio corrotto, più "morto") -->
+              <circle cx="280" cy="144" r="2.5" fill="#e0c0ff" opacity="0.7"/>
+              <!-- Palpebra superiore corrucciata -->
+              <path d="M 265 142 Q 285 135 305 144" fill="none" stroke="#2c4d1b" stroke-width="3.5" stroke-linecap="round"/>
             </g>
-          </g>
 
-          <!-- ================= MANO DESTRA CHE STRINGE LA MAZZA ================= -->
-          <g filter="url(#softShadow)">
-            <!-- Palmo (dietro il manico) -->
-            <ellipse cx="350" cy="405" rx="22" ry="24" fill="#5a8a44"/>
+            <!-- Sopracciglia: non archi, sono 2 tratti spessi inclinati in dentro -->
+            <path d="M 195 128 Q 215 118 238 130"
+                  fill="none" stroke="#1f3410" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 305 130 Q 285 118 262 130"
+                  fill="none" stroke="#1f3410" stroke-width="6" stroke-linecap="round"/>
 
-            <!-- 4 dita che avvolgono il manico -->
-            <path d="M 334 392 Q 350 388 366 394 L 366 400 Q 350 396 334 400 Z" fill="#6b9e54"/>
-            <path d="M 334 402 Q 350 398 366 404 L 366 410 Q 350 406 334 410 Z" fill="#6b9e54"/>
-            <path d="M 334 412 Q 350 408 366 414 L 366 420 Q 350 416 334 420 Z" fill="#6b9e54"/>
-            <path d="M 336 422 Q 350 418 364 424 L 364 430 Q 350 426 336 430 Z" fill="#6b9e54"/>
-            <!-- Separazioni tra le dita -->
-            <path d="M 336 399 Q 350 397 364 401" stroke="#2a4419" stroke-width="1.2" fill="none" opacity="0.75"/>
-            <path d="M 336 409 Q 350 407 364 411" stroke="#2a4419" stroke-width="1.2" fill="none" opacity="0.75"/>
-            <path d="M 336 419 Q 350 417 364 421" stroke="#2a4419" stroke-width="1.2" fill="none" opacity="0.75"/>
-            <!-- Unghie sulle dita -->
-            <ellipse cx="366" cy="397" rx="3" ry="4" fill="#d4c28a"/>
-            <ellipse cx="366" cy="407" rx="3" ry="4" fill="#d4c28a"/>
-            <ellipse cx="366" cy="417" rx="3" ry="4" fill="#d4c28a"/>
-            <ellipse cx="364" cy="427" rx="2.5" ry="3.5" fill="#d4c28a"/>
+            <!-- Sbuffi viola che salgono dall'occhio corrotto -->
+            <ellipse class="wisp-1" cx="285" cy="115" rx="10" ry="6" fill="#c266ff" opacity="0" filter="url(#purpleGlow)"/>
+            <ellipse class="wisp-2" cx="295" cy="105" rx="8" ry="5" fill="#c266ff" opacity="0" filter="url(#purpleGlow)"/>
 
-            <!-- Pollice sopra il manico -->
-            <path d="M 340 384 Q 330 400 340 418 Q 348 420 352 414 Q 344 400 350 386 Z"
-                  fill="#7cb662"/>
-            <path d="M 344 392 L 344 408" stroke="#2a4419" stroke-width="1" fill="none" opacity="0.6"/>
-            <ellipse cx="342" cy="386" rx="4" ry="5" fill="#d4c28a" transform="rotate(-30 342 386)"/>
+            <!-- ========== BOCCA con zanne ========== -->
+            <!-- Bocca aperta con ringhio -->
+            <path d="M 205 220 Q 250 240 295 220 Q 290 235 270 245 Q 250 250 230 245 Q 210 235 205 220 Z"
+                  fill="#1a0a12" stroke="#0e0508" stroke-width="1.2"/>
+            <!-- Gengive superiori -->
+            <path d="M 208 220 Q 250 232 292 220 L 288 224 Q 250 236 212 224 Z" fill="#6b2a30" opacity="0.8"/>
+            <!-- Zanne superiori (2 grandi, 1 più rotta) -->
+            <path d="M 218 220 L 214 248 L 230 226 Z" fill="#f0e8c8" stroke="#a89878" stroke-width="0.6"/>
+            <path d="M 280 220 L 284 246 L 268 226 Z" fill="#f0e8c8" stroke="#a89878" stroke-width="0.6"/>
+            <!-- Zanna rotta (dettaglio: taglio diagonale) -->
+            <path d="M 280 220 L 280 232 L 284 246 L 268 226 Z" fill="#f0e8c8"/>
+            <path d="M 268 226 L 284 246" stroke="#8a7a58" stroke-width="1.4" opacity="0.7"/>
+            <!-- Zanne inferiori (piccole) -->
+            <path d="M 232 244 L 234 230 L 240 242 Z" fill="#e8dcc0"/>
+            <path d="M 268 244 L 266 230 L 260 242 Z" fill="#e8dcc0"/>
+            <!-- Lingua -->
+            <ellipse cx="250" cy="240" rx="10" ry="4" fill="#a83a48" opacity="0.85"/>
+
+            <!-- Cicatrice diagonale sulla guancia destra -->
+            <path d="M 305 155 Q 312 175 305 195"
+                  fill="none" stroke="#1a3410" stroke-width="2" opacity="0.85" stroke-linecap="round"/>
+            <path d="M 308 162 L 318 160" fill="none" stroke="#1a3410" stroke-width="1.6" opacity="0.85" stroke-linecap="round"/>
+            <path d="M 310 172 L 320 170" fill="none" stroke="#1a3410" stroke-width="1.6" opacity="0.85" stroke-linecap="round"/>
+            <path d="M 308 182 L 318 180" fill="none" stroke="#1a3410" stroke-width="1.6" opacity="0.85" stroke-linecap="round"/>
+
+            <!-- Verruche sparse -->
+            <circle cx="195" cy="185" r="4" fill="#5c9040" stroke="#3f6b28" stroke-width="0.8"/>
+            <circle cx="196" cy="184" r="1.5" fill="#2c4d1b" opacity="0.7"/>
+            <circle cx="315" cy="205" r="5" fill="#5c9040" stroke="#3f6b28" stroke-width="0.8"/>
+            <circle cx="316" cy="204" r="2" fill="#2c4d1b" opacity="0.7"/>
+
+            <!-- Vene corruzione sulla fronte (dal lato destro verso sinistra) -->
+            <path d="M 320 100 Q 305 82 285 78 Q 265 75 250 82"
+                  fill="none" stroke="#7a3fb0" stroke-width="2" opacity="0.75" stroke-linecap="round" filter="url(#purpleGlow)"/>
+            <path d="M 305 92 Q 300 78 305 68"
+                  fill="none" stroke="#7a3fb0" stroke-width="1.4" opacity="0.6" stroke-linecap="round"/>
+            <path d="M 280 78 Q 278 65 285 58"
+                  fill="none" stroke="#7a3fb0" stroke-width="1.2" opacity="0.55" stroke-linecap="round"/>
+
+            <!-- Orecchino sul lobo destro (visibile dietro) -->
+            <circle cx="370" cy="148" r="4" fill="none" stroke="#d4c28a" stroke-width="1.6"/>
           </g>
 
         </g>
