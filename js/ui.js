@@ -105,9 +105,7 @@ function updateUIStats() {
     updatePlayableState();
 }
 
-// --- Adatta il font del titolo alla larghezza reale della carta ---
-// Usa un canvas per misurare la larghezza reale del testo (con il font corrente)
-// e riduce il font-size finché il titolo entra nello spazio disponibile.
+// --- Adatta il font dei titoli: calcola il font-size minimo che fa entrare TUTTI i titoli, e lo applica uniformemente ---
 function measureTextWidth(text, font) {
     if (!measureTextWidth._canvas) {
         measureTextWidth._canvas = document.createElement('canvas');
@@ -119,53 +117,70 @@ function measureTextWidth(text, font) {
 }
 
 function fitCardTitles() {
-    const cards = document.querySelectorAll('.hand-container .card, .deck-grid .card');
-    cards.forEach(cardEl => {
-        const span = cardEl.querySelector('.card-title');
-        const header = span && span.parentElement;
-        if (!span || !header) return;
+    // Prendo sia le carte in mano sia quelle nella modale del mazzo (se aperta)
+    const containers = [
+        document.querySelector('.hand-container'),
+        document.querySelector('.deck-grid')
+    ].filter(Boolean);
 
-        // Spazio disponibile nell'header (larghezza meno padding)
-        const hStyle = getComputedStyle(header);
-        const padL = parseFloat(hStyle.paddingLeft) || 0;
-        const padR = parseFloat(hStyle.paddingRight) || 0;
-        const availW = header.clientWidth - padL - padR;
-        if (availW <= 0) return;
+    containers.forEach(container => {
+        const cards = container.querySelectorAll('.card');
+        if (cards.length === 0) return;
 
-        // Reset dello stile precedente
-        span.style.fontSize = '';
-        span.style.letterSpacing = '';
+        // Reset stili precedenti
+        cards.forEach(cardEl => {
+            const span = cardEl.querySelector('.card-title');
+            if (span) {
+                span.style.fontSize = '';
+                span.style.letterSpacing = '';
+                span.style.transform = '';
+            }
+        });
 
-        // Font-size base da CSS (clamp), letto dal computed style
-        const sStyle = getComputedStyle(span);
-        let fontSize = parseFloat(sStyle.fontSize) || 12;
-        const fontFamily = sStyle.fontFamily;
-        const fontWeight = sStyle.fontWeight;
-        const text = span.textContent;
+        // Misura, per ogni titolo, il font-size minimo che gli serve per entrare
+        let minNeeded = Infinity;
+        let fontFamily = 'Montserrat';
+        let fontWeight = '700';
 
-        // Riduce il font-size a passi di 0.5px finché il testo entra, con minimo 7px
-        let attempts = 0;
-        while (attempts < 30) {
-            const font = `${fontWeight} ${fontSize}px ${fontFamily}`;
-            const w = measureTextWidth(text, font);
-            if (w <= availW || fontSize <= 7) break;
-            fontSize -= 0.5;
-            attempts++;
-        }
+        cards.forEach(cardEl => {
+            const span = cardEl.querySelector('.card-title');
+            const header = span && span.parentElement;
+            if (!span || !header) return;
 
-        // Se dopo aver ridotto il font serve ancora restringere, applica scaleX
-        const finalFont = `${fontWeight} ${fontSize}px ${fontFamily}`;
-        const finalW = measureTextWidth(text, finalFont);
-        span.style.fontSize = fontSize + 'px';
-        span.style.letterSpacing = '-0.2px';
+            const hStyle = getComputedStyle(header);
+            const padL = parseFloat(hStyle.paddingLeft) || 0;
+            const padR = parseFloat(hStyle.paddingRight) || 0;
+            const availW = header.clientWidth - padL - padR;
+            if (availW <= 0) return;
 
-        if (finalW > availW && availW > 0) {
-            const scale = availW / finalW;
-            span.style.transform = `scaleX(${scale})`;
-            span.style.transformOrigin = 'left center';
-        } else {
-            span.style.transform = '';
-        }
+            const sStyle = getComputedStyle(span);
+            fontFamily = sStyle.fontFamily;
+            fontWeight = sStyle.fontWeight;
+
+            // Provo font-size da 14 in giù, a step di 0.5, per trovare il massimo che entra
+            const text = span.textContent;
+            let size = 14;
+            while (size > 6) {
+                const w = measureTextWidth(text, `${fontWeight} ${size}px ${fontFamily}`);
+                if (w <= availW) break;
+                size -= 0.5;
+            }
+            if (size < minNeeded) minNeeded = size;
+        });
+
+        if (!isFinite(minNeeded)) return;
+        // Non scendo sotto 7px, altrimenti diventa illeggibile
+        const finalSize = Math.max(7, minNeeded);
+
+        // Applico la stessa dimensione a TUTTI i titoli del container
+        cards.forEach(cardEl => {
+            const span = cardEl.querySelector('.card-title');
+            if (span) {
+                span.style.fontSize = finalSize + 'px';
+                span.style.letterSpacing = '-0.2px';
+                span.style.transform = '';
+            }
+        });
     });
 }
 
@@ -236,7 +251,6 @@ function renderHand() {
     });
     setTimeout(() => els.forEach(el => { el.style.transitionDelay = ''; }), 450 + els.length * 70);
 
-    // Adatta i titoli dopo che il layout è stato calcolato
     requestAnimationFrame(() => fitCardTitles());
 
     handContainer.addEventListener('pointerdown', onHandPointerDown);
