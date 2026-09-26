@@ -316,22 +316,14 @@ body {
 }
 .hand-container .card.no-hover { pointer-events: none !important; }
 
-.hand-container .card:hover:not(.is-dragging):not(.no-hover) {
+/* IMPORTANTE: l'effetto hover non usa più :hover CSS, ma la classe .hovered gestita via JS.
+   Così l'hitbox rimane fissa alla posizione a riposo della carta e non si crea il loop. */
+.hand-container .card.hovered:not(.is-dragging):not(.no-hover) {
     transform: translateX(-50%) translate(var(--tx, 0px), calc(var(--ty, 0px) - 50px)) scale(1.1) rotate(0deg);
     box-shadow: 0 22px 45px rgba(0,0,0,0.65), 0 5px 15px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.95);
     z-index: 100;
 }
-.hand-container .card:hover::after { opacity: 1; }
-
-@media (hover: none) {
-    .hand-container .card:hover:not(.is-dragging):not(.no-hover) {
-        transform: translateX(-50%) translate(var(--tx, 0px), var(--ty, 0px)) scale(1) rotate(var(--rot, 0deg));
-        box-shadow: 0 12px 28px rgba(0,0,0,0.45), 0 3px 8px rgba(0,0,0,0.2),
-                    inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 4px rgba(0,0,0,0.08);
-        z-index: 1;
-    }
-    .hand-container .card:hover::after { opacity: 0; }
-}
+.hand-container .card.hovered::after { opacity: 1; }
 
 .card-header {
     display: flex;
@@ -386,7 +378,6 @@ body {
     word-break: break-word;
 }
 
-/* Parole chiave: cliccabili per mostrare il tooltip */
 .kw {
     cursor: pointer;
     font-weight: 700;
@@ -400,7 +391,6 @@ body {
     border-bottom-color: #d35400;
 }
 
-/* Tooltip globale */
 .tooltip-popup {
     position: fixed;
     left: -9999px;
@@ -423,9 +413,7 @@ body {
     z-index: 9999;
     text-align: left;
 }
-.tooltip-popup.visible {
-    opacity: 1;
-}
+.tooltip-popup.visible { opacity: 1; }
 
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -471,22 +459,22 @@ body {
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
 }
 
-/* Carte non giocabili (mana insufficiente) */
 .hand-container .card.unplayable {
     filter: grayscale(0.75) brightness(0.72);
     opacity: 0.8;
 }
-.hand-container .card.unplayable:hover:not(.is-dragging):not(.no-hover) {
+.hand-container .card.unplayable:hover:not(.is-dragging):not(.no-hover),
+.hand-container .card.unplayable.hovered:not(.is-dragging):not(.no-hover) {
     transform: translateX(-50%) translate(var(--tx, 0px), var(--ty, 0px)) scale(1) rotate(var(--rot, 0deg));
     box-shadow: 0 12px 28px rgba(0,0,0,0.45), 0 3px 8px rgba(0,0,0,0.2);
     z-index: 1;
     cursor: not-allowed;
 }
-.hand-container .card.unplayable:hover::after {
+.hand-container .card.unplayable:hover::after,
+.hand-container .card.unplayable.hovered::after {
     opacity: 0;
 }
 
-/* Grassetto nelle descrizioni */
 .card-description b,
 .card-description strong {
     font-weight: 700;
