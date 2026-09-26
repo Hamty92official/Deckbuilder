@@ -23,8 +23,13 @@ function updatePlayableState() {
     });
 }
 
-// Aggiorna i valori di danno nelle descrizioni delle carte d'attacco.
-// Se c'è un modificatore attivo (Forza o Debolezza), il numero appare in verde e mostra un tooltip col calcolo.
+// ============================================================
+//  AGGIORNAMENTO DEI VALORI DI DANNO DINAMICI
+//  - Se il valore totale è MAGGIORE del base → verde (buff netto)
+//  - Se MINORE → rosa chiaro (debuff netto)
+//  - Se UGUALE → colore normale
+//  Il tooltip mostra il calcolo con buff in verde e debuff in rosa.
+// ============================================================
 function updateDamageDisplays() {
     handEls.forEach((el, i) => {
         const card = hand[i];
@@ -33,30 +38,44 @@ function updateDamageDisplays() {
         if (!span) return;
 
         const hits = getCardHits(card);
+        const baseTotal = card.value;
         const totalModified = applyPlayerDamageMods(card.value);
+
+        // Per le multi-colpo mostro il danno per colpo, per le singole il totale
+        const basePerHit = Math.floor(baseTotal / hits);
         const perHit = Math.floor(totalModified / hits);
-        const basePerHit = Math.floor(card.value / hits);
+        span.textContent = hits > 1 ? perHit : totalModified;
 
-        span.textContent = perHit;
+        // Stato: buff, debuff o normale? Confronto sul TOTALE, non sul per-colpo,
+        // altrimenti con l'arrotondamento un multi-colpo con +1 Forza sembrerebbe invariato.
+        span.classList.remove('modified-buff', 'modified-debuff');
+        if (totalModified > baseTotal) span.classList.add('modified-buff');
+        else if (totalModified < baseTotal) span.classList.add('modified-debuff');
 
-        const hasModifier = (playerStrength > 0 || playerWeakTurns > 0);
-        span.classList.toggle('modified', hasModifier);
+        // Tooltip del calcolo (solo se c'è un modificatore attivo)
+        if (playerStrength === 0 && playerWeakTurns === 0) {
+            span.dataset.tip = '';
+            return;
+        }
 
-        // Tooltip con il calcolo
         const lines = [];
         if (hits > 1) {
-            lines.push(`Base: ${basePerHit} per colpo (${card.value} totale)`);
+            lines.push(`<span class="tip-neutral">Base: ${basePerHit} per colpo (${baseTotal} totale)</span>`);
         } else {
-            lines.push(`Base: ${card.value}`);
+            lines.push(`<span class="tip-neutral">Base: ${baseTotal}</span>`);
         }
-        if (playerStrength > 0) lines.push(`+${playerStrength} da Forza 💪`);
-        if (playerWeakTurns > 0) lines.push(`−25% da Debolezza ⛓️‍💥`);
+        if (playerStrength > 0) {
+            lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
+        }
+        if (playerWeakTurns > 0) {
+            lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
+        }
         if (hits > 1) {
-            lines.push(`= ${perHit} per colpo (${totalModified} totale)`);
+            lines.push(`<span class="tip-total">= ${perHit} per colpo (${totalModified} totale)</span>`);
         } else {
-            lines.push(`= ${perHit}`);
+            lines.push(`<span class="tip-total">= ${totalModified}</span>`);
         }
-        span.dataset.tip = lines.join('\n');
+        span.dataset.tip = lines.join('<br>');
     });
 }
 
@@ -226,8 +245,6 @@ function fitCardTitles() {
 
 function buildCardElement(cardData, extraClass) {
     const fs = getUniformTitleSize();
-    // Trasformo il placeholder {DMG} in uno span aggiornabile. Il valore effettivo
-    // viene impostato dopo da updateDamageDisplays().
     const hits = getCardHits(cardData);
     const basePerHit = Math.floor(cardData.value / hits);
     const descHtml = cardData.desc.replace(
@@ -485,7 +502,7 @@ function showTooltip(kwEl, x, y) {
 
     _currentKwEl = kwEl;
     kwEl.classList.add('active');
-    tooltipPopup.innerHTML = tipText.replace(/\n/g, '<br>');
+    tooltipPopup.innerHTML = tipText;
 
     tooltipPopup.style.left = '-9999px';
     tooltipPopup.style.top = '0';
