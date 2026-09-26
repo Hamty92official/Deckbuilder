@@ -202,40 +202,68 @@ function buildCardElement(cardData, extraClass) {
 }
 
 // ============================================================
-//  HOVER DELLE CARTE — hitbox fissa (no loop impazzito)
+//  HOVER DELLE CARTE — hitbox che segue la rotazione vera
 // ============================================================
-// Le carte nel ventaglio si sollevano di 50px. Se usassimo :hover CSS,
-// quando il mouse è nella parte bassa della carta il sollevamento lo
-// farebbe "uscire" dall'hitbox → la carta scende → il mouse rientra → loop.
-// Soluzione: memorizziamo le hitbox A RIPOSO di ogni carta, e gestiamo
-// l'hover via JS. Così la zona che attiva l'hover non cambia mai.
+// Ogni carta è un rettangolo RUOTATO. Il rettangolo AABB che il browser
+// restituisce con getBoundingClientRect() è più grande della carta reale
+// (include gli angoli vuoti attorno). Questo causava hover attivati anche
+// quando il mouse era negli angoli "vuoti" vicini al ventaglio.
+//
+// Soluzione: salvo per ogni carta la posizione del bottom-center a riposo,
+// le dimensioni reali (w, h) e l'angolo di rotazione. Al mousemove verifico
+// matematicamente se il punto è dentro il rettangolo RUOTATO della carta.
 
 let handHitBoxes = [];
 
 function computeHandHitBoxes() {
+    const container = document.getElementById('hand');
+    if (!container || handEls.length === 0) {
+        handHitBoxes = [];
+        return;
+    }
+    const cRect = container.getBoundingClientRect();
+
     handHitBoxes = handEls.map(el => {
-        // Misuro la posizione della carta SENZA hover applicato
-        const hadHover = el.classList.contains('hovered');
-        if (hadHover) {
-            el.style.transition = 'none';
-            el.classList.remove('hovered');
-        }
-        const r = el.getBoundingClientRect();
-        if (hadHover) {
-            void el.offsetWidth;
-            el.classList.add('hovered');
-            requestAnimationFrame(() => { el.style.transition = ''; });
-        }
-        return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+        const tx = parseFloat(el.style.getPropertyValue('--tx')) || 0;
+        const ty = parseFloat(el.style.getPropertyValue('--ty')) || 0;
+        const rotDeg = parseFloat(el.style.getPropertyValue('--rot')) || 0;
+        const w = el.offsetWidth;
+        const h = el.offsetHeight;
+        return {
+            bx: cRect.left + cRect.width / 2 + tx,   // bottom-center x a riposo
+            by: cRect.bottom + ty,                   // bottom-center y a riposo
+            w, h,
+            rotRad: rotDeg * Math.PI / 180
+        };
     });
+}
+
+// Verifica se il punto (px, py) è dentro il rettangolo ruotato di una carta
+function pointInCard(px, py, box) {
+    const { bx, by, w, h, rotRad } = box;
+    const cos = Math.cos(rotRad);
+    const sin = Math.sin(rotRad);
+    // Centro del rettangolo ruotato (il centro ruota attorno al bottom-center)
+    const cx = bx + (h / 2) * sin;
+    const cy = by - (h / 2) * cos;
+    // Porta il punto nel sistema di riferimento del rettangolo (inverso della rotazione)
+    const dx = px - cx;
+    const dy = py - cy;
+    const rx =  dx * cos + dy * sin;
+    const ry = -dx * sin + dy * cos;
+    return Math.abs(rx) <= w / 2 && Math.abs(ry) <= h / 2;
 }
 
 function updateHandHover(mx, my) {
     if (activeCard) return; // durante il drag non alterare l'hover
+    if (handHitBoxes.length !== handEls.length) {
+        clearHandHover();
+        return;
+    }
     let hoveredIdx = -1;
-    for (let i = 0; i < handHitBoxes.length; i++) {
-        const b = handHitBoxes[i];
-        if (mx >= b.left && mx <= b.right && my >= b.top && my <= b.bottom) {
+    // Itero dall'ultimo al primo: le carte in primo piano (a destra) hanno priorità
+    for (let i = handEls.length - 1; i >= 0; i--) {
+        if (pointInCard(mx, my, handHitBoxes[i])) {
             hoveredIdx = i;
             break;
         }
