@@ -104,9 +104,12 @@ function updateUIStats() {
     updatePlayableState();
 }
 
-// --- Font uniforme per TUTTI i titoli ---
-// Calcola UNA VOLTA la dimensione che fa entrare il titolo più lungo del gioco,
-// poi la applica a tutte le carte (stessa dimensione ovunque).
+// ============================================================
+//  FONT UNIFORME PER TUTTI I TITOLI
+//  Calcolo una volta sola (con una "carta fantasma") il font-size
+//  che fa entrare il titolo più lungo del gioco, e lo cache.
+//  Poi lo applico inline a ogni titolo, così sono TUTTI identici.
+// ============================================================
 
 function measureTextWidth(text, font) {
     if (!measureTextWidth._canvas) {
@@ -118,11 +121,11 @@ function measureTextWidth(text, font) {
     return ctx.measureText(text).width;
 }
 
-// Trova il titolo con la larghezza maggiore a un font di riferimento
+// Trova il titolo con la larghezza maggiore nel database carte
 function findWidestTitle() {
     let widest = '';
     let maxW = 0;
-    const fontFamily = "'Montserrat', 'Segoe UI', sans-serif";
+    const fontFamily = "'Montserrat', 'Segoe UI', Tahoma, sans-serif";
     cardDatabase.forEach(c => {
         const w = measureTextWidth(c.title, `700 14px ${fontFamily}`);
         if (w > maxW) { maxW = w; widest = c.title; }
@@ -130,54 +133,74 @@ function findWidestTitle() {
     return widest;
 }
 
-const _widestTitle = findWidestTitle();
+let _uniformTitleSize = null;
 
-// Calcola il font-size che fa entrare il titolo più lungo nella larghezza disponibile dell'header
 function computeUniformTitleSize() {
-    const sampleCard = document.querySelector('.hand-container .card, .deck-grid .card');
-    if (!sampleCard) return null;
+    // Creo una "carta fantasma" per misurare la larghezza effettiva dell'header
+    const ghost = document.createElement('div');
+    ghost.className = 'card';
+    ghost.style.position = 'absolute';
+    ghost.style.left = '-9999px';
+    ghost.style.top = '0';
+    ghost.style.visibility = 'hidden';
+    ghost.style.pointerEvents = 'none';
+    ghost.style.width = 'clamp(108px, 30vw, 180px)';
+    ghost.style.height = 'clamp(156px, 43vw, 260px)';
+    ghost.innerHTML = '<div class="card-header"><span class="card-title"></span></div>';
+    document.body.appendChild(ghost);
 
-    const header = sampleCard.querySelector('.card-header');
-    if (!header) return null;
-
+    const header = ghost.querySelector('.card-header');
     const hStyle = getComputedStyle(header);
     const padL = parseFloat(hStyle.paddingLeft) || 0;
     const padR = parseFloat(hStyle.paddingRight) || 0;
     const availW = header.clientWidth - padL - padR;
+
+    document.body.removeChild(ghost);
+
     if (availW <= 0) return null;
 
-    const sStyle = getComputedStyle(sampleCard.querySelector('.card-title'));
-    const fontFamily = sStyle.fontFamily;
-    const fontWeight = sStyle.fontWeight;
+    const widest = findWidestTitle();
+    const fontFamily = "'Montserrat', 'Segoe UI', Tahoma, sans-serif";
+    const fontWeight = '700';
+    const letterSpacing = -0.3;
+    const spacingTotal = (widest.length - 1) * letterSpacing;
 
-    let size = 14;
+    let size = 16;
     while (size > 6) {
-        const w = measureTextWidth(_widestTitle, `${fontWeight} ${size}px ${fontFamily}`);
-        if (w <= availW) break;
+        const w = measureTextWidth(widest, `${fontWeight} ${size}px ${fontFamily}`);
+        if ((w + spacingTotal) <= availW) break;
         size -= 0.5;
     }
     return Math.max(7, size);
 }
 
-function fitCardTitles() {
-    const size = computeUniformTitleSize();
-    if (!size) return;
+function getUniformTitleSize() {
+    if (_uniformTitleSize === null) {
+        _uniformTitleSize = computeUniformTitleSize();
+        // Se non riusciamo a calcolare (DOM non pronto), ritorno un fallback
+        if (_uniformTitleSize === null) _uniformTitleSize = 11;
+    }
+    return _uniformTitleSize;
+}
 
-    // Applica a tutte le carte in mano e nella modale
+// Applica la dimensione uniforme a tutte le carte esistenti (al resize)
+function fitCardTitles() {
+    _uniformTitleSize = null; // invalido cache
+    const size = getUniformTitleSize();
     document.querySelectorAll('.hand-container .card-title, .deck-grid .card-title').forEach(span => {
         span.style.fontSize = size + 'px';
         span.style.letterSpacing = '-0.3px';
-        span.style.transform = '';
     });
 }
 
 function buildCardElement(cardData, extraClass) {
+    const fs = getUniformTitleSize();
     const cardElement = document.createElement('div');
     cardElement.className = extraClass ? `card ${extraClass}` : 'card';
     cardElement.innerHTML = `
         <div class="card-cost">${cardData.cost}</div>
         <div class="card-header">
-            <span class="card-title">${cardData.title}</span>
+            <span class="card-title" style="font-size: ${fs}px; letter-spacing: -0.3px;">${cardData.title}</span>
         </div>
         <div class="card-art">${cardData.art}</div>
         <div class="card-description">${cardData.desc}</div>
@@ -222,6 +245,10 @@ function renderHand() {
     handContainer.innerHTML = '';
     handEls = [];
 
+    // Calcolo il size una volta prima di creare le carte
+    _uniformTitleSize = null;
+    getUniformTitleSize();
+
     hand.forEach((cardData) => {
         const cardElement = buildCardElement(cardData, 'card-enter');
         handContainer.appendChild(cardElement);
@@ -237,8 +264,6 @@ function renderHand() {
         el.classList.remove('card-enter');
     });
     setTimeout(() => els.forEach(el => { el.style.transitionDelay = ''; }), 450 + els.length * 70);
-
-    requestAnimationFrame(() => fitCardTitles());
 
     handContainer.addEventListener('pointerdown', onHandPointerDown);
     updateUIStats();
@@ -273,7 +298,6 @@ function drawCards(n) {
     });
     setTimeout(() => newEls.forEach(el => { el.style.transitionDelay = ''; }), 450 + newEls.length * 70);
 
-    requestAnimationFrame(() => fitCardTitles());
     updateUIStats();
 }
 
@@ -296,8 +320,6 @@ function renderDeckModal() {
         return;
     }
     deck.forEach((cardData) => deckGrid.appendChild(buildCardElement(cardData)));
-
-    requestAnimationFrame(() => fitCardTitles());
 }
 
 function showBanner(text) {
@@ -333,10 +355,3 @@ const openEquipBtn = document.getElementById('open-equip-btn');
 const openMapBtn = document.getElementById('open-map-btn');
 if (openEquipBtn) openEquipBtn.addEventListener('click', () => console.log("Equipaggiamento: da implementare"));
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
-
-// Ri-adatta i titoli dopo il caricamento del font Google
-if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => {
-        setTimeout(fitCardTitles, 100);
-    });
-}
