@@ -20,64 +20,64 @@ function kw(text, tipKey, keywordId) {
 
 const cardDatabase = [
     // ---------- ATTACCO ----------
-    { cost: "💎",     title: "Fendente",           art: "Spada",           desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 6 },
-    { cost: "💎",     title: "Lancia",             art: "Lancia",          desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 5 },
-    { cost: "💎",     title: "Pugnalata",          art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "slash",     type: "damage", value: 4, ignoreShield: true },
-    { cost: "💎",     title: "Stoccata",           art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",              fx: "slash2",    type: "damage", value: 4, draw: 1 },
-    { cost: "💎",     title: "Cecchino",           art: "Arco",            desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 8, ignoreShield: true },
-    { cost: "💎💎",   title: "Colpo Doppio",       art: "Spade",           desc: "Infligge {DMG} danni ⚔️ due volte",                       fx: "slash2",    type: "damage", value: 8 },
-    { cost: "💎💎",   title: "Fulmine",            art: "Saetta",          desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
-    { cost: "💎💎",   title: "Freccia Multipla",   art: "Frecce",          desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
-    { cost: "💎💎",   title: "Lancia Perforante",  art: "Lancia",          desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
-    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
-    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno", "poison"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
-    { cost: "💎💎",   title: "Rubavita",           art: "Falce",           desc: "Infligge {DMG} danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
-    { cost: "💎💎💎", title: "Magia",              art: "Tempesta",        desc: "Infligge {DMG} danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
-    { cost: "💎💎💎", title: "Colpo Possente",     art: "Martello",        desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
-    { cost: "💎💎💎", title: "Assalto",            art: "Armi",            desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 18 },
+    { cost: "💎",     title: "Taglio Rapido",      art: "Spada",           desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 6 },
+    { cost: "💎",     title: "Affondo Lineare",    art: "Lancia",          desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 5 },
+    { cost: "💎",     title: "Colpo Furtivo",      art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "slash",     type: "damage", value: 4, ignoreShield: true },
+    { cost: "💎",     title: "Affondo Rapido",     art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",              fx: "slash2",    type: "damage", value: 4, draw: 1 },
+    { cost: "💎",     title: "Tiro Preciso",       art: "Arco",            desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 8, ignoreShield: true },
+    { cost: "💎💎",   title: "Doppio Taglio",      art: "Spade",           desc: "Infligge {DMG} danni ⚔️ due volte",                       fx: "slash2",    type: "damage", value: 8 },
+    { cost: "💎💎",   title: "Scarica Elettrica",  art: "Saetta",          desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
+    { cost: "💎💎",   title: "Frecce Multiple",    art: "Frecce",          desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
+    { cost: "💎💎",   title: "Perforazione Letale",art: "Lancia",          desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
+    { cost: "💎💎",   title: "Fiamma Divorante",   art: "Fiamma",          desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
+    { cost: "💎💎",   title: "Morso Velenoso",     art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno", "poison"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
+    { cost: "💎💎",   title: "Falce Mietitrice",   art: "Falce",           desc: "Infligge {DMG} danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
+    { cost: "💎💎💎", title: "Tempesta Arcana",    art: "Tempesta",        desc: "Infligge {DMG} danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
+    { cost: "💎💎💎", title: "Colpo Devastante",   art: "Martello",        desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
+    { cost: "💎💎💎", title: "Assalto Brutale",    art: "Armi",            desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 18 },
 
     // ---------- SCUDO ----------
-    { cost: "💎",     title: "Baluardo",           art: "Scudo",           desc: "Ottieni 5 scudo 🛡️",                                 fx: "shield",     type: "shield", value: 5 },
-    { cost: "💎",     title: "Barriera",           art: "Scudo",           desc: "Ottieni 4 scudo 🛡️. Pesca 1 carta 🎴",               fx: "shield",     type: "shield", value: 4, draw: 1 },
-    { cost: "💎💎",   title: "Muraglia",           art: "Muro",            desc: "Ottieni 11 scudo 🛡️",                                fx: "shield",     type: "shield", value: 11 },
-    { cost: "💎💎",   title: "Riparo",             art: "Riparo",          desc: "Ottieni 7 scudo 🛡️. Cura 4 ❤️",                      fx: "shieldheal", type: "shield", value: 7, healValue: 4 },
-    { cost: "💎💎💎", title: "Fortezza",           art: "Fortezza",        desc: "Ottieni 18 scudo 🛡️",                                fx: "shield",     type: "shield", value: 18 },
+    { cost: "💎",     title: "Scudo Saldo",        art: "Scudo",           desc: "Ottieni 5 scudo 🛡️",                                 fx: "shield",     type: "shield", value: 5 },
+    { cost: "💎",     title: "Barriera Fluida",    art: "Scudo",           desc: "Ottieni 4 scudo 🛡️. Pesca 1 carta 🎴",               fx: "shield",     type: "shield", value: 4, draw: 1 },
+    { cost: "💎💎",   title: "Muraglia Eterna",    art: "Muro",            desc: "Ottieni 11 scudo 🛡️",                                fx: "shield",     type: "shield", value: 11 },
+    { cost: "💎💎",   title: "Riparo Curativo",    art: "Riparo",          desc: "Ottieni 7 scudo 🛡️. Cura 4 ❤️",                      fx: "shieldheal", type: "shield", value: 7, healValue: 4 },
+    { cost: "💎💎💎", title: "Fortezza Eterna",    art: "Fortezza",        desc: "Ottieni 18 scudo 🛡️",                                fx: "shield",     type: "shield", value: 18 },
 
     // ---------- CURA ----------
-    { cost: "💎",     title: "Secondo Fiato",      art: "Elisir",          desc: "Cura 4 ❤️",                                          fx: "heal",       type: "heal", value: 4 },
-    { cost: "💎💎",   title: "Rigenera",           art: "Elisir",          desc: "Cura 6 ❤️",                                          fx: "heal",       type: "heal", value: 6 },
-    { cost: "💎💎",   title: "Benedizione",        art: "Foglia",          desc: "Cura 5 ❤️. Pesca 1 carta 🎴",                        fx: "heal",       type: "heal", value: 5, draw: 1 },
-    { cost: "💎💎",   title: "Rinascita",          art: "Foglia",          desc: kw("Rigenerazione 💚", "Rigenerazione") + " 4 per 3 turni",       fx: "regen",      type: "regen", value: 4, regenTurns: 3 },
-    { cost: "💎💎💎", title: "Guarigione",         art: "Fonte",           desc: "Cura 15 ❤️",                                         fx: "heal",       type: "heal", value: 15 },
+    { cost: "💎",     title: "Soffio Vitale",      art: "Elisir",          desc: "Cura 4 ❤️",                                          fx: "heal",       type: "heal", value: 4 },
+    { cost: "💎💎",   title: "Elisir Curativo",    art: "Elisir",          desc: "Cura 6 ❤️",                                          fx: "heal",       type: "heal", value: 6 },
+    { cost: "💎💎",   title: "Benedizione Divina", art: "Foglia",          desc: "Cura 5 ❤️. Pesca 1 carta 🎴",                        fx: "heal",       type: "heal", value: 5, draw: 1 },
+    { cost: "💎💎",   title: "Fonte Vitale",       art: "Foglia",          desc: kw("Rigenerazione 💚", "Rigenerazione") + " 4 per 3 turni",       fx: "regen",      type: "regen", value: 4, regenTurns: 3 },
+    { cost: "💎💎💎", title: "Guarigione Suprema", art: "Fonte",           desc: "Cura 15 ❤️",                                         fx: "heal",       type: "heal", value: 15 },
 
     // ---------- UTILITÀ ----------
-    { cost: "💎",     title: "Pozione",            art: "Pozione",         desc: "Pesca 2 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 2, manaGain: 1 },
-    { cost: "💎",     title: "Concentrazione",     art: "Tomo",            desc: "Pesca 3 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 3, manaGain: 1 },
-    { cost: "💎",     title: "Purificazione",      art: "Stella",          desc: "Rimuove i tuoi effetti negativi",                    fx: "cleanse",    type: "cleanse" },
-    { cost: "💎💎",   title: "Ispirazione",        art: "Faro",            desc: "Pesca 2 carte 🎴. Cura 3 ❤️. Ottieni 1 💎",           fx: "heal",       type: "utility", value: 3, draw: 2, manaGain: 1 },
-    { cost: "💎💎",   title: "Panacea",            art: "Calice",          desc: "Rimuove i tuoi effetti negativi. Cura 5 ❤️",         fx: "cleanseheal",type: "cleanse", value: 5 },
+    { cost: "💎",     title: "Pozione Arcana",     art: "Pozione",         desc: "Pesca 2 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 2, manaGain: 1 },
+    { cost: "💎",     title: "Focus Mentale",      art: "Tomo",            desc: "Pesca 3 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 3, manaGain: 1 },
+    { cost: "💎",     title: "Luce Purificatrice", art: "Stella",          desc: "Rimuove i tuoi effetti negativi",                    fx: "cleanse",    type: "cleanse" },
+    { cost: "💎💎",   title: "Faro Ispirante",     art: "Faro",            desc: "Pesca 2 carte 🎴. Cura 3 ❤️. Ottieni 1 💎",           fx: "heal",       type: "utility", value: 3, draw: 2, manaGain: 1 },
+    { cost: "💎💎",   title: "Panacea Suprema",    art: "Calice",          desc: "Rimuove i tuoi effetti negativi. Cura 5 ❤️",         fx: "cleanseheal",type: "cleanse", value: 5 },
 
     // ---------- BUFF / DEBUFF ----------
-    { cost: "💎",     title: "Forza",              art: "Pugno",           desc: kw("Forza 💪", "Forza") + " +2",                              fx: "strength", type: "strength", value: 2 },
-    { cost: "💎",     title: "Indebolimento",      art: "Catene",          desc: "Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni",       fx: "weaken",   type: "weaken", value: 2 },
-    { cost: "💎💎",   title: "Maledizione",        art: "Teschio",         desc: "Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 3 turni",       fx: "weaken",   type: "weaken", value: 3 },
-    { cost: "💎💎",   title: "Stordimento",        art: "Martello",        desc: kw("Stordisci 💫", "Stordisci") + " il nemico",                 fx: "stun",     type: "stun", value: 1 },
-    { cost: "💎💎💎", title: "Furia",              art: "Fiamma",          desc: kw("Forza 💪", "Forza") + " +5",                              fx: "strength", type: "strength", value: 5 },
-    { cost: "💎💎💎", title: "Terrore",            art: "Spettro",         desc: kw("Stordisci 💫", "Stordisci") + " il nemico per 2 turni",      fx: "stun",     type: "stun", value: 2 },
+    { cost: "💎",     title: "Potere Marziale",    art: "Pugno",           desc: kw("Forza 💪", "Forza") + " +2",                              fx: "strength", type: "strength", value: 2 },
+    { cost: "💎",     title: "Sortilegio Fioco",   art: "Catene",          desc: "Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni",       fx: "weaken",   type: "weaken", value: 2 },
+    { cost: "💎💎",   title: "Maledizione Oscura", art: "Teschio",         desc: "Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 3 turni",       fx: "weaken",   type: "weaken", value: 3 },
+    { cost: "💎💎",   title: "Colpo Stordente",    art: "Martello",        desc: kw("Stordisci 💫", "Stordisci") + " il nemico",                 fx: "stun",     type: "stun", value: 1 },
+    { cost: "💎💎💎", title: "Furia Primordiale",  art: "Fiamma",          desc: kw("Forza 💪", "Forza") + " +5",                              fx: "strength", type: "strength", value: 5 },
+    { cost: "💎💎💎", title: "Terrore Abissale",   art: "Spettro",         desc: kw("Stordisci 💫", "Stordisci") + " il nemico per 2 turni",      fx: "stun",     type: "stun", value: 2 },
 
     // ---------- STATUS (solo DoT) ----------
-    { cost: "💎💎",   title: "Veleno Puro",        art: "Fiala",           desc: "Applica " + kw("Veleno 🧪", "Veleno", "poison"),                                fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
-    { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
+    { cost: "💎💎",   title: "Tossina Pura",       art: "Fiala",           desc: "Applica " + kw("Veleno 🧪", "Veleno", "poison"),                                fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
+    { cost: "💎💎💎", title: "Combustione Ardente",art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
 
     // ---------- MISTI ----------
-    { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
+    { cost: "💎💎",   title: "Assalto Debilitante",art: "Mazza",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
     { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
 ];
 
 const CARD_COPIES = {
-    "Fendente": 2, "Lancia": 2, "Baluardo": 2, "Barriera": 2,
-    "Stoccata": 2, "Pozione": 2, "Secondo Fiato": 2, "Forza": 2,
-    "Indebolimento": 2, "Vampata": 2, "Morso Tossico": 2, "Purificazione": 2,
+    "Taglio Rapido": 2, "Affondo Lineare": 2, "Scudo Saldo": 2, "Barriera Fluida": 2,
+    "Affondo Rapido": 2, "Pozione Arcana": 2, "Soffio Vitale": 2, "Potere Marziale": 2,
+    "Sortilegio Fioco": 2, "Fiamma Divorante": 2, "Morso Velenoso": 2, "Luce Purificatrice": 2,
 };
 
 // ---------- STATO GLOBALE ----------
