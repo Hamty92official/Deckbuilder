@@ -23,6 +23,43 @@ function updatePlayableState() {
     });
 }
 
+// Aggiorna i valori di danno nelle descrizioni delle carte d'attacco.
+// Se c'è un modificatore attivo (Forza o Debolezza), il numero appare in verde e mostra un tooltip col calcolo.
+function updateDamageDisplays() {
+    handEls.forEach((el, i) => {
+        const card = hand[i];
+        if (!card) return;
+        const span = el.querySelector('.dmg-value');
+        if (!span) return;
+
+        const hits = getCardHits(card);
+        const totalModified = applyPlayerDamageMods(card.value);
+        const perHit = Math.floor(totalModified / hits);
+        const basePerHit = Math.floor(card.value / hits);
+
+        span.textContent = perHit;
+
+        const hasModifier = (playerStrength > 0 || playerWeakTurns > 0);
+        span.classList.toggle('modified', hasModifier);
+
+        // Tooltip con il calcolo
+        const lines = [];
+        if (hits > 1) {
+            lines.push(`Base: ${basePerHit} per colpo (${card.value} totale)`);
+        } else {
+            lines.push(`Base: ${card.value}`);
+        }
+        if (playerStrength > 0) lines.push(`+${playerStrength} da Forza 💪`);
+        if (playerWeakTurns > 0) lines.push(`−25% da Debolezza ⛓️‍💥`);
+        if (hits > 1) {
+            lines.push(`= ${perHit} per colpo (${totalModified} totale)`);
+        } else {
+            lines.push(`= ${perHit}`);
+        }
+        span.dataset.tip = lines.join('\n');
+    });
+}
+
 function updateUIStats() {
     const deckCountEl = document.getElementById('deck-count');
     if (deckCountEl) deckCountEl.innerText = deck.length;
@@ -89,11 +126,11 @@ function updateUIStats() {
         if (monsterStunTurns > 0) {
             intentEl.innerText = `💫 Stordito`;
         } else if (next.type === 'attack') {
-            intentEl.innerText = `⚔️ Intento: ${applyMonsterDamageMods(next.value)} Danni`;
+            intentEl.innerText = `⚔️ Intento: ${applyMonsterDamageMods(next.value)} ⚔️`;
         } else if (next.type === 'shield') {
-            intentEl.innerText = `🛡️ Intento: +${next.value} Scudo`;
+            intentEl.innerText = `🛡️ Intento: ${next.value} 🛡️`;
         } else if (next.type === 'weaken') {
-            intentEl.innerText = `⛓️‍💥 Intento: Indebolimento`;
+            intentEl.innerText = `⛓️‍💥 Intento: Debolezza`;
         }
     }
 
@@ -102,6 +139,7 @@ function updateUIStats() {
 
     updatePlayerShieldUI();
     updatePlayableState();
+    updateDamageDisplays();
 }
 
 // ============================================================
@@ -188,6 +226,15 @@ function fitCardTitles() {
 
 function buildCardElement(cardData, extraClass) {
     const fs = getUniformTitleSize();
+    // Trasformo il placeholder {DMG} in uno span aggiornabile. Il valore effettivo
+    // viene impostato dopo da updateDamageDisplays().
+    const hits = getCardHits(cardData);
+    const basePerHit = Math.floor(cardData.value / hits);
+    const descHtml = cardData.desc.replace(
+        '{DMG}',
+        `<span class="dmg-value" data-tip="">${basePerHit}</span>`
+    );
+
     const cardElement = document.createElement('div');
     cardElement.className = extraClass ? `card ${extraClass}` : 'card';
     cardElement.innerHTML = `
@@ -196,7 +243,7 @@ function buildCardElement(cardData, extraClass) {
             <span class="card-title" style="font-size: ${fs}px; letter-spacing: -0.3px;">${cardData.title}</span>
         </div>
         <div class="card-art">${cardData.art}</div>
-        <div class="card-description">${cardData.desc}</div>
+        <div class="card-description">${descHtml}</div>
     `;
     return cardElement;
 }
@@ -204,14 +251,6 @@ function buildCardElement(cardData, extraClass) {
 // ============================================================
 //  HOVER DELLE CARTE — hitbox che segue la rotazione vera
 // ============================================================
-// Ogni carta è un rettangolo RUOTATO. Il rettangolo AABB che il browser
-// restituisce con getBoundingClientRect() è più grande della carta reale
-// (include gli angoli vuoti attorno). Questo causava hover attivati anche
-// quando il mouse era negli angoli "vuoti" vicini al ventaglio.
-//
-// Soluzione: salvo per ogni carta la posizione del bottom-center a riposo,
-// le dimensioni reali (w, h) e l'angolo di rotazione. Al mousemove verifico
-// matematicamente se il punto è dentro il rettangolo RUOTATO della carta.
 
 let handHitBoxes = [];
 
@@ -230,23 +269,20 @@ function computeHandHitBoxes() {
         const w = el.offsetWidth;
         const h = el.offsetHeight;
         return {
-            bx: cRect.left + cRect.width / 2 + tx,   // bottom-center x a riposo
-            by: cRect.bottom + ty,                   // bottom-center y a riposo
+            bx: cRect.left + cRect.width / 2 + tx,
+            by: cRect.bottom + ty,
             w, h,
             rotRad: rotDeg * Math.PI / 180
         };
     });
 }
 
-// Verifica se il punto (px, py) è dentro il rettangolo ruotato di una carta
 function pointInCard(px, py, box) {
     const { bx, by, w, h, rotRad } = box;
     const cos = Math.cos(rotRad);
     const sin = Math.sin(rotRad);
-    // Centro del rettangolo ruotato (il centro ruota attorno al bottom-center)
     const cx = bx + (h / 2) * sin;
     const cy = by - (h / 2) * cos;
-    // Porta il punto nel sistema di riferimento del rettangolo (inverso della rotazione)
     const dx = px - cx;
     const dy = py - cy;
     const rx =  dx * cos + dy * sin;
@@ -255,13 +291,12 @@ function pointInCard(px, py, box) {
 }
 
 function updateHandHover(mx, my) {
-    if (activeCard) return; // durante il drag non alterare l'hover
+    if (activeCard) return;
     if (handHitBoxes.length !== handEls.length) {
         clearHandHover();
         return;
     }
     let hoveredIdx = -1;
-    // Itero dall'ultimo al primo: le carte in primo piano (a destra) hanno priorità
     for (let i = handEls.length - 1; i >= 0; i--) {
         if (pointInCard(mx, my, handHitBoxes[i])) {
             hoveredIdx = i;
@@ -299,7 +334,6 @@ function layoutHand() {
     });
 }
 
-// Ricalcola le hitbox dopo che le animazioni di layout sono finite
 let _hitboxTimer = null;
 function scheduleComputeHitBoxes(delay) {
     clearTimeout(_hitboxTimer);
@@ -383,6 +417,7 @@ function onHandPointerDown(e) {
     const cardElement = e.target.closest('.card');
     if (!cardElement) return;
     if (e.target.closest('.kw')) return;
+    if (e.target.closest('.dmg-value')) return;
     if (cardElement.classList.contains('unplayable')) return;
     const index = handEls.indexOf(cardElement);
     if (index === -1) return;
@@ -436,7 +471,7 @@ if (openEquipBtn) openEquipBtn.addEventListener('click', () => console.log("Equi
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
 
 // ============================================================
-//  TOOLTIP PER LE PAROLE CHIAVE
+//  TOOLTIP PER LE PAROLE CHIAVE E I VALORI DINAMICI
 // ============================================================
 
 const tooltipPopup = document.getElementById('tooltip-popup');
@@ -450,7 +485,7 @@ function showTooltip(kwEl, x, y) {
 
     _currentKwEl = kwEl;
     kwEl.classList.add('active');
-    tooltipPopup.innerText = tipText;
+    tooltipPopup.innerHTML = tipText.replace(/\n/g, '<br>');
 
     tooltipPopup.style.left = '-9999px';
     tooltipPopup.style.top = '0';
@@ -486,16 +521,16 @@ document.addEventListener('mousemove', (e) => {
 });
 
 document.addEventListener('mouseover', (e) => {
-    const kwEl = e.target.closest('.kw');
-    if (kwEl) showTooltip(kwEl, _mouseX, _mouseY);
+    const kwEl = e.target.closest('.kw, .dmg-value');
+    if (kwEl && kwEl.dataset.tip) showTooltip(kwEl, _mouseX, _mouseY);
 });
 document.addEventListener('mouseout', (e) => {
-    const kwEl = e.target.closest('.kw');
+    const kwEl = e.target.closest('.kw, .dmg-value');
     if (kwEl && kwEl === _currentKwEl) hideTooltip();
 });
 document.addEventListener('click', (e) => {
-    const kwEl = e.target.closest('.kw');
-    if (kwEl) {
+    const kwEl = e.target.closest('.kw, .dmg-value');
+    if (kwEl && kwEl.dataset.tip) {
         e.stopPropagation();
         e.preventDefault();
         if (kwEl === _currentKwEl) hideTooltip();
@@ -510,7 +545,7 @@ document.addEventListener('click', (e) => {
     }
 });
 document.addEventListener('touchstart', (e) => {
-    const kwEl = e.target.closest('.kw');
+    const kwEl = e.target.closest('.kw, .dmg-value');
     if (!kwEl) hideTooltip();
 }, { passive: true });
 
