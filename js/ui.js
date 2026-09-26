@@ -24,58 +24,79 @@ function updatePlayableState() {
 }
 
 // ============================================================
-//  AGGIORNAMENTO DEI VALORI DI DANNO DINAMICI
-//  - Se il valore totale è MAGGIORE del base → verde (buff netto)
-//  - Se MINORE → rosa chiaro (debuff netto)
-//  - Se UGUALE → colore normale
-//  Il tooltip mostra il calcolo con buff in verde e debuff in rosa.
+//  AGGIORNAMENTO DEI VALORI DINAMICI
+//  - Danno delle carte: verde sopra il base, rosa sotto
+//  - Tooltip di Bruciatura/Veleno: mostrano il tick effettivo
+//    (Bruciatura = 100% del danno modificato, Veleno = 50%)
 // ============================================================
 function updateDamageDisplays() {
     handEls.forEach((el, i) => {
         const card = hand[i];
         if (!card) return;
-        const span = el.querySelector('.dmg-value');
-        if (!span) return;
 
-        const hits = getCardHits(card);
-        const baseTotal = card.value;
-        const totalModified = applyPlayerDamageMods(card.value);
+        // ---- 1) Valore del danno della carta ----
+        const dmgSpan = el.querySelector('.dmg-value');
+        if (dmgSpan) {
+            const hits = getCardHits(card);
+            const baseTotal = card.value;
+            const totalModified = applyPlayerDamageMods(card.value);
+            const basePerHit = Math.floor(baseTotal / hits);
+            const perHit = Math.floor(totalModified / hits);
+            dmgSpan.textContent = hits > 1 ? perHit : totalModified;
 
-        // Per le multi-colpo mostro il danno per colpo, per le singole il totale
-        const basePerHit = Math.floor(baseTotal / hits);
-        const perHit = Math.floor(totalModified / hits);
-        span.textContent = hits > 1 ? perHit : totalModified;
+            dmgSpan.classList.remove('modified-buff', 'modified-debuff');
+            if (totalModified > baseTotal) dmgSpan.classList.add('modified-buff');
+            else if (totalModified < baseTotal) dmgSpan.classList.add('modified-debuff');
 
-        // Stato: buff, debuff o normale? Confronto sul TOTALE, non sul per-colpo,
-        // altrimenti con l'arrotondamento un multi-colpo con +1 Forza sembrerebbe invariato.
-        span.classList.remove('modified-buff', 'modified-debuff');
-        if (totalModified > baseTotal) span.classList.add('modified-buff');
-        else if (totalModified < baseTotal) span.classList.add('modified-debuff');
-
-        // Tooltip del calcolo (solo se c'è un modificatore attivo)
-        if (playerStrength === 0 && playerWeakTurns === 0) {
-            span.dataset.tip = '';
-            return;
+            if (playerStrength === 0 && playerWeakTurns === 0) {
+                dmgSpan.dataset.tip = '';
+            } else {
+                const lines = [];
+                if (hits > 1) {
+                    lines.push(`<span class="tip-neutral">Base: ${basePerHit} per colpo (${baseTotal} totale)</span>`);
+                } else {
+                    lines.push(`<span class="tip-neutral">Base: ${baseTotal}</span>`);
+                }
+                if (playerStrength > 0) lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
+                if (playerWeakTurns > 0) lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
+                if (hits > 1) {
+                    lines.push(`<span class="tip-total">= ${perHit} per colpo (${totalModified} totale)</span>`);
+                } else {
+                    lines.push(`<span class="tip-total">= ${totalModified}</span>`);
+                }
+                dmgSpan.dataset.tip = lines.join('<br>');
+            }
         }
 
-        const lines = [];
-        if (hits > 1) {
-            lines.push(`<span class="tip-neutral">Base: ${basePerHit} per colpo (${baseTotal} totale)</span>`);
-        } else {
-            lines.push(`<span class="tip-neutral">Base: ${baseTotal}</span>`);
+        // ---- 2) Tooltip di Bruciatura ----
+        const burnSpan = el.querySelector('[data-keyword="burn"]');
+        if (burnSpan) {
+            const baseTick = card.value;
+            const tickDamage = applyPlayerDamageMods(card.value);
+            const lines = [];
+            lines.push(`<span class="tip-neutral">Ogni turno il nemico subisce il 100% del danno della carta, per 3 turni. Ignora lo scudo.</span>`);
+            lines.push('');
+            lines.push(`<span class="tip-neutral">Base: ${baseTick} danni per turno</span>`);
+            if (playerStrength > 0) lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
+            if (playerWeakTurns > 0) lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
+            lines.push(`<span class="tip-total">= ${tickDamage} danni per turno</span>`);
+            burnSpan.dataset.tip = lines.join('<br>');
         }
-        if (playerStrength > 0) {
-            lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
+
+        // ---- 3) Tooltip di Veleno ----
+        const poisonSpan = el.querySelector('[data-keyword="poison"]');
+        if (poisonSpan) {
+            const baseTick = Math.round(card.value / 2);
+            const tickDamage = Math.round(applyPlayerDamageMods(card.value) / 2);
+            const lines = [];
+            lines.push(`<span class="tip-neutral">Ogni turno il nemico subisce il 50% del danno della carta, per 3 turni. Ignora lo scudo. Il nemico ha il 20% di sbagliare il colpo.</span>`);
+            lines.push('');
+            lines.push(`<span class="tip-neutral">Base: ${baseTick} danni per turno</span>`);
+            if (playerStrength > 0) lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
+            if (playerWeakTurns > 0) lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
+            lines.push(`<span class="tip-total">= ${tickDamage} danni per turno</span>`);
+            poisonSpan.dataset.tip = lines.join('<br>');
         }
-        if (playerWeakTurns > 0) {
-            lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
-        }
-        if (hits > 1) {
-            lines.push(`<span class="tip-total">= ${perHit} per colpo (${totalModified} totale)</span>`);
-        } else {
-            lines.push(`<span class="tip-total">= ${totalModified}</span>`);
-        }
-        span.dataset.tip = lines.join('<br>');
     });
 }
 
