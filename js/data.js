@@ -12,7 +12,6 @@ const KEYWORD_TIPS = {
     "Rigenerazione": "Cura te all'inizio di ogni turno per la durata indicata."
 };
 
-// kw(text, tipKey, keywordId?) — keywordId serve a identificare i tooltip dinamici
 function kw(text, tipKey, keywordId) {
     const tip = KEYWORD_TIPS[tipKey] || "";
     const kwAttr = keywordId ? ` data-keyword="${keywordId}"` : "";
@@ -52,10 +51,10 @@ const cardDatabase = [
     { cost: "💎💎💎", title: "Guarigione",         art: "Fonte",           desc: "Cura 15 ❤️",                                         fx: "heal",       type: "heal", value: 15 },
 
     // ---------- UTILITÀ ----------
-    { cost: "💎",     title: "Pozione",            art: "Pozione",         desc: "Pesca 2 carte 🎴",                                   fx: "potion",     type: "utility", draw: 2 },
-    { cost: "💎",     title: "Concentrazione",     art: "Tomo",            desc: "Pesca 3 carte 🎴",                                   fx: "potion",     type: "utility", draw: 3 },
+    { cost: "💎",     title: "Pozione",            art: "Pozione",         desc: "Pesca 2 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 2, manaGain: 1 },
+    { cost: "💎",     title: "Concentrazione",     art: "Tomo",            desc: "Pesca 3 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 3, manaGain: 1 },
     { cost: "💎",     title: "Purificazione",      art: "Stella",          desc: "Rimuove i tuoi effetti negativi",                    fx: "cleanse",    type: "cleanse" },
-    { cost: "💎💎",   title: "Ispirazione",        art: "Faro",            desc: "Pesca 2 carte 🎴. Cura 3 ❤️",                        fx: "heal",       type: "utility", value: 3, draw: 2 },
+    { cost: "💎💎",   title: "Ispirazione",        art: "Faro",            desc: "Pesca 2 carte 🎴. Cura 3 ❤️. Ottieni 1 💎",           fx: "heal",       type: "utility", value: 3, draw: 2, manaGain: 1 },
     { cost: "💎💎",   title: "Panacea",            art: "Calice",          desc: "Rimuove i tuoi effetti negativi. Cura 5 ❤️",         fx: "cleanseheal",type: "cleanse", value: 5 },
 
     // ---------- BUFF / DEBUFF ----------
