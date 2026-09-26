@@ -14,7 +14,6 @@ function updatePlayerShieldUI() {
     }
 }
 
-// Applica/rimuove la classe "unplayable" alle carte in mano in base al mana
 function updatePlayableState() {
     handEls.forEach((el, i) => {
         const card = hand[i];
@@ -105,7 +104,10 @@ function updateUIStats() {
     updatePlayableState();
 }
 
-// --- Adatta il font dei titoli: calcola il font-size minimo che fa entrare TUTTI i titoli, e lo applica uniformemente ---
+// --- Font uniforme per TUTTI i titoli ---
+// Calcola UNA VOLTA la dimensione che fa entrare il titolo più lungo del gioco,
+// poi la applica a tutte le carte (stessa dimensione ovunque).
+
 function measureTextWidth(text, font) {
     if (!measureTextWidth._canvas) {
         measureTextWidth._canvas = document.createElement('canvas');
@@ -116,71 +118,56 @@ function measureTextWidth(text, font) {
     return ctx.measureText(text).width;
 }
 
+// Trova il titolo con la larghezza maggiore a un font di riferimento
+function findWidestTitle() {
+    let widest = '';
+    let maxW = 0;
+    const fontFamily = "'Montserrat', 'Segoe UI', sans-serif";
+    cardDatabase.forEach(c => {
+        const w = measureTextWidth(c.title, `700 14px ${fontFamily}`);
+        if (w > maxW) { maxW = w; widest = c.title; }
+    });
+    return widest;
+}
+
+const _widestTitle = findWidestTitle();
+
+// Calcola il font-size che fa entrare il titolo più lungo nella larghezza disponibile dell'header
+function computeUniformTitleSize() {
+    const sampleCard = document.querySelector('.hand-container .card, .deck-grid .card');
+    if (!sampleCard) return null;
+
+    const header = sampleCard.querySelector('.card-header');
+    if (!header) return null;
+
+    const hStyle = getComputedStyle(header);
+    const padL = parseFloat(hStyle.paddingLeft) || 0;
+    const padR = parseFloat(hStyle.paddingRight) || 0;
+    const availW = header.clientWidth - padL - padR;
+    if (availW <= 0) return null;
+
+    const sStyle = getComputedStyle(sampleCard.querySelector('.card-title'));
+    const fontFamily = sStyle.fontFamily;
+    const fontWeight = sStyle.fontWeight;
+
+    let size = 14;
+    while (size > 6) {
+        const w = measureTextWidth(_widestTitle, `${fontWeight} ${size}px ${fontFamily}`);
+        if (w <= availW) break;
+        size -= 0.5;
+    }
+    return Math.max(7, size);
+}
+
 function fitCardTitles() {
-    // Prendo sia le carte in mano sia quelle nella modale del mazzo (se aperta)
-    const containers = [
-        document.querySelector('.hand-container'),
-        document.querySelector('.deck-grid')
-    ].filter(Boolean);
+    const size = computeUniformTitleSize();
+    if (!size) return;
 
-    containers.forEach(container => {
-        const cards = container.querySelectorAll('.card');
-        if (cards.length === 0) return;
-
-        // Reset stili precedenti
-        cards.forEach(cardEl => {
-            const span = cardEl.querySelector('.card-title');
-            if (span) {
-                span.style.fontSize = '';
-                span.style.letterSpacing = '';
-                span.style.transform = '';
-            }
-        });
-
-        // Misura, per ogni titolo, il font-size minimo che gli serve per entrare
-        let minNeeded = Infinity;
-        let fontFamily = 'Montserrat';
-        let fontWeight = '700';
-
-        cards.forEach(cardEl => {
-            const span = cardEl.querySelector('.card-title');
-            const header = span && span.parentElement;
-            if (!span || !header) return;
-
-            const hStyle = getComputedStyle(header);
-            const padL = parseFloat(hStyle.paddingLeft) || 0;
-            const padR = parseFloat(hStyle.paddingRight) || 0;
-            const availW = header.clientWidth - padL - padR;
-            if (availW <= 0) return;
-
-            const sStyle = getComputedStyle(span);
-            fontFamily = sStyle.fontFamily;
-            fontWeight = sStyle.fontWeight;
-
-            // Provo font-size da 14 in giù, a step di 0.5, per trovare il massimo che entra
-            const text = span.textContent;
-            let size = 14;
-            while (size > 6) {
-                const w = measureTextWidth(text, `${fontWeight} ${size}px ${fontFamily}`);
-                if (w <= availW) break;
-                size -= 0.5;
-            }
-            if (size < minNeeded) minNeeded = size;
-        });
-
-        if (!isFinite(minNeeded)) return;
-        // Non scendo sotto 7px, altrimenti diventa illeggibile
-        const finalSize = Math.max(7, minNeeded);
-
-        // Applico la stessa dimensione a TUTTI i titoli del container
-        cards.forEach(cardEl => {
-            const span = cardEl.querySelector('.card-title');
-            if (span) {
-                span.style.fontSize = finalSize + 'px';
-                span.style.letterSpacing = '-0.2px';
-                span.style.transform = '';
-            }
-        });
+    // Applica a tutte le carte in mano e nella modale
+    document.querySelectorAll('.hand-container .card-title, .deck-grid .card-title').forEach(span => {
+        span.style.fontSize = size + 'px';
+        span.style.letterSpacing = '-0.3px';
+        span.style.transform = '';
     });
 }
 
