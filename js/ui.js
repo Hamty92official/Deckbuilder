@@ -59,7 +59,7 @@ function updateUIStats() {
     const monsterWeakEl = document.getElementById('monster-weak');
     if (monsterWeakEl) {
         monsterWeakEl.style.display = monsterWeakTurns > 0 ? 'flex' : 'none';
-        monsterWeakEl.innerText = `🔻 Debole: ${monsterWeakTurns} turni`;
+        monsterWeakEl.innerText = `⛓️‍💥 Debole: ${monsterWeakTurns} turni`;
     }
     const monsterStunEl = document.getElementById('monster-stun');
     if (monsterStunEl) {
@@ -75,7 +75,7 @@ function updateUIStats() {
     const playerWeakEl = document.getElementById('player-weak');
     if (playerWeakEl) {
         playerWeakEl.style.display = playerWeakTurns > 0 ? 'flex' : 'none';
-        playerWeakEl.innerText = `🔻 Debole: ${playerWeakTurns} turni`;
+        playerWeakEl.innerText = `⛓️‍💥 Debole: ${playerWeakTurns} turni`;
     }
     const playerRegenEl = document.getElementById('player-regen');
     if (playerRegenEl) {
@@ -93,7 +93,7 @@ function updateUIStats() {
         } else if (next.type === 'shield') {
             intentEl.innerText = `🛡️ Intento: +${next.value} Scudo`;
         } else if (next.type === 'weaken') {
-            intentEl.innerText = `🔻 Intento: Indebolimento`;
+            intentEl.innerText = `⛓️‍💥 Intento: Indebolimento`;
         }
     }
 
@@ -106,9 +106,6 @@ function updateUIStats() {
 
 // ============================================================
 //  FONT UNIFORME PER TUTTI I TITOLI
-//  Calcolo una volta sola (con una "carta fantasma") il font-size
-//  che fa entrare il titolo più lungo del gioco, e lo cache.
-//  Poi lo applico inline a ogni titolo, così sono TUTTI identici.
 // ============================================================
 
 function measureTextWidth(text, font) {
@@ -121,7 +118,6 @@ function measureTextWidth(text, font) {
     return ctx.measureText(text).width;
 }
 
-// Trova il titolo con la larghezza maggiore nel database carte
 function findWidestTitle() {
     let widest = '';
     let maxW = 0;
@@ -136,7 +132,6 @@ function findWidestTitle() {
 let _uniformTitleSize = null;
 
 function computeUniformTitleSize() {
-    // Creo una "carta fantasma" per misurare la larghezza effettiva dell'header
     const ghost = document.createElement('div');
     ghost.className = 'card';
     ghost.style.position = 'absolute';
@@ -177,15 +172,13 @@ function computeUniformTitleSize() {
 function getUniformTitleSize() {
     if (_uniformTitleSize === null) {
         _uniformTitleSize = computeUniformTitleSize();
-        // Se non riusciamo a calcolare (DOM non pronto), ritorno un fallback
         if (_uniformTitleSize === null) _uniformTitleSize = 11;
     }
     return _uniformTitleSize;
 }
 
-// Applica la dimensione uniforme a tutte le carte esistenti (al resize)
 function fitCardTitles() {
-    _uniformTitleSize = null; // invalido cache
+    _uniformTitleSize = null;
     const size = getUniformTitleSize();
     document.querySelectorAll('.hand-container .card-title, .deck-grid .card-title').forEach(span => {
         span.style.fontSize = size + 'px';
@@ -245,7 +238,6 @@ function renderHand() {
     handContainer.innerHTML = '';
     handEls = [];
 
-    // Calcolo il size una volta prima di creare le carte
     _uniformTitleSize = null;
     getUniformTitleSize();
 
