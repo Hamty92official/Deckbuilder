@@ -12,7 +12,11 @@ const FX_TIME = {
     slash: 90,
     slash2: 130 + 90,
     slash3: 2 * 130 + 90,
+    thrust: 300,
+    dagger: 260,
     arrow: 200,
+    arrow3: 2 * 100 + 220,
+    electric: 480,
     fire: FIRE_FLIGHT + BURN_TICK_DELAY,
     arcane: (ARCANE_HITS - 1) * ARCANE_STEP + ARCANE_FALL,
     shield: 320,
@@ -306,6 +310,7 @@ function flyToMonster(from, html, duration, onArrive) {
 
 // ---------- FX delle singole carte ----------
 
+// Lama diagonale (spade, martelli, mazze)
 function fxSlash(card, from, count) {
     const target = fxPoint(monsterUi);
     const angles = [-32, 28, -18];
@@ -323,6 +328,45 @@ function fxSlash(card, from, count) {
     });
 }
 
+// Affondo con lancia: scia orizzontale che colpisce
+function fxThrust(card, from) {
+    const target = fxPoint(monsterUi);
+    const dx = target.x - from.x, dy = target.y - from.y;
+    const angle = Math.atan2(dy, dx);
+
+    const spear = fxEl('fx-spear', from.x, from.y);
+    spear.style.rotate = `${angle}rad`;
+    fxAnim(spear, [
+        { transform: 'translate(0, 0) scaleX(0.3)', opacity: 0 },
+        { transform: `translate(${dx * 0.55}px, ${dy * 0.55}px) scaleX(0.9)`, opacity: 1, offset: 0.4 },
+        { transform: `translate(${dx}px, ${dy}px) scaleX(1.2)`, opacity: 1, offset: 0.75 },
+        { transform: `translate(${dx}px, ${dy}px) scaleX(1.2)`, opacity: 0 }
+    ], { duration: 300, easing: 'cubic-bezier(0.3, 0, 0.6, 1)' });
+
+    later(160, () => {
+        const dmg = applyPlayerDamageMods(card.value);
+        burst(target.x, target.y, FX_COLOR.slash, 8, 70);
+        hitMonster(dmg, FX_COLOR.slash, { ignoreShield: !!card.ignoreShield });
+    });
+}
+
+// Pugnale: colpo rapido e netto, corto
+function fxDagger(card) {
+    const target = fxPoint(monsterUi);
+    const dagger = fxEl('fx-dagger-fx', target.x - 40 * FX_SCALE, target.y);
+    dagger.style.rotate = '-15deg';
+    fxAnim(dagger, [
+        { clipPath: 'inset(0 100% 0 0)', transform: 'translate(-50%, -50%) translateX(-24px)', opacity: 0.6 },
+        { clipPath: 'inset(0 0 0 0)', transform: 'translate(-50%, -50%) translateX(0)', opacity: 1, offset: 0.4 },
+        { clipPath: 'inset(0 0 0 0)', transform: 'translate(-50%, -50%) translateX(14px)', opacity: 0 }
+    ], { duration: 260, easing: 'cubic-bezier(0.4, 0, 0.4, 1)' });
+    later(80, () => {
+        burst(target.x, target.y, FX_COLOR.slash, 5, 50);
+        hitMonster(applyPlayerDamageMods(card.value), FX_COLOR.slash, { ignoreShield: !!card.ignoreShield });
+    });
+}
+
+// Freccia singola
 function fxArrow(card, from) {
     const target = fxPoint(monsterUi);
     const dx = target.x - from.x, dy = target.y - from.y;
@@ -335,6 +379,50 @@ function fxArrow(card, from) {
         { transform: `translate(${dx}px, ${dy}px)`, opacity: 1 }
     ], { duration: FX_TIME.arrow, easing: 'cubic-bezier(0.4, 0, 1, 1)' });
     later(FX_TIME.arrow, () => hitMonster(applyPlayerDamageMods(card.value), FX_COLOR.arrow, { ignoreShield: !!card.ignoreShield }));
+}
+
+// 3 frecce in rapida sequenza
+function fxArrow3(card, from) {
+    const target = fxPoint(monsterUi);
+    const dx = target.x - from.x, dy = target.y - from.y;
+    const angle = Math.atan2(dy, dx);
+    const total = applyPlayerDamageMods(card.value);
+    const damages = splitDamage(total, 3);
+
+    damages.forEach((dmg, i) => {
+        const delay = i * 100;
+        later(delay, () => {
+            const shot = fxEl('fx-slash', from.x, from.y);
+            shot.style.width = '100px';
+            shot.style.height = '4px';
+            shot.style.rotate = `${angle}rad`;
+            fxAnim(shot, [
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { transform: `translate(${dx}px, ${dy}px)`, opacity: 1 }
+            ], { duration: 220, easing: 'cubic-bezier(0.4, 0, 1, 1)' });
+            later(220, () => hitMonster(dmg, FX_COLOR.arrow));
+        });
+    });
+}
+
+// Fulmine elettrico: giallo, dritto dall'alto
+function fxElectric(card) {
+    const target = fxPoint(monsterUi);
+    const x = target.x + (Math.random() - 0.5) * 60 * FX_SCALE;
+    const y = target.y;
+    const bolt = fxEl('fx-lightning', x, y);
+    bolt.style.rotate = `${(Math.random() - 0.5) * 10}deg`;
+    fxAnim(bolt, [
+        { clipPath: 'inset(0 0 100% 0)', opacity: 1 },
+        { clipPath: 'inset(0 0 0 0)', opacity: 1, offset: 0.3 },
+        { clipPath: 'inset(0 0 0 0)', opacity: 0 }
+    ], { duration: 400 });
+    later(80, () => {
+        ring(x, y, '#ffeb3b', 50, 2.6, 400);
+        burst(x, y, '#ffeb3b', 14, 100);
+        screenFlash('255, 235, 59', 0.35);
+        hitMonster(applyPlayerDamageMods(card.value), '#ffeb3b');
+    });
 }
 
 function fxFire(card, from) {
@@ -370,8 +458,6 @@ function fxFire(card, from) {
         ring(target.x, target.y, FX_COLOR.ember, 50, 2.2, 420, 80);
         burst(target.x, target.y, FX_COLOR.ember, 14, 120);
         screenFlash('255, 150, 40', 0.35);
-
-        // Il danno effettivo della carta (con modificatori) definisce anche il tick di Bruciatura
         const directDmg = applyPlayerDamageMods(card.value);
         hitMonster(directDmg, FX_COLOR.fire);
         if (card.burnTurns) later(BURN_TICK_DELAY, () => applyBurn(directDmg, card.burnTurns));
@@ -407,7 +493,6 @@ function fxPoisonHit(card, from) {
     ], { duration: POISON_FLIGHT, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' });
     later(POISON_FLIGHT, () => {
         orb.remove();
-        // Il danno effettivo (con modificatori) definisce anche il tick di Veleno (50%)
         const directDmg = applyPlayerDamageMods(card.value);
         hitMonster(directDmg, FX_COLOR.poison);
         if (card.poisonTurns) {
@@ -466,7 +551,6 @@ function fxPoisonOnly(card, from) {
     ], { duration: POISON_FLIGHT, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' });
     later(POISON_FLIGHT, () => {
         orb.remove();
-        // Anche il "solo veleno" scala con Forza/Debolezza (50% del valore modificato)
         const poisonDmg = Math.round(applyPlayerDamageMods(card.value) / 2);
         if (card.poisonTurns) applyPoison(poisonDmg, card.poisonTurns);
     });
@@ -484,7 +568,6 @@ function fxBurnOnly(card, from) {
         orb.remove();
         ring(target.x, target.y, FX_COLOR.fire, 70, 3.4, 520);
         burst(target.x, target.y, FX_COLOR.ember, 12, 100);
-        // Anche il "solo bruciatura" scala (100% del valore modificato)
         const burnDmg = applyPlayerDamageMods(card.value);
         if (card.burnTurns) later(BURN_TICK_DELAY, () => applyBurn(burnDmg, card.burnTurns));
     });
@@ -512,7 +595,11 @@ const cardFx = {
     slash:      (card, from) => fxSlash(card, from, 1),
     slash2:     (card, from) => fxSlash(card, from, 2),
     slash3:     (card, from) => fxSlash(card, from, 3),
+    thrust:     fxThrust,
+    dagger:     fxDagger,
     arrow:      fxArrow,
+    arrow3:     fxArrow3,
+    electric:   fxElectric,
     fire:       fxFire,
     arcane:     fxArcane,
     shield:     (card, from) => flyToPlayer(from, '🛡️', '', () => gainPlayerShield(card.value)),
@@ -533,7 +620,9 @@ const cardFx = {
 };
 
 const castColor = {
-    slash: 'slash', slash2: 'slash', slash3: 'slash', arrow: 'arrow',
+    slash: 'slash', slash2: 'slash', slash3: 'slash',
+    thrust: 'slash', dagger: 'slash',
+    arrow: 'arrow', arrow3: 'arrow', electric: 'slash',
     fire: 'fire', arcane: 'arcane', shield: 'shield', heal: 'heal',
     poison: 'poison', weaken: 'weak', strength: 'strength', stun: 'stun',
     lifesteal: 'lifesteal', regen: 'heal', cleanse: 'heal', potion: 'heal',
@@ -554,7 +643,6 @@ function playCardFx(card) {
         totalMs = FX_LAUNCH_DELAY + FX_TIME[kind] + FX_SETTLE;
     }
 
-    // Guadagno di mana (per le carte di pesca): lo applico con effetto visivo
     if (card.manaGain) {
         later(FX_LAUNCH_DELAY, () => {
             playerMana += card.manaGain;
