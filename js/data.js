@@ -21,21 +21,21 @@ function kw(text, tipKey) {
 
 const cardDatabase = [
     // ---------- ATTACCO ----------
-    { cost: "💎",     title: "Fendente",           art: "Spada",           desc: "Infligge 6 danni ⚔️",                                fx: "slash",     type: "damage", value: 6 },
-    { cost: "💎",     title: "Lancia",             art: "Lancia",          desc: "Infligge 5 danni ⚔️",                                fx: "slash",     type: "damage", value: 5 },
-    { cost: "💎",     title: "Pugnalata",          art: "Pugnale",         desc: "Infligge 4 danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "slash",     type: "damage", value: 4, ignoreShield: true },
-    { cost: "💎",     title: "Stoccata",           art: "Pugnale",         desc: "Infligge 4 danni ⚔️. Pesca 1 carta 🎴",              fx: "slash2",    type: "damage", value: 4, draw: 1 },
-    { cost: "💎",     title: "Cecchino",           art: "Arco",            desc: "Infligge 8 danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 8, ignoreShield: true },
-    { cost: "💎💎",   title: "Colpo Doppio",       art: "Spade",           desc: "Infligge 4 danni ⚔️ due volte",                       fx: "slash2",    type: "damage", value: 8 },
-    { cost: "💎💎",   title: "Fulmine",            art: "Saetta",          desc: "Infligge 10 danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
-    { cost: "💎💎",   title: "Freccia Multipla",   art: "Frecce",          desc: "Infligge 3 danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
-    { cost: "💎💎",   title: "Lancia Perforante",  art: "Lancia",          desc: "Infligge 7 danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
-    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge 3 danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
-    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge 6 danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
-    { cost: "💎💎",   title: "Rubavita",           art: "Falce",           desc: "Infligge 5 danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
-    { cost: "💎💎💎", title: "Magia",              art: "Tempesta",        desc: "Infligge 4 danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
-    { cost: "💎💎💎", title: "Colpo Possente",     art: "Martello",        desc: "Infligge 15 danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
-    { cost: "💎💎💎", title: "Assalto",            art: "Armi",            desc: "Infligge 6 danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 18 },
+    { cost: "💎",     title: "Fendente",           art: "Spada",           desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 6 },
+    { cost: "💎",     title: "Lancia",             art: "Lancia",          desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 5 },
+    { cost: "💎",     title: "Pugnalata",          art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "slash",     type: "damage", value: 4, ignoreShield: true },
+    { cost: "💎",     title: "Stoccata",           art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",              fx: "slash2",    type: "damage", value: 4, draw: 1 },
+    { cost: "💎",     title: "Cecchino",           art: "Arco",            desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 8, ignoreShield: true },
+    { cost: "💎💎",   title: "Colpo Doppio",       art: "Spade",           desc: "Infligge {DMG} danni ⚔️ due volte",                       fx: "slash2",    type: "damage", value: 8 },
+    { cost: "💎💎",   title: "Fulmine",            art: "Saetta",          desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
+    { cost: "💎💎",   title: "Freccia Multipla",   art: "Frecce",          desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
+    { cost: "💎💎",   title: "Lancia Perforante",  art: "Lancia",          desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
+    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
+    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
+    { cost: "💎💎",   title: "Rubavita",           art: "Falce",           desc: "Infligge {DMG} danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
+    { cost: "💎💎💎", title: "Magia",              art: "Tempesta",        desc: "Infligge {DMG} danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
+    { cost: "💎💎💎", title: "Colpo Possente",     art: "Martello",        desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
+    { cost: "💎💎💎", title: "Assalto",            art: "Armi",            desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 18 },
 
     // ---------- SCUDO ----------
     { cost: "💎",     title: "Baluardo",           art: "Scudo",           desc: "Ottieni 5 scudo 🛡️",                                 fx: "shield",     type: "shield", value: 5 },
@@ -71,8 +71,8 @@ const cardDatabase = [
     { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
 
     // ---------- MISTI ----------
-    { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge 4 danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
-    { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge 8 danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
+    { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
+    { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
 ];
 
 // Copie per tipo → totale mazzo: 52 carte
@@ -153,6 +153,16 @@ function drawCard() {
 
 function getCardCost(cardData) {
     return [...cardData.cost].length;
+}
+
+// Quanti colpi fa una carta d'attacco (per calcolare il danno per colpo)
+function getCardHits(card) {
+    switch (card.fx) {
+        case 'slash2': return 2;
+        case 'slash3': return 3;
+        case 'arcane': return 5;
+        default: return 1;
+    }
 }
 
 function applyPlayerDamageMods(baseDamage) {
