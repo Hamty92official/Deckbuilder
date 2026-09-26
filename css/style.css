@@ -245,6 +245,33 @@ body {
 .fx-emoji { font-size: clamp(32px, 9vw, 56px); line-height: 1; filter: drop-shadow(0 0 12px rgba(93,237,236,0.9)); }
 .fx-sparkle { font-size: clamp(13px, 3.5vw, 20px); font-weight: 800; text-shadow: 0 0 8px currentColor; }
 
+/* --- NUOVI FX --- */
+
+/* Lancia / Affondo: scia lineare orizzontale, puntuta, color argento */
+.fx-spear {
+    width: clamp(140px, 38vw, 220px); height: clamp(6px, 1.5vw, 9px);
+    border-radius: 3px;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.3) 15%, #ffffff 45%, #cfefff 70%, rgba(255,255,255,0.2) 100%);
+    box-shadow: 0 0 16px 4px rgba(207,239,255,0.85), inset 0 0 4px #ffffff;
+    clip-path: polygon(0 40%, 85% 0, 100% 50%, 85% 100%, 0 60%);
+}
+
+/* Pugnale furtivo: linea corta e netta, azzurrino */
+.fx-dagger-fx {
+    width: clamp(70px, 18vw, 110px); height: clamp(4px, 1vw, 6px);
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(200,240,255,0), #e6f7ff 35%, #ffffff 55%, rgba(200,240,255,0));
+    box-shadow: 0 0 12px 3px rgba(200,240,255,0.9);
+}
+
+/* Fulmine elettrico: giallo brillante con bagliore */
+.fx-lightning {
+    width: clamp(7px, 1.6vw, 11px); height: clamp(180px, 46vh, 320px);
+    translate: -50% -100%; border-radius: 4px;
+    background: linear-gradient(180deg, rgba(255,235,59,0), #fff59d 25%, #ffeb3b 55%, #ffffff 100%);
+    box-shadow: 0 0 22px 6px rgba(255,235,59,0.9), 0 0 60px 16px rgba(255,193,7,0.4);
+}
+
 .fx-vignette {
     position: absolute; inset: 0; pointer-events: none;
     opacity: 0; z-index: 190;
@@ -487,7 +514,6 @@ body {
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
 }
 
-/* Carte non giocabili (mana insufficiente): desaturate ma NON trasparenti */
 .hand-container .card.unplayable {
     filter: grayscale(0.75) brightness(0.85);
 }
