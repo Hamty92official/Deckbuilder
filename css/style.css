@@ -203,6 +203,7 @@ body {
 .fx-small { font-size: 18px; }
 .fx-heal { color: #5df08a; }
 .fx-miss { color: #c8d0d5; font-style: italic; }
+.fx-mana { color: #5db9ff; }
 
 .fx-orb {
     width: clamp(24px, 6.6vw, 40px); height: clamp(24px, 6.6vw, 40px);
@@ -389,7 +390,6 @@ body {
     border-bottom-color: #d35400;
 }
 
-/* Valore del danno dinamico */
 .dmg-value {
     font-weight: 700;
     cursor: pointer;
@@ -398,7 +398,6 @@ body {
     transition: color 0.15s ease, border-color 0.15s ease;
     white-space: nowrap;
 }
-/* Sopra il valore base: verde (buff netto) */
 .dmg-value.modified-buff {
     color: #27ae60;
     border-bottom: 1px dotted #27ae60;
@@ -407,7 +406,6 @@ body {
     color: #2ecc71;
     border-bottom-color: #2ecc71;
 }
-/* Sotto il valore base: rosa chiaro (debuff netto) */
 .dmg-value.modified-debuff {
     color: #e07a92;
     border-bottom: 1px dotted #e07a92;
@@ -440,7 +438,6 @@ body {
     text-align: left;
 }
 .tooltip-popup.visible { opacity: 1; }
-/* Colori nel tooltip: verde per i buff, rosa per i debuff, grigio per il neutro */
 .tooltip-popup .tip-buff { color: #6ff09a; font-weight: 700; }
 .tooltip-popup .tip-debuff { color: #f5a1b4; font-weight: 700; }
 .tooltip-popup .tip-neutral { color: #c8d0d5; }
