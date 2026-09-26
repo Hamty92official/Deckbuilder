@@ -2,21 +2,21 @@
 //  DATI, STATO E FUNZIONI PURE — nessuna dipendenza esterna
 // ============================================================
 
-// Testi dei tooltip (mostrati al passaggio del mouse / al tap sulle parole chiave)
 const KEYWORD_TIPS = {
-    "Bruciatura": "Danno nel tempo. Ogni turno il nemico subisce danni pari al 100% del valore della carta, per 3 turni. Ignora lo scudo.",
-    "Veleno": "Danno nel tempo. Ogni turno il nemico subisce danni pari al 50% del valore della carta, per 3 turni. Ignora lo scudo. Il nemico ha il 20% di sbagliare il colpo.",
+    "Bruciatura": "Danno nel tempo: ogni turno il nemico subisce il 100% del danno della carta, per 3 turni. Ignora lo scudo.",
+    "Veleno": "Danno nel tempo: ogni turno il nemico subisce il 50% del danno della carta, per 3 turni. Ignora lo scudo. Il nemico ha il 20% di sbagliare il colpo.",
     "Debolezza": "Riduce i danni inflitti del 25%.",
     "Stordisci": "Il nemico salta il prossimo turno.",
     "Ignora lo scudo": "Il danno non viene bloccato dallo scudo del nemico.",
-    "Forza": "Aumenta i danni delle tue carte d'attacco per il resto dello scontro.",
+    "Forza": "Aumenta i danni delle tue carte d'attacco per il resto dello scontro. Vale anche per i tick di Bruciatura e Veleno.",
     "Rigenerazione": "Cura te all'inizio di ogni turno per la durata indicata."
 };
 
-// Helper: crea uno span di parola chiave con tooltip
-function kw(text, tipKey) {
+// kw(text, tipKey, keywordId?) — keywordId serve a identificare i tooltip dinamici
+function kw(text, tipKey, keywordId) {
     const tip = KEYWORD_TIPS[tipKey] || "";
-    return `<span class="kw" data-tip="${tip}">${text}</span>`;
+    const kwAttr = keywordId ? ` data-keyword="${keywordId}"` : "";
+    return `<span class="kw"${kwAttr} data-tip="${tip}">${text}</span>`;
 }
 
 const cardDatabase = [
@@ -30,8 +30,8 @@ const cardDatabase = [
     { cost: "💎💎",   title: "Fulmine",            art: "Saetta",          desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 10 },
     { cost: "💎💎",   title: "Freccia Multipla",   art: "Frecce",          desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 9 },
     { cost: "💎💎",   title: "Lancia Perforante",  art: "Lancia",          desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "arrow",     type: "damage", value: 7, ignoreShield: true },
-    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
-    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
+    { cost: "💎💎",   title: "Vampata",            art: "Fiamma",          desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),        fx: "fire",      type: "damage", value: 3, burnTurns: 3 },
+    { cost: "💎💎",   title: "Morso Tossico",      art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno", "poison"),                fx: "poison",    type: "damage", value: 6, poisonTurns: 3 },
     { cost: "💎💎",   title: "Rubavita",           art: "Falce",           desc: "Infligge {DMG} danni ⚔️. Cura te di altrettanti ❤️",     fx: "lifesteal", type: "damage", value: 5, lifesteal: true },
     { cost: "💎💎💎", title: "Magia",              art: "Tempesta",        desc: "Infligge {DMG} danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
     { cost: "💎💎💎", title: "Colpo Possente",     art: "Martello",        desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
@@ -67,15 +67,14 @@ const cardDatabase = [
     { cost: "💎💎💎", title: "Terrore",            art: "Spettro",         desc: kw("Stordisci 💫", "Stordisci") + " il nemico per 2 turni",      fx: "stun",     type: "stun", value: 2 },
 
     // ---------- STATUS (solo DoT) ----------
-    { cost: "💎💎",   title: "Veleno Puro",        art: "Fiala",           desc: "Applica " + kw("Veleno 🧪", "Veleno"),                                fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
-    { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
+    { cost: "💎💎",   title: "Veleno Puro",        art: "Fiala",           desc: "Applica " + kw("Veleno 🧪", "Veleno", "poison"),                                fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
+    { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
 
     // ---------- MISTI ----------
     { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
     { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
 ];
 
-// Copie per tipo → totale mazzo: 52 carte
 const CARD_COPIES = {
     "Fendente": 2, "Lancia": 2, "Baluardo": 2, "Barriera": 2,
     "Stoccata": 2, "Pozione": 2, "Secondo Fiato": 2, "Forza": 2,
@@ -155,7 +154,6 @@ function getCardCost(cardData) {
     return [...cardData.cost].length;
 }
 
-// Quanti colpi fa una carta d'attacco (per calcolare il danno per colpo)
 function getCardHits(card) {
     switch (card.fx) {
         case 'slash2': return 2;
