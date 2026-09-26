@@ -376,18 +376,55 @@ body {
 }
 .card-description {
     font-size: clamp(8.5px, 2.3vw, 12px);
-    font-weight: 500; color: #34495e; line-height: 1.2;
+    font-weight: 500; color: #34495e; line-height: 1.25;
     flex: 1 1 auto; min-height: 0; overflow: hidden; box-sizing: border-box;
     background: rgba(255,255,255,0.65);
     padding: clamp(4px, 1.4vw, 8px); border-radius: 6px;
     border: 1px solid rgba(0,0,0,0.05);
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 1px 1px rgba(255,255,255,0.8);
     margin-top: clamp(4px, 1.4vw, 8px);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
-    text-overflow: ellipsis;
     word-break: break-word;
+}
+
+/* Parole chiave: cliccabili per mostrare il tooltip */
+.kw {
+    cursor: pointer;
+    font-weight: 700;
+    color: #1a252f;
+    border-bottom: 1px dotted rgba(44, 62, 80, 0.5);
+    transition: color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+}
+.kw:hover, .kw.active {
+    color: #d35400;
+    border-bottom-color: #d35400;
+}
+
+/* Tooltip globale */
+.tooltip-popup {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    max-width: min(280px, 82vw);
+    padding: 8px 12px;
+    background: linear-gradient(145deg, #2c3e50, #1a252f);
+    color: #f5f7fa;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.1px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.1);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 9999;
+    text-align: left;
+}
+.tooltip-popup.visible {
+    opacity: 1;
 }
 
 .modal-overlay {
@@ -434,7 +471,7 @@ body {
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
 }
 
-/* Carte non giocabili (mana insufficiente): spente e desaturate */
+/* Carte non giocabili (mana insufficiente) */
 .hand-container .card.unplayable {
     filter: grayscale(0.75) brightness(0.72);
     opacity: 0.8;
@@ -449,7 +486,7 @@ body {
     opacity: 0;
 }
 
-/* Grassetto delle parole chiave nelle descrizioni: più elegante del default */
+/* Grassetto nelle descrizioni */
 .card-description b,
 .card-description strong {
     font-weight: 700;
