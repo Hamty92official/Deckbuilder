@@ -370,8 +370,11 @@ function fxFire(card, from) {
         ring(target.x, target.y, FX_COLOR.ember, 50, 2.2, 420, 80);
         burst(target.x, target.y, FX_COLOR.ember, 14, 120);
         screenFlash('255, 150, 40', 0.35);
-        hitMonster(applyPlayerDamageMods(card.value), FX_COLOR.fire);
-        if (card.burnTurns) later(BURN_TICK_DELAY, () => applyBurn(card.value, card.burnTurns));
+
+        // Il danno effettivo della carta (con modificatori) definisce anche il tick di Bruciatura
+        const directDmg = applyPlayerDamageMods(card.value);
+        hitMonster(directDmg, FX_COLOR.fire);
+        if (card.burnTurns) later(BURN_TICK_DELAY, () => applyBurn(directDmg, card.burnTurns));
     });
 }
 
@@ -404,8 +407,13 @@ function fxPoisonHit(card, from) {
     ], { duration: POISON_FLIGHT, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' });
     later(POISON_FLIGHT, () => {
         orb.remove();
-        hitMonster(applyPlayerDamageMods(card.value), FX_COLOR.poison);
-        if (card.poisonTurns) later(POISON_TICK_DELAY, () => applyPoison(Math.round(card.value / 2), card.poisonTurns));
+        // Il danno effettivo (con modificatori) definisce anche il tick di Veleno (50%)
+        const directDmg = applyPlayerDamageMods(card.value);
+        hitMonster(directDmg, FX_COLOR.poison);
+        if (card.poisonTurns) {
+            const poisonDmg = Math.round(directDmg / 2);
+            later(POISON_TICK_DELAY, () => applyPoison(poisonDmg, card.poisonTurns));
+        }
     });
 }
 
@@ -458,7 +466,9 @@ function fxPoisonOnly(card, from) {
     ], { duration: POISON_FLIGHT, easing: 'cubic-bezier(0.4, 0, 0.8, 0.6)' });
     later(POISON_FLIGHT, () => {
         orb.remove();
-        if (card.poisonTurns) applyPoison(card.value, card.poisonTurns);
+        // Anche il "solo veleno" scala con Forza/Debolezza (50% del valore modificato)
+        const poisonDmg = Math.round(applyPlayerDamageMods(card.value) / 2);
+        if (card.poisonTurns) applyPoison(poisonDmg, card.poisonTurns);
     });
 }
 
@@ -474,7 +484,9 @@ function fxBurnOnly(card, from) {
         orb.remove();
         ring(target.x, target.y, FX_COLOR.fire, 70, 3.4, 520);
         burst(target.x, target.y, FX_COLOR.ember, 12, 100);
-        if (card.burnTurns) later(BURN_TICK_DELAY, () => applyBurn(card.value, card.burnTurns));
+        // Anche il "solo bruciatura" scala (100% del valore modificato)
+        const burnDmg = applyPlayerDamageMods(card.value);
+        if (card.burnTurns) later(BURN_TICK_DELAY, () => applyBurn(burnDmg, card.burnTurns));
     });
 }
 
