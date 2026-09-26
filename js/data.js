@@ -43,8 +43,8 @@ const cardDatabase = [
 
     // ---------- BUFF / DEBUFF ----------
     { cost: "💎",     title: "Forza",              art: "Pugno",           desc: "Aumenta i tuoi danni di 2 💪 per il resto dello scontro",        fx: "strength", type: "strength", value: 2 },
-    { cost: "💎",     title: "Indebolimento",      art: "Catene",          desc: "Applica <b>Debolezza</b> 🔻 al nemico per 2 turni",              fx: "weaken",   type: "weaken", value: 2 },
-    { cost: "💎💎",   title: "Maledizione",        art: "Teschio",         desc: "Applica <b>Debolezza</b> 🔻 al nemico per 3 turni",              fx: "weaken",   type: "weaken", value: 3 },
+    { cost: "💎",     title: "Indebolimento",      art: "Catene",          desc: "Applica <b>Debolezza</b> ⛓️‍💥 al nemico per 2 turni",            fx: "weaken",   type: "weaken", value: 2 },
+    { cost: "💎💎",   title: "Maledizione",        art: "Teschio",         desc: "Applica <b>Debolezza</b> ⛓️‍💥 al nemico per 3 turni",            fx: "weaken",   type: "weaken", value: 3 },
     { cost: "💎💎",   title: "Stordimento",        art: "Martello",        desc: "<b>Stordisci</b> il nemico 💫. Salta il prossimo turno",          fx: "stun",     type: "stun", value: 1 },
     { cost: "💎💎💎", title: "Furia",              art: "Fiamma",          desc: "Aumenta i tuoi danni di 5 💪 per il resto dello scontro",        fx: "strength", type: "strength", value: 5 },
     { cost: "💎💎💎", title: "Terrore",            art: "Spettro",         desc: "<b>Stordisci</b> il nemico 💫 per 2 turni",                      fx: "stun",     type: "stun", value: 2 },
@@ -54,7 +54,7 @@ const cardDatabase = [
     { cost: "💎💎💎", title: "Combustione",        art: "Braciere",        desc: "Applica <b>Bruciatura</b> 🔥: 6 danni per 3 turni. <b>Ignora lo scudo</b>", fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
 
     // ---------- MISTI ----------
-    { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge 4 danni ⚔️. Applica <b>Debolezza</b> 🔻 per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
+    { cost: "💎💎",   title: "Colpo Debilitante",  art: "Mazza",           desc: "Infligge 4 danni ⚔️. Applica <b>Debolezza</b> ⛓️‍💥 per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
     { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge 8 danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
 ];
 
