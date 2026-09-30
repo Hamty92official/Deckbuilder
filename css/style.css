@@ -548,8 +548,10 @@ body {
     z-index: -2;
     pointer-events: none;
     user-select: none;
-    /* Solo una leggera desaturazione per non rubare l'occhio */
-    filter: brightness(1) saturate(0.95);
+    /* Sfocatura + desaturazione: lo sfondo diventa atmosfera, non protagonista */
+    filter: brightness(0.7) saturate(0.65) blur(7px);
+    /* Leggero zoom per non mostrare i bordi sfumati dalla blur */
+    transform: scale(1.08);
 }
 
 /* Velo molto leggero: scurisce solo i bordi, non il centro */
