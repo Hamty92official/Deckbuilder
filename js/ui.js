@@ -276,7 +276,7 @@ function buildCardElement(cardData, extraClass) {
     const cardElement = document.createElement('div');
     cardElement.className = extraClass ? `card ${extraClass}` : 'card';
     cardElement.innerHTML = `
-        <div class="card-cost">${cardData.cost}</div>
+        <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="card-cost">${cardData.cost}</div>
         <div class="card-header">
             <span class="card-title" style="font-size: ${fs}px; letter-spacing: -0.3px;">${cardData.title}</span>
         </div>

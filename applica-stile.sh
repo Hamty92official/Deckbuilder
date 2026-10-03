@@ -1,3 +1,16 @@
+#!/bin/bash
+# Applica lo stile dark fantasy a Deckbuilder
+# Uso: bash applica-stile.sh
+
+set -e
+
+echo ""
+echo "==============================================="
+echo "  Applicazione stile dark fantasy..."
+echo "==============================================="
+echo ""
+
+cat > css/style.css << 'CSSEOF'
 /* ============================================================
    STILE DARK FANTASY — coerente con bg-goblin.webm
    ============================================================ */
@@ -866,3 +879,38 @@ body::after {
     z-index: -1;
     pointer-events: none;
 }
+CSSEOF
+
+echo ""
+echo "CSS aggiornato. Ora aggiungo le borchie alle carte nell'HTML..."
+
+# Aggiunge le borchie agli angoli delle carte nell'HTML/JS
+# Il JS genera le carte, quindi aggiungiamo le borchie via JS
+if [ -f js/ui.js ]; then
+    if ! grep -q "corner tl" js/ui.js; then
+        # Inserisce le 4 borchie subito dopo <div class="card-cost">
+        sed -i 's|<div class="card-cost">${cardData.cost}</div>|<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="card-cost">${cardData.cost}</div>|' js/ui.js
+        echo "Borchie aggiunte al template delle carte."
+    else
+        echo "Borchie già presenti, skip."
+    fi
+fi
+
+echo ""
+echo "Staging modifiche..."
+git add .
+
+echo ""
+echo "Commit..."
+git commit -m "Applica stile dark fantasy a carte e UI"
+
+echo ""
+echo "Push su GitHub..."
+git push
+
+echo ""
+echo "==============================================="
+echo "  FATTO! Lo stile è stato applicato e caricato."
+echo "  Ricarica la pagina del gioco nel browser."
+echo "==============================================="
+echo ""
