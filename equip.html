@@ -709,9 +709,6 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
 
 <div class="test-bar">
     <button class="test-btn back-btn" id="btn-back">← Torna al gioco</button>
-    <button class="test-btn" id="btn-drop">⚔️ Simula Vittoria</button>
-    <button class="test-btn legendary" id="btn-legendary">👑 Test Leggendario</button>
-    <button class="test-btn" id="btn-reset">🗑️ Reset</button>
 </div>
 
 <div class="dim-overlay" id="dim-overlay"></div>
@@ -1161,9 +1158,6 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
     document.getElementById('btn-back').addEventListener('click', () => {
         window.location.href = 'index.html';
     });
-    document.getElementById('btn-drop').addEventListener('click', simulateVictory);
-    document.getElementById('btn-legendary').addEventListener('click', testLegendary);
-    document.getElementById('btn-reset').addEventListener('click', resetAll);
 })();
 </script>
 
