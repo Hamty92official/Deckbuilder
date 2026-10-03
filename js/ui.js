@@ -505,7 +505,7 @@ if (deckModal) {
 
 const openEquipBtn = document.getElementById('open-equip-btn');
 const openMapBtn = document.getElementById('open-map-btn');
-if (openEquipBtn) openEquipBtn.addEventListener('click', () => console.log("Equipaggiamento: da implementare"));
+if (openEquipBtn) openEquipBtn.addEventListener("click", () => { window.location.href = "equip.html"; });
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
 
 // ============================================================
