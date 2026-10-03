@@ -485,6 +485,31 @@ function showBattleDrop(item) {
     document.getElementById('battle-drop-collect')?.addEventListener('click', collectBattleDrop, { once: true });
 }
 
+function getUnseenEquipCount() {
+    if (typeof localStorage === 'undefined') return 0;
+    const value = Number.parseInt(localStorage.getItem('db_unseen_items') || '0', 10);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function updateEquipNotification() {
+    const badge = document.getElementById('equip-unseen-count');
+    if (!badge) return;
+    const count = getUnseenEquipCount();
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'block' : 'none';
+}
+
+function addUnseenEquipItem() {
+    const next = getUnseenEquipCount() + 1;
+    try { localStorage.setItem('db_unseen_items', String(next)); } catch (e) {}
+    updateEquipNotification();
+}
+
+function markEquipItemsSeen() {
+    try { localStorage.setItem('db_unseen_items', '0'); } catch (e) {}
+    updateEquipNotification();
+}
+
 function collectBattleDrop() {
     if (!battleDropItem || typeof LootSystem === 'undefined') return;
 
@@ -497,6 +522,7 @@ function collectBattleDrop() {
 
     inventory[emptyIdx] = battleDropItem;
     LootSystem.saveInventory(inventory);
+    addUnseenEquipItem();
 
     const modal = document.getElementById('battle-drop-modal');
     if (modal) modal.classList.remove('active');
@@ -525,7 +551,13 @@ if (deckModal) {
 
 const openEquipBtn = document.getElementById('open-equip-btn');
 const openMapBtn = document.getElementById('open-map-btn');
-if (openEquipBtn) openEquipBtn.addEventListener("click", () => { window.location.href = "equip.html"; });
+if (openEquipBtn) {
+    updateEquipNotification();
+    openEquipBtn.addEventListener("click", () => {
+        markEquipItemsSeen();
+        window.location.href = "equip.html";
+    });
+}
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
 
 // ============================================================
