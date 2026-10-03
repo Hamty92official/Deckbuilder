@@ -750,7 +750,11 @@ function endBattle(playerWon) {
     isPlayerTurn = false;
     showBanner(playerWon ? 'Vittoria! 🏆' : 'Sconfitta 💀');
     if (playerWon && typeof LootSystem !== "undefined") {
-        try { LootSystem.rollAndQueueDrop(); } catch(e) { console.warn("Loot drop failed", e); }
+        try {
+            const drop = LootSystem.rollDrop();
+            // Prima lasciamo comparire chiaramente "Vittoria!", poi parte il drop.
+            setTimeout(() => showBattleDrop(drop), 1500);
+        } catch(e) { console.warn("Loot drop failed", e); }
     }
 
     const loser = playerWon ? monsterUi : playerUi;

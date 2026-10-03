@@ -183,89 +183,19 @@ function updateUIStats() {
 }
 
 // ============================================================
-//  FONT UNIFORME PER TUTTI I TITOLI
+//  TITOLI DELLE CARTE
+//  La dimensione viene gestita dal CSS e può andare su due righe;
+//  non viene più ristretta in base al titolo più lungo del database.
 // ============================================================
 
-function measureTextWidth(text, font) {
-    if (!measureTextWidth._canvas) {
-        measureTextWidth._canvas = document.createElement('canvas');
-        measureTextWidth._ctx = measureTextWidth._canvas.getContext('2d');
-    }
-    const ctx = measureTextWidth._ctx;
-    ctx.font = font;
-    return ctx.measureText(text).width;
-}
-
-function findWidestTitle() {
-    let widest = '';
-    let maxW = 0;
-    const fontFamily = "'Montserrat', 'Segoe UI', Tahoma, sans-serif";
-    cardDatabase.forEach(c => {
-        const w = measureTextWidth(c.title, `700 14px ${fontFamily}`);
-        if (w > maxW) { maxW = w; widest = c.title; }
-    });
-    return widest;
-}
-
-let _uniformTitleSize = null;
-
-function computeUniformTitleSize() {
-    const ghost = document.createElement('div');
-    ghost.className = 'card';
-    ghost.style.position = 'absolute';
-    ghost.style.left = '-9999px';
-    ghost.style.top = '0';
-    ghost.style.visibility = 'hidden';
-    ghost.style.pointerEvents = 'none';
-    ghost.style.width = 'clamp(108px, 30vw, 180px)';
-    ghost.style.height = 'clamp(156px, 43vw, 260px)';
-    ghost.innerHTML = '<div class="card-header"><span class="card-title"></span></div>';
-    document.body.appendChild(ghost);
-
-    const header = ghost.querySelector('.card-header');
-    const hStyle = getComputedStyle(header);
-    const padL = parseFloat(hStyle.paddingLeft) || 0;
-    const padR = parseFloat(hStyle.paddingRight) || 0;
-    const availW = header.clientWidth - padL - padR;
-
-    document.body.removeChild(ghost);
-
-    if (availW <= 0) return null;
-
-    const widest = findWidestTitle();
-    const fontFamily = "'Montserrat', 'Segoe UI', Tahoma, sans-serif";
-    const fontWeight = '700';
-    const letterSpacing = -0.3;
-    const spacingTotal = (widest.length - 1) * letterSpacing;
-
-    let size = 16;
-    while (size > 6) {
-        const w = measureTextWidth(widest, `${fontWeight} ${size}px ${fontFamily}`);
-        if ((w + spacingTotal) <= availW) break;
-        size -= 0.5;
-    }
-    return Math.max(7, size);
-}
-
-function getUniformTitleSize() {
-    if (_uniformTitleSize === null) {
-        _uniformTitleSize = computeUniformTitleSize();
-        if (_uniformTitleSize === null) _uniformTitleSize = 11;
-    }
-    return _uniformTitleSize;
-}
-
 function fitCardTitles() {
-    _uniformTitleSize = null;
-    const size = getUniformTitleSize();
     document.querySelectorAll('.hand-container .card-title, .deck-grid .card-title').forEach(span => {
-        span.style.fontSize = size + 'px';
-        span.style.letterSpacing = '-0.3px';
+        span.style.removeProperty('font-size');
+        span.style.removeProperty('letter-spacing');
     });
 }
 
 function buildCardElement(cardData, extraClass) {
-    const fs = getUniformTitleSize();
     const hits = getCardHits(cardData);
     const basePerHit = Math.floor(cardData.value / hits);
     const descHtml = cardData.desc.replace(
@@ -278,7 +208,7 @@ function buildCardElement(cardData, extraClass) {
     cardElement.innerHTML = `
         <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="card-cost">${cardData.cost}</div>
         <div class="card-header">
-            <span class="card-title" style="font-size: ${fs}px; letter-spacing: -0.3px;">${cardData.title}</span>
+            <span class="card-title">${cardData.title}</span>
         </div>
         <div class="card-art">${cardData.art}</div>
         <div class="card-description">${descHtml}</div>
@@ -394,9 +324,6 @@ function renderHand() {
     handContainer.innerHTML = '';
     handEls = [];
 
-    _uniformTitleSize = null;
-    getUniformTitleSize();
-
     hand.forEach((cardData) => {
         const cardElement = buildCardElement(cardData, 'card-enter');
         handContainer.appendChild(cardElement);
@@ -481,6 +408,99 @@ function showBanner(text) {
 }
 function hideBanner() {
     document.getElementById('turn-banner').classList.remove('visible');
+}
+
+// ============================================================
+//  DROP BOTTINO DOPO LA VITTORIA
+// ============================================================
+
+let battleDropItem = null;
+
+function getBattleDropRarityColor(rarity) {
+    return {
+        comune: 'var(--rarity-common)',
+        raro: 'var(--rarity-rare)',
+        epico: 'var(--rarity-epic)',
+        leggendario: 'var(--rarity-legendary)'
+    }[rarity] || 'var(--moon)';
+}
+
+function getBattleDropRarityGlow(rarity) {
+    return {
+        comune: 'rgba(138,155,181,0.28)',
+        raro: 'rgba(93,185,255,0.38)',
+        epico: 'rgba(208,112,224,0.42)',
+        leggendario: 'rgba(240,168,64,0.5)'
+    }[rarity] || 'rgba(200,224,240,0.25)';
+}
+
+function getBattleDropSlotName(slot) {
+    return {
+        head: 'Testa',
+        amulet: 'Amuleto',
+        ring: 'Anello',
+        shield: 'Scudo',
+        chest: 'Pettorina',
+        necklace: 'Collana',
+        pet: 'Pet',
+        weapon: 'Arma'
+    }[slot] || slot;
+}
+
+function showBattleDrop(item) {
+    const modal = document.getElementById('battle-drop-modal');
+    const stage = document.getElementById('battle-drop-stage');
+    if (!modal || !stage || !item) return;
+
+    battleDropItem = item;
+    const rarityColor = getBattleDropRarityColor(item.rarity);
+    const rarityGlow = getBattleDropRarityGlow(item.rarity);
+    let particlesHTML = '';
+    for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * Math.PI * 2;
+        const dist = 180 + Math.random() * 80;
+        const px = Math.cos(angle) * dist;
+        const py = Math.sin(angle) * dist;
+        particlesHTML += `<div class="drop-particle" style="--px:${px}px; --py:${py}px;"></div>`;
+    }
+
+    stage.innerHTML = `
+        <div class="drop-title">Bottino</div>
+        <div class="drop-subtitle">Il nemico ha lasciato cadere qualcosa...</div>
+        <div class="drop-emoji-wrap" style="--rarity:${rarityColor}; --rarity-glow:${rarityGlow};">
+            <div class="drop-impact" style="border-color:${rarityColor};"></div>
+            <div class="drop-particles" style="--rarity:${rarityColor}; --rarity-glow:${rarityGlow};">${particlesHTML}</div>
+            <div class="drop-emoji">${item.icon}</div>
+        </div>
+        <div class="drop-info">
+            <div class="drop-rarity-badge" style="--rarity:${rarityColor}; --rarity-glow:${rarityGlow};">${item.rarity}</div>
+            <div class="drop-name">${item.name}</div>
+            <div class="drop-slot-type">${getBattleDropSlotName(item.slot)}</div>
+            <div class="drop-effect" style="--rarity:${rarityColor}; --rarity-glow:${rarityGlow};"><b>${item.effect}</b></div>
+        </div>
+        <button class="drop-collect-btn" id="battle-drop-collect">Raccogli</button>
+    `;
+
+    modal.classList.add('active');
+    document.getElementById('battle-drop-collect')?.addEventListener('click', collectBattleDrop, { once: true });
+}
+
+function collectBattleDrop() {
+    if (!battleDropItem || typeof LootSystem === 'undefined') return;
+
+    const inventory = LootSystem.getInventory();
+    let emptyIdx = -1;
+    for (let i = 0; i < Math.max(inventory.length, 30); i++) {
+        if (!inventory[i]) { emptyIdx = i; break; }
+    }
+    if (emptyIdx === -1) emptyIdx = inventory.length;
+
+    inventory[emptyIdx] = battleDropItem;
+    LootSystem.saveInventory(inventory);
+
+    const modal = document.getElementById('battle-drop-modal');
+    if (modal) modal.classList.remove('active');
+    battleDropItem = null;
 }
 
 // --- Listener modale e pulsanti accessori ---

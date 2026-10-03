@@ -17,6 +17,12 @@
     --blood: #c83048;
     --blood-light: #e85868;
     --mana: #7ad8ff;
+    --gold: #d8a840;
+    --gold-light: #f0c870;
+    --rarity-common: #8a9bb5;
+    --rarity-rare: #5db9ff;
+    --rarity-epic: #d070e0;
+    --rarity-legendary: #f0a840;
 }
 
 html, body { height: 100%; overscroll-behavior: none; }
@@ -100,6 +106,7 @@ body {
 
 .health-bar-container {
     width: 100%;
+    box-sizing: border-box;
     height: clamp(15px, 4.4vw, 26px);
     background: var(--ink-deep);
     border-radius: 8px;
@@ -577,16 +584,24 @@ body {
 
 .card-title {
     font-family: 'IM Fell English SC', 'IM Fell English', serif;
+    font-size: clamp(12px, 2.8vw, 16px);
     font-weight: 400;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
     color: var(--moon-bright);
     text-shadow:
         2px 2px 0 var(--ink),
         1px 1px 0 var(--ink),
         0 0 12px rgba(168, 213, 240, 0.5);
-    white-space: nowrap;
-    flex: 0 0 auto;
-    line-height: 1.1;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+    width: 100%;
+    min-height: 2.15em;
+    display: block;
+    flex: 1 1 auto;
+    line-height: 1;
+    text-align: center;
 }
 
 /* Costo */
@@ -813,6 +828,246 @@ body {
         5px 5px 0 var(--ink),
         0 15px 30px rgba(0,0,0,0.5),
         0 0 30px rgba(168, 213, 240, 0.3);
+}
+
+/* ============================================================
+   DROP BOTTINO — mostrato subito dopo la vittoria
+   ============================================================ */
+.battle-drop-modal {
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(12px);
+    padding: 20px;
+    overflow: hidden;
+    z-index: 1500;
+}
+.battle-drop-modal .drop-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 700px;
+    min-height: 100%;
+    max-height: 100%;
+    padding: 36px 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.battle-drop-modal .drop-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    text-shadow: 3px 3px 0 var(--ink), 1px 1px 0 var(--ink),
+        0 0 25px rgba(216,168,64,0.9), 0 0 50px rgba(216,168,64,0.5);
+    margin-bottom: 10px;
+    animation: battle-drop-title-glow 2.5s ease-in-out infinite;
+    position: relative;
+    z-index: 3;
+}
+@keyframes battle-drop-title-glow {
+    0%, 100% { text-shadow: 3px 3px 0 var(--ink), 1px 1px 0 var(--ink), 0 0 25px rgba(216,168,64,0.9), 0 0 50px rgba(216,168,64,0.5); }
+    50% { text-shadow: 3px 3px 0 var(--ink), 1px 1px 0 var(--ink), 0 0 40px rgba(216,168,64,1), 0 0 80px rgba(216,168,64,0.8); }
+}
+.battle-drop-modal .drop-subtitle {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--moon-shadow);
+    text-shadow: 1px 1px 0 var(--ink);
+    margin-bottom: 34px;
+    position: relative;
+    z-index: 3;
+    text-align: center;
+}
+.battle-drop-modal .drop-emoji-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 280px;
+    height: 240px;
+    margin-bottom: 20px;
+    z-index: 3;
+}
+.battle-drop-modal .drop-emoji-wrap::before {
+    content: '';
+    position: absolute;
+    width: 190px;
+    height: 34px;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, var(--rarity-glow) 0%, transparent 72%);
+    filter: blur(12px);
+    animation: battle-drop-ground-glow 2.8s ease-in-out infinite;
+    z-index: 1;
+}
+@keyframes battle-drop-ground-glow {
+    0%, 100% { transform: translateX(-50%) scaleX(0.9); opacity: 0.45; }
+    50% { transform: translateX(-50%) scaleX(1.08); opacity: 0.7; }
+}
+.battle-drop-modal .drop-emoji {
+    font-size: 180px;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 0 18px var(--rarity-glow)) drop-shadow(0 0 36px var(--rarity-glow));
+    animation: battle-item-drop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform-origin: center bottom;
+}
+@keyframes battle-item-drop {
+    0% { transform: translateY(-120vh) scale(0.4) rotate(-25deg); opacity: 0; }
+    30% { transform: translateY(-20px) scale(1) rotate(8deg); opacity: 1; }
+    45% { transform: translateY(0) scale(1.15) rotate(-5deg); }
+    55% { transform: translateY(-30px) scale(1.05) rotate(3deg); }
+    70% { transform: translateY(0) scale(1) rotate(-2deg); }
+    80% { transform: translateY(-8px) scale(1.02) rotate(1deg); }
+    100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+.battle-drop-modal .drop-impact {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    border: 4px solid var(--rarity, var(--moon));
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    animation: battle-impact-wave 1.2s ease-out 0.35s forwards;
+}
+@keyframes battle-impact-wave {
+    0% { width: 0; height: 0; opacity: 0.65; border-width: 4px; }
+    100% { width: 360px; height: 360px; opacity: 0; border-width: 1px; }
+}
+.battle-drop-modal .drop-particles { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.battle-drop-modal .drop-particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rarity, var(--moon));
+    box-shadow: 0 0 12px var(--rarity-glow);
+    opacity: 0;
+    animation: battle-particle-fly 1.2s ease-out 0.35s forwards;
+}
+@keyframes battle-particle-fly {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--px, 0px)), calc(-50% + var(--py, 0px))) scale(0.2); }
+}
+.battle-drop-modal .drop-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 3;
+    opacity: 0;
+    animation: battle-drop-info-appear 0.6s ease-out 0.7s forwards;
+}
+@keyframes battle-drop-info-appear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.battle-drop-modal .drop-rarity-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rarity, var(--moon-bright));
+    text-shadow: 1px 1px 0 var(--ink), 0 0 15px var(--rarity-glow), 0 0 30px var(--rarity-glow);
+    padding: 6px 18px;
+    border: 2px solid var(--rarity, var(--moon));
+    border-radius: 6px;
+    background: rgba(10, 10, 26, 0.6);
+    box-shadow: 0 0 20px var(--rarity-glow), inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.battle-drop-modal .drop-name {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 32px;
+    letter-spacing: 1px;
+    color: var(--moon-bright);
+    text-align: center;
+    text-shadow: 3px 3px 0 var(--ink), 1px 1px 0 var(--ink), 0 0 20px var(--rarity-glow);
+    line-height: 1.15;
+    margin-top: 4px;
+}
+.battle-drop-modal .drop-slot-type {
+    font-family: 'Kalam', cursive;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--moon-shadow);
+    text-shadow: 1px 1px 0 var(--ink);
+    opacity: 0.8;
+}
+.battle-drop-modal .drop-effect {
+    font-family: 'Kalam', cursive;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--moon);
+    text-align: center;
+    margin-top: 14px;
+    padding: 14px 28px;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    background:
+        radial-gradient(ellipse 60% 40% at 50% 50%, var(--rarity-glow), transparent 70%),
+        linear-gradient(180deg, rgba(20, 20, 45, 0.85), rgba(10, 10, 26, 0.95));
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(0, 0, 0, 0.7), 0 0 15px var(--rarity-glow);
+    text-shadow: 1px 1px 0 var(--ink);
+    max-width: 480px;
+}
+.battle-drop-modal .drop-effect b {
+    color: var(--rarity, var(--moon-bright));
+    font-weight: 700;
+    text-shadow: 1px 1px 0 var(--ink), 0 0 10px var(--rarity-glow);
+}
+.battle-drop-modal .drop-collect-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    padding: 16px 48px;
+    border-radius: 12px;
+    border: 3px solid var(--ink);
+    cursor: pointer;
+    margin-top: 28px;
+    background:
+        radial-gradient(ellipse 60% 40% at 50% 50%, rgba(216, 168, 64, 0.15), transparent 70%),
+        linear-gradient(135deg, rgba(42, 42, 74, 0.95), rgba(26, 26, 58, 0.95));
+    box-shadow: 5px 5px 0 var(--ink), 0 15px 28px rgba(0, 0, 0, 0.6), 0 0 25px rgba(216, 168, 64, 0.5), inset 0 0 20px rgba(216, 168, 64, 0.1);
+    text-shadow: 2px 2px 0 var(--ink), 0 0 15px rgba(216, 168, 64, 0.8);
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 0;
+    animation: battle-drop-info-appear 0.6s ease-out 1s forwards;
+    z-index: 3;
+}
+.battle-drop-modal .drop-collect-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 6px 6px 0 var(--ink), 0 20px 35px rgba(0, 0, 0, 0.7), 0 0 40px rgba(216, 168, 64, 0.8), inset 0 0 25px rgba(216, 168, 64, 0.2);
+    color: #fff;
+}
+@media (max-height: 720px) {
+    .battle-drop-modal .drop-stage { padding-top: 18px; padding-bottom: 18px; }
+    .battle-drop-modal .drop-subtitle { margin-bottom: 16px; }
+    .battle-drop-modal .drop-emoji-wrap { width: 220px; height: 170px; margin-bottom: 12px; }
+    .battle-drop-modal .drop-emoji { font-size: 130px; }
+    .battle-drop-modal .drop-name { font-size: 26px; }
+    .battle-drop-modal .drop-effect { margin-top: 8px; padding: 10px 18px; font-size: 15px; }
+    .battle-drop-modal .drop-collect-btn { margin-top: 16px; padding: 12px 36px; }
 }
 
 /* Carte non giocabili */
