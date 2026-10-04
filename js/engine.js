@@ -193,46 +193,10 @@ function startPlayerTurn() {
     isPlayerTurn = true;
     hideBanner();
     renderHand();
+    if (typeof autoSave === "function") autoSave();
 }
 
+
 function startBattle() {
-    loadEquippedBonuses();
-
-    const bossIndex = getCurrentBossIndex();
-    currentBoss = BOSSES[bossIndex];
-    monsterPattern = currentBoss.pattern;
-    monsterHp = currentBoss.hp;
-    monsterTurnIndex = 0;
-    monsterShield = 0;
-
-    const savedHp = loadSavedPlayerHp();
-    const maxHp = getPlayerMaxHp();
-    playerHp = (savedHp !== null && savedHp > 0) ? Math.min(savedHp, maxHp) : maxHp;
-    playerShield = equippedBonuses.shieldStart;
-
-    maxMana = BASE_MANA + equippedBonuses.manaMax;
-    playerMana = maxMana;
-
-    const bossNameEl = document.querySelector('.monster-ui .entity-name');
-    if (bossNameEl) bossNameEl.textContent = currentBoss.name;
-
-    // Cambia sfondo in base al boss
-    const bgVideo = document.getElementById("bg-video");
-    const bgSource = document.getElementById("bg-video-source");
-    if (bgVideo && bgSource && currentBoss.bgVideo) {
-        bgSource.src = currentBoss.bgVideo;
-        bgVideo.load();
-        bgVideo.play().catch(() => {});
-    }
-
-    initializeDeck();
-    hand = [];
-    const cardsToDraw = handSize + equippedBonuses.extraDraw;
-    for (let i = 0; i < cardsToDraw; i++) {
-        const newCard = drawCard();
-        if (newCard) hand.push(newCard);
-    }
-    renderHand();
-    if (typeof renderBonusPanel === 'function') renderBonusPanel();
-    updateUIStats();
+    // Avvio partita gestito da main.js + MenuSystem (questa funzione non serve piu')
 }

@@ -548,7 +548,7 @@ function collectBattleDrop() {
     if (modal) modal.classList.remove('active');
     battleDropItem = null;
 
-    setTimeout(() => window.location.reload(), 400);
+    setTimeout(() => { window.location.href = location.pathname + '?autostart=1'; }, 400);
 }
 
 const openDeckBtn = document.getElementById('open-deck-btn');

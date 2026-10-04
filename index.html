@@ -30,6 +30,7 @@
         </div>
 
         <div class="top-center-ui">
+            <button class="icon-btn" id="open-menu-btn" title="Menu">☰</button>
             <button class="icon-btn" id="open-deck-btn" title="Mazzo">📜<span class="icon-badge" id="deck-count">0</span></button>
             <button class="icon-btn" id="open-equip-btn" title="Equipaggiamento">📦<span class="icon-badge" id="equip-unseen-count" style="display: none;">0</span></button>
             <button class="icon-btn" id="open-map-btn" title="Mappa">🗺️</button>
@@ -76,12 +77,30 @@
         <source id="bg-video-source" src="bg-goblin.webm" type="video/webm">
     </video>
 
+    <div class="menu-overlay" id="menu-overlay">
+        <video class="menu-bg" id="menu-bg-video" autoplay muted loop playsinline preload="auto">
+            <source id="menu-bg-source" src="bg-menu.webm" type="video/webm">
+        </video>
+        <div class="menu-panel" id="menu-panel">
+            <button class="menu-btn" id="menu-resume">Riprendi Partita</button>
+            <button class="menu-btn" id="menu-new">Nuova Partita</button>
+            <button class="menu-btn" id="menu-save">Salva Partita</button>
+            <button class="menu-btn" id="menu-load">Carica Partita</button>
+            <button class="menu-btn menu-btn-exit" id="menu-exit">Esci da Gioco</button>
+        </div>
+        <div class="menu-submodal" id="menu-submodal">
+            <div class="menu-submodal-content" id="menu-submodal-content"></div>
+        </div>
+    </div>
+
     <script src="js/loot.js"></script>
+    <script src="js/save.js"></script>
     <script src="js/data.js"></script>
     <script src="js/fx-utils.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/effects.js"></script>
     <script src="js/engine.js"></script>
+    <script src="js/menu.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -736,14 +736,41 @@ function endBattle(playerWon) {
     isPlayerTurn = false;
     showBanner(playerWon ? 'Vittoria! 🏆' : 'Sconfitta 💀');
 
+    // Reset stato per-battaglia
+    burnDamage = 0; burnTicksLeft = 0;
+    poisonDamage = 0; poisonTicksLeft = 0;
+    monsterWeakTurns = 0; monsterStunTurns = 0;
+    playerWeakTurns = 0; playerStrength = 0;
+    playerRegenAmount = 0; playerRegenTurns = 0;
+    monsterShield = 0;
+    playerShield = 0;
+    discardPile = [];
+    hand = [];
+    monsterTurnIndex = 0;
+
     if (playerWon) {
-        savePlayerHp(playerHp);
-        const nextIdx = (getCurrentBossIndex() + 1) % BOSSES.length;
-        setCurrentBossIndex(nextIdx);
+        const idx = BOSSES.indexOf(currentBoss);
+        currentBoss = BOSSES[(idx + 1) % BOSSES.length];
+        monsterPattern = currentBoss.pattern;
+        monsterHp = currentBoss.hp;
     } else {
-        clearSavedPlayerHp();
-        setTimeout(() => window.location.reload(), 3000);
+        playerHp = getPlayerMaxHp();
+        monsterHp = currentBoss.hp;
     }
+
+    // Mazzo fresco per la battaglia successiva
+    initializeDeck();
+    const cardsToDraw = handSize + equippedBonuses.extraDraw;
+    for (let i = 0; i < cardsToDraw; i++) {
+        const c = drawCard();
+        if (c) hand.push(c);
+    }
+
+    isPlayerTurn = true;
+    battleOver = false;
+
+    // Autosave dopo vittoria/sconfitta
+    if (typeof autoSave === 'function') autoSave();
 
     if (playerWon && typeof LootSystem !== "undefined") {
         try {
@@ -779,5 +806,8 @@ function endBattle(playerWon) {
         burst(p.x, p.y, '#ff5a4d', 28, 200);
         burst(p.x, p.y, '#8b0000', 18, 260);
         screenFlash('255, 0, 0', 0.45);
+        setTimeout(() => {
+            window.location.href = location.pathname + '?autostart=1';
+        }, 2500);
     }
 }
