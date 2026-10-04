@@ -25,7 +25,6 @@ function cardPose(dx, dy, scale) {
 
 function startDrag(e, card, data, index) {
     if (activeCard || !isPlayerTurn || battleOver) return;
-    // Blocco di sicurezza: non si trascinano carte che non puoi permetterti
     if (getCardCost(data) > playerMana) return;
 
     activeCard = card;
@@ -100,8 +99,6 @@ function resetDrag() {
     activeCardIndex = -1;
     activeCardData = null;
 }
-
-// ---------- Turni ----------
 
 function checkEndOfTurn() {
     if (battleOver || !isPlayerTurn) return;
@@ -181,13 +178,15 @@ function monsterTurn() {
 }
 
 function startPlayerTurn() {
-    playerShield = 0;
+    playerShield = equippedBonuses.shieldStart;
+    maxMana = BASE_MANA + equippedBonuses.manaMax;
     playerMana = maxMana;
 
     playerRegenTick();
 
     hand = [];
-    for (let i = 0; i < handSize; i++) {
+    const cardsToDraw = handSize + equippedBonuses.extraDraw;
+    for (let i = 0; i < cardsToDraw; i++) {
         const newCard = drawCard();
         if (newCard) hand.push(newCard);
     }
@@ -197,11 +196,43 @@ function startPlayerTurn() {
 }
 
 function startBattle() {
+    loadEquippedBonuses();
+
+    const bossIndex = getCurrentBossIndex();
+    currentBoss = BOSSES[bossIndex];
+    monsterPattern = currentBoss.pattern;
+    monsterHp = currentBoss.hp;
+    monsterTurnIndex = 0;
+    monsterShield = 0;
+
+    const savedHp = loadSavedPlayerHp();
+    const maxHp = getPlayerMaxHp();
+    playerHp = (savedHp !== null && savedHp > 0) ? Math.min(savedHp, maxHp) : maxHp;
+    playerShield = equippedBonuses.shieldStart;
+
+    maxMana = BASE_MANA + equippedBonuses.manaMax;
+    playerMana = maxMana;
+
+    const bossNameEl = document.querySelector('.monster-ui .entity-name');
+    if (bossNameEl) bossNameEl.textContent = currentBoss.name;
+
+    // Cambia sfondo in base al boss
+    const bgVideo = document.getElementById("bg-video");
+    const bgSource = document.getElementById("bg-video-source");
+    if (bgVideo && bgSource && currentBoss.bgVideo) {
+        bgSource.src = currentBoss.bgVideo;
+        bgVideo.load();
+        bgVideo.play().catch(() => {});
+    }
+
     initializeDeck();
     hand = [];
-    for (let i = 0; i < handSize; i++) {
+    const cardsToDraw = handSize + equippedBonuses.extraDraw;
+    for (let i = 0; i < cardsToDraw; i++) {
         const newCard = drawCard();
         if (newCard) hand.push(newCard);
     }
     renderHand();
+    if (typeof renderBonusPanel === 'function') renderBonusPanel();
+    updateUIStats();
 }

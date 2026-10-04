@@ -39,8 +39,6 @@ const FX_LAUNCH_DELAY = 220;
 const FX_SETTLE = 200;
 const defaultFx = { damage: 'slash', shield: 'shield', heal: 'heal', utility: 'potion' };
 
-// ---------- Impatti base ----------
-
 function hitMonster(amount, sparkColor, opts = {}) {
     const p = fxPoint(monsterUi);
     const absorbed = opts.ignoreShield ? 0 : Math.min(monsterShield, amount);
@@ -119,7 +117,7 @@ function gainPlayerShield(value) {
 
 function healPlayer(value) {
     const before = playerHp;
-    playerHp = Math.min(75, playerHp + value);
+    playerHp = Math.min(getPlayerMaxHp(), playerHp + value);
     const healed = playerHp - before;
     updateUIStats();
 
@@ -138,8 +136,6 @@ function healPlayer(value) {
         ], { duration: 900, delay: i * 55, easing: 'ease-out' });
     }
 }
-
-// ---------- Status effects ----------
 
 function applyBurn(damage, turns) {
     if (monsterHp <= 0) return;
@@ -262,11 +258,15 @@ function applyPlayerRegen(amount, turns) {
 }
 
 function playerRegenTick() {
-    if (playerRegenTurns <= 0) return;
-    const amount = playerRegenAmount;
-    playerRegenTurns--;
-    if (playerRegenTurns === 0) playerRegenAmount = 0;
-    healPlayer(amount);
+    if (playerRegenTurns > 0) {
+        const amount = playerRegenAmount;
+        playerRegenTurns--;
+        if (playerRegenTurns === 0) playerRegenAmount = 0;
+        healPlayer(amount);
+    }
+    if (equippedBonuses.regen > 0) {
+        healPlayer(equippedBonuses.regen);
+    }
 }
 
 function cleansePlayer() {
@@ -284,8 +284,6 @@ function cleansePlayer() {
     glow(playerUi, '93, 240, 138');
     burst(p.x, p.y, FX_COLOR.heal, 10, 90);
 }
-
-// ---------- Voli generici ----------
 
 function flyToPlayer(from, html, orbClass, onArrive) {
     const target = fxPoint(playerUi);
@@ -308,9 +306,6 @@ function flyToMonster(from, html, duration, onArrive) {
     later(duration, onArrive);
 }
 
-// ---------- FX delle singole carte ----------
-
-// Lama diagonale (spade, martelli, mazze)
 function fxSlash(card, from, count) {
     const target = fxPoint(monsterUi);
     const angles = [-32, 28, -18];
@@ -328,7 +323,6 @@ function fxSlash(card, from, count) {
     });
 }
 
-// Affondo con lancia: scia orizzontale che colpisce
 function fxThrust(card, from) {
     const target = fxPoint(monsterUi);
     const dx = target.x - from.x, dy = target.y - from.y;
@@ -350,7 +344,6 @@ function fxThrust(card, from) {
     });
 }
 
-// Pugnale: colpo rapido e netto, corto
 function fxDagger(card) {
     const target = fxPoint(monsterUi);
     const dagger = fxEl('fx-dagger-fx', target.x - 40 * FX_SCALE, target.y);
@@ -366,7 +359,6 @@ function fxDagger(card) {
     });
 }
 
-// Freccia singola
 function fxArrow(card, from) {
     const target = fxPoint(monsterUi);
     const dx = target.x - from.x, dy = target.y - from.y;
@@ -381,7 +373,6 @@ function fxArrow(card, from) {
     later(FX_TIME.arrow, () => hitMonster(applyPlayerDamageMods(card.value), FX_COLOR.arrow, { ignoreShield: !!card.ignoreShield }));
 }
 
-// 3 frecce in rapida sequenza
 function fxArrow3(card, from) {
     const target = fxPoint(monsterUi);
     const dx = target.x - from.x, dy = target.y - from.y;
@@ -405,7 +396,6 @@ function fxArrow3(card, from) {
     });
 }
 
-// Fulmine elettrico: giallo, dritto dall'alto
 function fxElectric(card) {
     const target = fxPoint(monsterUi);
     const x = target.x + (Math.random() - 0.5) * 60 * FX_SCALE;
@@ -661,8 +651,6 @@ function playCardFx(card) {
     return totalMs;
 }
 
-// ---------- Azioni del boss ----------
-
 function fxMonsterAttack(damage, done) {
     const p = fxPoint(playerUi);
     monsterUi.animate([
@@ -742,17 +730,24 @@ function fxMonsterShield(value, done) {
     later(1000, done);
 }
 
-// ---------- Fine battaglia ----------
-
 function endBattle(playerWon) {
     if (battleOver) return;
     battleOver = true;
     isPlayerTurn = false;
     showBanner(playerWon ? 'Vittoria! 🏆' : 'Sconfitta 💀');
+
+    if (playerWon) {
+        savePlayerHp(playerHp);
+        const nextIdx = (getCurrentBossIndex() + 1) % BOSSES.length;
+        setCurrentBossIndex(nextIdx);
+    } else {
+        clearSavedPlayerHp();
+        setTimeout(() => window.location.reload(), 3000);
+    }
+
     if (playerWon && typeof LootSystem !== "undefined") {
         try {
             const drop = LootSystem.rollDrop();
-            // Prima lasciamo comparire chiaramente "Vittoria!", poi parte il drop.
             setTimeout(() => showBattleDrop(drop), 1500);
         } catch(e) { console.warn("Loot drop failed", e); }
     }

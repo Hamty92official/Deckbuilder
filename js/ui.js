@@ -25,38 +25,36 @@ function updatePlayableState() {
 
 // ============================================================
 //  AGGIORNAMENTO DEI VALORI DINAMICI
-//  - Danno delle carte: verde sopra il base, rosa sotto
-//  - Tooltip di Bruciatura/Veleno: mostrano il tick effettivo
-//    (Bruciatura = 100% del danno modificato, Veleno = 50%)
 // ============================================================
 function updateDamageDisplays() {
     handEls.forEach((el, i) => {
         const card = hand[i];
         if (!card) return;
 
-        // ---- 1) Valore del danno della carta ----
         const dmgSpan = el.querySelector('.dmg-value');
         if (dmgSpan) {
             const hits = getCardHits(card);
+            const itemBonus = equippedBonuses.dmgBonus;
             const baseTotal = card.value;
+            const baseWithItems = baseTotal + itemBonus;
             const totalModified = applyPlayerDamageMods(card.value);
-            const basePerHit = Math.floor(baseTotal / hits);
             const perHit = Math.floor(totalModified / hits);
             dmgSpan.textContent = hits > 1 ? perHit : totalModified;
 
             dmgSpan.classList.remove('modified-buff', 'modified-debuff');
-            if (totalModified > baseTotal) dmgSpan.classList.add('modified-buff');
-            else if (totalModified < baseTotal) dmgSpan.classList.add('modified-debuff');
+            if (totalModified > baseWithItems) dmgSpan.classList.add('modified-buff');
+            else if (totalModified < baseWithItems) dmgSpan.classList.add('modified-debuff');
 
-            if (playerStrength === 0 && playerWeakTurns === 0) {
+            if (playerStrength === 0 && playerWeakTurns === 0 && itemBonus === 0) {
                 dmgSpan.dataset.tip = '';
             } else {
                 const lines = [];
                 if (hits > 1) {
-                    lines.push(`<span class="tip-neutral">Base: ${basePerHit} per colpo (${baseTotal} totale)</span>`);
+                    lines.push(`<span class="tip-neutral">Base: ${Math.floor(baseTotal / hits)} per colpo (${baseTotal} totale)</span>`);
                 } else {
                     lines.push(`<span class="tip-neutral">Base: ${baseTotal}</span>`);
                 }
+                if (itemBonus > 0) lines.push(`<span class="tip-buff">+${itemBonus} da equipaggiamento</span>`);
                 if (playerStrength > 0) lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
                 if (playerWeakTurns > 0) lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
                 if (hits > 1) {
@@ -68,30 +66,32 @@ function updateDamageDisplays() {
             }
         }
 
-        // ---- 2) Tooltip di Bruciatura ----
         const burnSpan = el.querySelector('[data-keyword="burn"]');
         if (burnSpan) {
             const baseTick = card.value;
+            const itemBonus = equippedBonuses.dmgBonus;
             const tickDamage = applyPlayerDamageMods(card.value);
             const lines = [];
             lines.push(`<span class="tip-neutral">Ogni turno il nemico subisce il 100% del danno della carta, per 3 turni. Ignora lo scudo.</span>`);
             lines.push('');
             lines.push(`<span class="tip-neutral">Base: ${baseTick} danni per turno</span>`);
+            if (itemBonus > 0) lines.push(`<span class="tip-buff">+${itemBonus} da equipaggiamento</span>`);
             if (playerStrength > 0) lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
             if (playerWeakTurns > 0) lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
             lines.push(`<span class="tip-total">= ${tickDamage} danni per turno</span>`);
             burnSpan.dataset.tip = lines.join('<br>');
         }
 
-        // ---- 3) Tooltip di Veleno ----
         const poisonSpan = el.querySelector('[data-keyword="poison"]');
         if (poisonSpan) {
             const baseTick = Math.round(card.value / 2);
+            const itemBonus = equippedBonuses.dmgBonus;
             const tickDamage = Math.round(applyPlayerDamageMods(card.value) / 2);
             const lines = [];
             lines.push(`<span class="tip-neutral">Ogni turno il nemico subisce il 50% del danno della carta, per 3 turni. Ignora lo scudo. Il nemico ha il 20% di sbagliare il colpo.</span>`);
             lines.push('');
             lines.push(`<span class="tip-neutral">Base: ${baseTick} danni per turno</span>`);
+            if (itemBonus > 0) lines.push(`<span class="tip-buff">+${itemBonus} da equipaggiamento</span>`);
             if (playerStrength > 0) lines.push(`<span class="tip-buff">+${playerStrength} da Forza 💪</span>`);
             if (playerWeakTurns > 0) lines.push(`<span class="tip-debuff">−25% da Debolezza ⛓️‍💥</span>`);
             lines.push(`<span class="tip-total">= ${tickDamage} danni per turno</span>`);
@@ -100,19 +100,47 @@ function updateDamageDisplays() {
     });
 }
 
+function renderBonusPanel() {
+    const panel = document.getElementById('player-bonuses');
+    if (!panel) return;
+
+    const rows = [];
+    if (equippedBonuses.hpMax > 0) rows.push(`<div class="bonus-item">❤️ ${equippedBonuses.hpMax}</div>`);
+    if (equippedBonuses.dmgBonus > 0) rows.push(`<div class="bonus-item">⚔️ ${equippedBonuses.dmgBonus}</div>`);
+    if (equippedBonuses.shieldStart > 0) rows.push(`<div class="bonus-item">🛡️ ${equippedBonuses.shieldStart}</div>`);
+    if (equippedBonuses.manaMax > 0) rows.push(`<div class="bonus-item">💎 ${equippedBonuses.manaMax}</div>`);
+    if (equippedBonuses.regen > 0) rows.push(`<div class="bonus-item">💚 ${equippedBonuses.regen}</div>`);
+    if (equippedBonuses.extraDraw > 0) rows.push(`<div class="bonus-item">🎴 ${equippedBonuses.extraDraw}</div>`);
+
+    if (rows.length === 0) {
+        panel.style.display = 'none';
+        panel.innerHTML = '';
+    } else {
+        panel.style.display = 'flex';
+        panel.innerHTML = rows.join('');
+    }
+}
+
 function updateUIStats() {
     const deckCountEl = document.getElementById('deck-count');
     if (deckCountEl) deckCountEl.innerText = deck.length;
 
+    const maxHp = getPlayerMaxHp();
+    const monsterMaxHp = (typeof currentBoss !== 'undefined' && currentBoss) ? currentBoss.hp : 50;
+
     const playerHpEl = document.getElementById('player-hp');
     if (playerHpEl) playerHpEl.innerText = playerHp;
+    const playerMaxHpEl = document.getElementById('player-max-hp');
+    if (playerMaxHpEl) playerMaxHpEl.innerText = maxHp;
     const monsterHpEl = document.getElementById('monster-hp');
     if (monsterHpEl) monsterHpEl.innerText = monsterHp;
+    const monsterMaxHpEl = document.getElementById('monster-max-hp');
+    if (monsterMaxHpEl) monsterMaxHpEl.innerText = monsterMaxHp;
 
     const playerHpBar = document.getElementById('player-hp-bar');
-    if (playerHpBar) playerHpBar.style.width = `${(playerHp / 75) * 100}%`;
+    if (playerHpBar) playerHpBar.style.width = `${(playerHp / maxHp) * 100}%`;
     const monsterHpBar = document.getElementById('monster-hp-bar');
-    if (monsterHpBar) monsterHpBar.style.width = `${(monsterHp / 50) * 100}%`;
+    if (monsterHpBar) monsterHpBar.style.width = `${(monsterHp / monsterMaxHp) * 100}%`;
 
     const monsterShieldEl = document.getElementById('monster-shield-display');
     if (monsterHpBar && monsterShieldEl) {
@@ -176,17 +204,13 @@ function updateUIStats() {
 
     const playerManaEl = document.getElementById('mana-current');
     if (playerManaEl) playerManaEl.innerText = playerMana;
+    const manaMaxEl = document.getElementById('mana-max');
+    if (manaMaxEl) manaMaxEl.innerText = maxMana;
 
     updatePlayerShieldUI();
     updatePlayableState();
     updateDamageDisplays();
 }
-
-// ============================================================
-//  TITOLI DELLE CARTE
-//  La dimensione viene gestita dal CSS e può andare su due righe;
-//  non viene più ristretta in base al titolo più lungo del database.
-// ============================================================
 
 function fitCardTitles() {
     document.querySelectorAll('.hand-container .card-title, .deck-grid .card-title').forEach(span => {
@@ -215,10 +239,6 @@ function buildCardElement(cardData, extraClass) {
     `;
     return cardElement;
 }
-
-// ============================================================
-//  HOVER DELLE CARTE — hitbox che segue la rotazione vera
-// ============================================================
 
 let handHitBoxes = [];
 
@@ -527,9 +547,10 @@ function collectBattleDrop() {
     const modal = document.getElementById('battle-drop-modal');
     if (modal) modal.classList.remove('active');
     battleDropItem = null;
+
+    setTimeout(() => window.location.reload(), 400);
 }
 
-// --- Listener modale e pulsanti accessori ---
 const openDeckBtn = document.getElementById('open-deck-btn');
 const closeDeckBtn = document.getElementById('close-deck-btn');
 const deckModal = document.getElementById('deck-modal');
@@ -559,10 +580,6 @@ if (openEquipBtn) {
     });
 }
 if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
-
-// ============================================================
-//  TOOLTIP PER LE PAROLE CHIAVE E I VALORI DINAMICI
-// ============================================================
 
 const tooltipPopup = document.getElementById('tooltip-popup');
 let _currentKwEl = null;
@@ -638,10 +655,6 @@ document.addEventListener('touchstart', (e) => {
     const kwEl = e.target.closest('.kw, .dmg-value');
     if (!kwEl) hideTooltip();
 }, { passive: true });
-
-// ============================================================
-//  LISTENER GLOBALI PER L'HOVER DELLE CARTE
-// ============================================================
 
 const handContainerEl = document.getElementById('hand');
 if (handContainerEl) {

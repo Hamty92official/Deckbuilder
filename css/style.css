@@ -1121,3 +1121,35 @@ body::after {
     z-index: -1;
     pointer-events: none;
 }
+
+/* ============================================================
+
+/* ============================================================
+   PANNELLO BONUS — stile Binding of Isaac (senza contenitore)
+   ============================================================ */
+.player-bonuses {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2px, 0.6vw, 5px);
+    padding: clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px);
+    align-items: flex-start;
+}
+
+.bonus-item {
+    font-family: 'Cinzel', 'Kalam', cursive;
+    font-weight: 900;
+    font-size: clamp(16px, 4vw, 24px);
+    color: #ffffff;
+    text-shadow:
+        2px 2px 0 var(--ink),
+        -1px -1px 0 var(--ink),
+        1px -1px 0 var(--ink),
+        -1px 1px 0 var(--ink),
+        0 0 12px rgba(168, 213, 240, 0.7),
+        0 0 24px rgba(168, 213, 240, 0.4);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+}

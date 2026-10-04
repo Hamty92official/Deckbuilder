@@ -19,7 +19,6 @@ function kw(text, tipKey, keywordId) {
 }
 
 const cardDatabase = [
-    // ---------- ATTACCO ----------
     { cost: "💎",     title: "Taglio Rapido",      art: "Spada",           desc: "Infligge {DMG} danni ⚔️",                                fx: "slash",     type: "damage", value: 6 },
     { cost: "💎",     title: "Affondo Lineare",    art: "Lancia",          desc: "Infligge {DMG} danni ⚔️",                                fx: "thrust",    type: "damage", value: 5 },
     { cost: "💎",     title: "Colpo Furtivo",      art: "Pugnale",         desc: "Infligge {DMG} danni ⚔️. " + kw("Ignora lo scudo", "Ignora lo scudo"),         fx: "dagger",    type: "damage", value: 4, ignoreShield: true },
@@ -35,41 +34,29 @@ const cardDatabase = [
     { cost: "💎💎💎", title: "Tempesta Arcana",    art: "Tempesta",        desc: "Infligge {DMG} danni ⚔️ cinque volte",                    fx: "arcane",    type: "damage", value: 20 },
     { cost: "💎💎💎", title: "Colpo Devastante",   art: "Martello",        desc: "Infligge {DMG} danni ⚔️",                               fx: "slash",     type: "damage", value: 15 },
     { cost: "💎💎💎", title: "Assalto Brutale",    art: "Armi",            desc: "Infligge {DMG} danni ⚔️ tre volte",                       fx: "slash3",    type: "damage", value: 18 },
-
-    // ---------- SCUDO ----------
     { cost: "💎",     title: "Scudo Saldo",        art: "Scudo",           desc: "Ottieni 5 scudo 🛡️",                                 fx: "shield",     type: "shield", value: 5 },
     { cost: "💎",     title: "Barriera Fluida",    art: "Scudo",           desc: "Ottieni 4 scudo 🛡️. Pesca 1 carta 🎴",               fx: "shield",     type: "shield", value: 4, draw: 1 },
     { cost: "💎💎",   title: "Muraglia Eterna",    art: "Muro",            desc: "Ottieni 11 scudo 🛡️",                                fx: "shield",     type: "shield", value: 11 },
     { cost: "💎💎",   title: "Riparo Curativo",    art: "Riparo",          desc: "Ottieni 7 scudo 🛡️. Cura 4 ❤️",                      fx: "shieldheal", type: "shield", value: 7, healValue: 4 },
     { cost: "💎💎💎", title: "Fortezza Eterna",    art: "Fortezza",        desc: "Ottieni 18 scudo 🛡️",                                fx: "shield",     type: "shield", value: 18 },
-
-    // ---------- CURA ----------
     { cost: "💎",     title: "Soffio Vitale",      art: "Elisir",          desc: "Cura 4 ❤️",                                          fx: "heal",       type: "heal", value: 4 },
     { cost: "💎💎",   title: "Elisir Curativo",    art: "Elisir",          desc: "Cura 6 ❤️",                                          fx: "heal",       type: "heal", value: 6 },
     { cost: "💎💎",   title: "Benedizione Divina", art: "Foglia",          desc: "Cura 5 ❤️. Pesca 1 carta 🎴",                        fx: "heal",       type: "heal", value: 5, draw: 1 },
     { cost: "💎💎",   title: "Fonte Vitale",       art: "Foglia",          desc: kw("Rigenerazione 💚", "Rigenerazione") + " 4 per 3 turni",       fx: "regen",      type: "regen", value: 4, regenTurns: 3 },
     { cost: "💎💎💎", title: "Guarigione Suprema", art: "Fonte",           desc: "Cura 15 ❤️",                                         fx: "heal",       type: "heal", value: 15 },
-
-    // ---------- UTILITÀ ----------
     { cost: "💎",     title: "Pozione Arcana",     art: "Pozione",         desc: "Pesca 2 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 2, manaGain: 1 },
     { cost: "💎",     title: "Focus Mentale",      art: "Tomo",            desc: "Pesca 3 carte 🎴. Ottieni 1 💎",                     fx: "potion",     type: "utility", draw: 3, manaGain: 1 },
     { cost: "💎",     title: "Luce Purificatrice", art: "Stella",          desc: "Rimuove i tuoi effetti negativi",                    fx: "cleanse",    type: "cleanse" },
     { cost: "💎💎",   title: "Faro Ispirante",     art: "Faro",            desc: "Pesca 2 carte 🎴. Cura 3 ❤️. Ottieni 1 💎",           fx: "heal",       type: "utility", value: 3, draw: 2, manaGain: 1 },
     { cost: "💎💎",   title: "Panacea Suprema",    art: "Calice",          desc: "Rimuove i tuoi effetti negativi. Cura 5 ❤️",         fx: "cleanseheal",type: "cleanse", value: 5 },
-
-    // ---------- BUFF / DEBUFF ----------
     { cost: "💎",     title: "Potere Marziale",    art: "Pugno",           desc: kw("Forza 💪", "Forza") + " +2",                              fx: "strength", type: "strength", value: 2 },
     { cost: "💎",     title: "Sortilegio Fioco",   art: "Catene",          desc: "Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni",       fx: "weaken",   type: "weaken", value: 2 },
     { cost: "💎💎",   title: "Maledizione Oscura", art: "Teschio",         desc: "Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 3 turni",       fx: "weaken",   type: "weaken", value: 3 },
     { cost: "💎💎",   title: "Colpo Stordente",    art: "Martello",        desc: kw("Stordisci 💫", "Stordisci") + " il nemico",                 fx: "stun",     type: "stun", value: 1 },
     { cost: "💎💎💎", title: "Furia Primordiale",  art: "Fiamma",          desc: kw("Forza 💪", "Forza") + " +5",                              fx: "strength", type: "strength", value: 5 },
     { cost: "💎💎💎", title: "Terrore Abissale",   art: "Spettro",         desc: kw("Stordisci 💫", "Stordisci") + " il nemico per 2 turni",      fx: "stun",     type: "stun", value: 2 },
-
-    // ---------- STATUS (solo DoT) ----------
     { cost: "💎💎",   title: "Tossina Pura",       art: "Fiala",           desc: "Applica " + kw("Veleno 🧪", "Veleno", "poison"),                                fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
     { cost: "💎💎💎", title: "Combustione Ardente",art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
-
-    // ---------- MISTI ----------
     { cost: "💎💎",   title: "Assalto Debilitante",art: "Mazza",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
     { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
 ];
@@ -86,21 +73,114 @@ let discardPile = [];
 let hand = [];
 let handEls = [];
 
-let playerShield = 0;
-let playerHp = 75;
-let monsterHp = 50;
-let playerMana = 3;
-const maxMana = 3;
+// --- Costanti base ---
+const BASE_PLAYER_HP = 75;
+const BASE_MANA = 3;
+const BASE_HAND_SIZE = 5;
+const handSize = BASE_HAND_SIZE;
 
-const handSize = 5;
-const monsterPattern = [
-    { type: 'attack', value: 6 },
-    { type: 'attack', value: 6 },
-    { type: 'shield', value: 8 },
-    { type: 'weaken', value: 2 }
-];
+// --- Stato giocatore ---
+let playerShield = 0;
+let playerHp = BASE_PLAYER_HP;
+let playerMana = BASE_MANA;
+let maxMana = BASE_MANA;
+
+// --- Stato mostro ---
+let monsterHp = 50;
 let monsterTurnIndex = 0;
 let monsterShield = 0;
+
+// ---------- BOSS ----------
+const BOSSES = [
+    {
+        id: 'goblin',
+        name: 'Goblin Corrotto',
+        bgVideo: 'bg-goblin.webm',
+        hp: 50,
+        pattern: [
+            { type: 'attack', value: 6 },
+            { type: 'attack', value: 6 },
+            { type: 'shield', value: 8 },
+            { type: 'weaken', value: 2 }
+        ]
+    },
+    {
+        id: 'kraken',
+        name: 'Kraken Abissale',
+        bgVideo: 'bg-kraken.webm',
+        hp: 85,
+        pattern: [
+            { type: 'attack', value: 7 },
+            { type: 'attack', value: 9 },
+            { type: 'shield', value: 12 },
+            { type: 'attack', value: 11 },
+            { type: 'weaken', value: 3 }
+        ]
+    }
+];
+
+let currentBoss = BOSSES[0];
+let monsterPattern = currentBoss.pattern;
+
+const BOSS_INDEX_KEY = 'db_boss_index';
+const PLAYER_HP_KEY = 'db_player_hp';
+
+function getCurrentBossIndex() {
+    try {
+        const raw = parseInt(localStorage.getItem(BOSS_INDEX_KEY) || '0', 10);
+        if (Number.isFinite(raw) && raw >= 0 && raw < BOSSES.length) return raw;
+    } catch (e) {}
+    return 0;
+}
+
+function setCurrentBossIndex(i) {
+    try { localStorage.setItem(BOSS_INDEX_KEY, String(i)); } catch (e) {}
+}
+
+function savePlayerHp(hp) {
+    try { localStorage.setItem(PLAYER_HP_KEY, String(Math.max(0, Math.floor(hp)))); } catch (e) {}
+}
+
+function loadSavedPlayerHp() {
+    try {
+        const raw = parseInt(localStorage.getItem(PLAYER_HP_KEY) || '', 10);
+        return Number.isFinite(raw) ? raw : null;
+    } catch (e) { return null; }
+}
+
+function clearSavedPlayerHp() {
+    try { localStorage.removeItem(PLAYER_HP_KEY); } catch (e) {}
+}
+
+// ---------- BONUS EQUIPAGGIAMENTO ----------
+const equippedBonuses = {
+    hpMax: 0, dmgBonus: 0, shieldStart: 0,
+    manaMax: 0, regen: 0, extraDraw: 0
+};
+
+function loadEquippedBonuses() {
+    equippedBonuses.hpMax = 0;
+    equippedBonuses.dmgBonus = 0;
+    equippedBonuses.shieldStart = 0;
+    equippedBonuses.manaMax = 0;
+    equippedBonuses.regen = 0;
+    equippedBonuses.extraDraw = 0;
+
+    if (typeof LootSystem === 'undefined') return;
+    try {
+        const equipped = LootSystem.getEquipped() || {};
+        Object.values(equipped).forEach(item => {
+            if (!item || !item.stats) return;
+            Object.entries(item.stats).forEach(([k, v]) => {
+                if (k in equippedBonuses) equippedBonuses[k] += v;
+            });
+        });
+    } catch (e) { /* ignore */ }
+}
+
+function getPlayerMaxHp() {
+    return BASE_PLAYER_HP + equippedBonuses.hpMax;
+}
 
 let burnDamage = 0;
 let burnTicksLeft = 0;
@@ -153,7 +233,6 @@ function getCardCost(cardData) {
     return [...cardData.cost].length;
 }
 
-// Quanti colpi fa una carta d'attacco (per calcolare il danno per colpo)
 function getCardHits(card) {
     switch (card.fx) {
         case 'slash2':  return 2;
@@ -165,7 +244,7 @@ function getCardHits(card) {
 }
 
 function applyPlayerDamageMods(baseDamage) {
-    let dmg = baseDamage + playerStrength;
+    let dmg = baseDamage + playerStrength + equippedBonuses.dmgBonus;
     if (playerWeakTurns > 0) dmg = Math.round(dmg * (1 - WEAK_REDUCTION));
     return Math.max(0, dmg);
 }
