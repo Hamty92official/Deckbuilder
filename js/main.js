@@ -32,8 +32,6 @@ function applyGameState(data) {
     currentBoss = BOSSES[bossIdx];
     monsterPattern = currentBoss.pattern;
 
-    if (data.inventory && typeof LootSystem !== 'undefined') LootSystem.saveInventory(data.inventory);
-    if (data.equipped && typeof LootSystem !== 'undefined') LootSystem.saveEquipped(data.equipped);
     if (typeof data.unseenItems === 'number') {
         try { localStorage.setItem('db_unseen_items', String(data.unseenItems)); } catch(e) {}
     }

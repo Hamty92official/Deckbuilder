@@ -766,8 +766,10 @@ function endBattle(playerWon) {
         if (c) hand.push(c);
     }
 
+    maxMana = BASE_MANA + equippedBonuses.manaMax;
+    playerMana = maxMana;
+    playerShield = equippedBonuses.shieldStart;
     isPlayerTurn = true;
-    battleOver = false;
 
     // Autosave dopo vittoria/sconfitta
     if (typeof autoSave === 'function') autoSave();

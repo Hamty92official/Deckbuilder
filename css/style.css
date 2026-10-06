@@ -771,6 +771,7 @@ body {
 .modal-content {
     background:
         radial-gradient(ellipse 60% 40% at 20% 15%, rgba(122, 216, 255, 0.06), transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"),
         linear-gradient(145deg, #2a2a4a 0%, #1a1a3a 45%, #0f0f28 100%);
     border-radius: 20px;
     border: 3px solid var(--ink);
@@ -1173,34 +1174,42 @@ body::after {
 }
 .menu-panel {
     position: absolute;
-    top: 22vh;
+    top: 2vh;
     left: 3vw;
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 1.2vh, 14px);
-    width: min(320px, 34vw);
-    max-width: 340px;
+    gap: clamp(10px, 1.5vh, 18px);
+    width: min(680px, 55vw);
+    max-width: 720px;
     z-index: 2;
 }
 .menu-btn {
     font-family: 'Cinzel', serif;
-    font-size: clamp(12px, 1.4vw, 17px);
+    font-size: clamp(14px, 1.7vw, 22px);
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: #f0c870;
-    padding: clamp(10px, 1.4vh, 15px) clamp(14px, 1.8vw, 22px);
-    border-radius: 10px;
+    padding: clamp(16px, 2.2vh, 26px) clamp(20px, 2.5vw, 36px);
+    border-radius: 12px;
     border: 3px solid var(--ink);
     cursor: pointer;
-    background: linear-gradient(135deg, rgba(42,42,74,0.95), rgba(15,15,40,0.95));
-    box-shadow: 4px 4px 0 var(--ink), 0 8px 20px rgba(0,0,0,0.6), 0 0 20px rgba(216,168,64,0.3);
+    background:
+        radial-gradient(ellipse 40% 25% at 78% 18%, rgba(0, 0, 0, 0.5), transparent 70%),
+        radial-gradient(ellipse 35% 30% at 20% 78%, rgba(0, 0, 0, 0.4), transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"),
+        linear-gradient(135deg, rgba(42, 42, 74, 0.92) 0%, rgba(26, 26, 58, 0.95) 50%, rgba(15, 15, 40, 0.96) 100%);
+    box-shadow:
+        5px 5px 0 var(--ink),
+        0 15px 35px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 2px rgba(168, 213, 240, 0.12),
+        inset 0 0 0 4px rgba(5, 5, 15, 0.6),
+        inset 0 0 60px rgba(0, 0, 0, 0.7),
+        0 0 20px rgba(216, 168, 64, 0.3);
     text-shadow: 2px 2px 0 var(--ink), 0 0 10px rgba(216,168,64,0.6);
     transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .menu-btn:hover {
     transform: translateY(-2px) translateX(6px);
@@ -1231,6 +1240,7 @@ body::after {
 .menu-submodal-content {
     background:
         radial-gradient(ellipse 60% 40% at 20% 15%, rgba(122, 216, 255, 0.06), transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"),
         linear-gradient(145deg, #2a2a4a 0%, #1a1a3a 45%, #0f0f28 100%);
     border-radius: 20px;
     border: 3px solid var(--ink);
@@ -1268,7 +1278,11 @@ body::after {
     border-radius: 10px;
     border: 3px solid var(--ink);
     cursor: pointer;
-    background: linear-gradient(135deg, rgba(42,42,74,0.95), rgba(26,26,58,0.95));
+    background:
+        radial-gradient(ellipse 40% 25% at 78% 18%, rgba(0, 0, 0, 0.5), transparent 70%),
+        radial-gradient(ellipse 35% 30% at 20% 78%, rgba(0, 0, 0, 0.4), transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"),
+        linear-gradient(135deg, rgba(42, 42, 74, 0.92) 0%, rgba(26, 26, 58, 0.95) 50%, rgba(15, 15, 40, 0.96) 100%);
     box-shadow: 4px 4px 0 var(--ink), 0 8px 20px rgba(0,0,0,0.6);
     text-shadow: 2px 2px 0 var(--ink);
     transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
@@ -1292,7 +1306,11 @@ body::after {
     padding: 14px;
     border: 3px solid var(--ink);
     border-radius: 12px;
-    background: linear-gradient(145deg, rgba(26,26,58,0.9), rgba(15,15,40,0.95));
+    background:
+        radial-gradient(ellipse 40% 25% at 78% 18%, rgba(0, 0, 0, 0.5), transparent 70%),
+        radial-gradient(ellipse 35% 30% at 20% 78%, rgba(0, 0, 0, 0.4), transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"),
+        linear-gradient(145deg, rgba(26,26,58,0.9), rgba(15,15,40,0.95));
     box-shadow: 3px 3px 0 var(--ink), inset 0 2px 5px rgba(0,0,0,0.7);
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
@@ -1385,3 +1403,45 @@ body::after {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
+
+
+/* ==+ RESPONSIVE_HIGH_RES_START +== */
+/* Riferimento: 2K = zoom 1x. Tutto scala in proporzione. */
+@media (max-width: 1919px) {
+    /* 720p: 0.5x */
+    body { zoom: 0.5; }
+}
+@media (min-width: 1920px) and (max-width: 2559px) {
+    /* 1080p: 0.75x */
+    body { zoom: 0.75; }
+}
+/* 2K (2560-3839): zoom 1x (default, nessuna regola) */
+@media (min-width: 3840px) and (max-width: 7679px) {
+    /* 4K: 1.5x */
+    body { zoom: 1.5; }
+}
+@media (min-width: 7680px) {
+    /* 8K: 3x */
+    body { zoom: 3; }
+}
+/* ==+ RESPONSIVE_HIGH_RES_END +== */
+
+
+/* ==+ MENU_TARGHETTA_START +== */
+.menu-targhetta {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 clamp(10px, 1.4vh, 16px) 0;
+    pointer-events: none;
+    user-select: none;
+    filter:
+        drop-shadow(0 4px 12px rgba(0, 0, 0, 0.75))
+        drop-shadow(0 0 20px rgba(216, 168, 64, 0.25));
+    animation: menu-targhetta-fadein 0.6s ease-out;
+}
+@keyframes menu-targhetta-fadein {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* ==+ MENU_TARGHETTA_END +== */

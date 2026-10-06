@@ -9,6 +9,7 @@
     let onLoadSlotCb = null;
     let onSaveCb = null;
     let inGame = false;
+    let forceNoResume = false;
 
     function initMenu() {
         const overlay = document.getElementById('menu-overlay');
@@ -37,6 +38,17 @@
         if (pauseBtn) pauseBtn.addEventListener('click', () => showPauseMenu());
     }
 
+    function shouldShowResume() {
+        if (inGame) return !forceNoResume;
+        return S.findMostRecentSlot() > 0;
+    }
+
+    function updateResumeButton() {
+        const resumeBtn = document.getElementById('menu-resume');
+        if (!resumeBtn) return;
+        resumeBtn.style.display = shouldShowResume() ? 'block' : 'none';
+    }
+
     function showStartMenu() {
         const overlay = document.getElementById('menu-overlay');
         if (!overlay) return;
@@ -45,7 +57,7 @@
 
         const resumeBtn = document.getElementById('menu-resume');
         resumeBtn.textContent = 'Riprendi Partita';
-        resumeBtn.style.display = S.findMostRecentSlot() > 0 ? 'block' : 'none';
+        updateResumeButton();
         document.getElementById('menu-save').style.display = 'none';
 
         setMenuVideo();
@@ -59,7 +71,7 @@
 
         const resumeBtn = document.getElementById('menu-resume');
         resumeBtn.textContent = 'Continua';
-        resumeBtn.style.display = 'block';
+        updateResumeButton();
         document.getElementById('menu-save').style.display = 'block';
 
         setMenuVideo();
@@ -87,6 +99,7 @@
             const idx = S.findMostRecentSlot();
             if (idx > 0 && onLoadSlotCb) {
                 S.setActiveSlot(idx);
+                forceNoResume = false;
                 hideMenu();
                 onLoadSlotCb(idx);
             }
@@ -101,6 +114,7 @@
         const active = S.getActiveSlot();
         if (active > 0) {
             if (onSaveCb) onSaveCb(active);
+            forceNoResume = false;
             showToast('Partita salvata nello Slot ' + active);
         } else {
             showSlotPicker('save');
@@ -169,19 +183,23 @@
         closeSubModal();
         if (mode === 'new') {
             S.setActiveSlot(slot);
+            forceNoResume = false;
             hideMenu();
             if (onNewGameCb) onNewGameCb(slot);
         } else if (mode === 'save') {
             if (onSaveCb) {
                 const ok = onSaveCb(slot);
-                if (ok) showToast('Partita salvata nello Slot ' + slot);
+                if (ok) {
+                    forceNoResume = false;
+                    showToast('Partita salvata nello Slot ' + slot);
+                }
             }
         }
     }
 
     function showLoadModal() {
         const slots = S.listSlots();
-        let hasAny = slots.some(s => s.data);
+        const hasAny = slots.some(s => s.data);
         let html = '<div class="submodal-title">Carica Partita</div>';
         if (!hasAny) {
             html += '<div class="empty-msg">Nessun salvataggio disponibile.</div>';
@@ -205,7 +223,8 @@
             });
             html += '</div>';
         }
-        html += '<div class="submodal-actions"><button class="submodal-btn" id="submodal-cancel">Annulla</button></div>';
+        const btnLabel = hasAny ? 'Annulla' : 'Ok';
+        html += '<div class="submodal-actions"><button class="submodal-btn" id="submodal-cancel">' + btnLabel + '</button></div>';
         openSubModal(html);
 
         document.getElementById('submodal-cancel').addEventListener('click', closeSubModal);
@@ -215,6 +234,7 @@
                 if (e.target.closest('.slot-trash')) return;
                 const slot = parseInt(el.dataset.slot, 10);
                 S.setActiveSlot(slot);
+                forceNoResume = false;
                 closeSubModal();
                 hideMenu();
                 if (onLoadSlotCb) onLoadSlotCb(slot);
@@ -226,8 +246,13 @@
                 e.stopPropagation();
                 const slot = parseInt(btn.dataset.trash, 10);
                 confirmModal('Eliminare il salvataggio nello Slot ' + slot + '?', () => {
+                    const wasActive = (S.getActiveSlot() === slot);
                     S.deleteSlot(slot);
-                    if (S.getActiveSlot() === slot) S.setActiveSlot(-1);
+                    if (wasActive) {
+                        S.setActiveSlot(-1);
+                        if (inGame) forceNoResume = true;
+                    }
+                    updateResumeButton();
                     showLoadModal();
                 });
             });
@@ -271,7 +296,10 @@
             saveBtn.addEventListener('click', () => {
                 let slot = S.getActiveSlot();
                 if (slot < 1) slot = S.findFirstEmptySlot();
-                if (slot > 0 && onSaveCb) onSaveCb(slot);
+                if (slot > 0 && onSaveCb) {
+                    onSaveCb(slot);
+                    forceNoResume = false;
+                }
                 closeSubModal();
                 tryClose();
             });
