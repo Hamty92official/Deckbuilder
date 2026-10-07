@@ -651,6 +651,33 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+        /* RESPONSIVE_EQUIP_START */
+        @media (max-height: 1200px) {
+            .dual-panels {
+                padding-top: 70px;
+                padding-bottom: 15px;
+                gap: 18px;
+                min-height: auto;
+            }
+            .panel { padding: 10px; gap: 8px; }
+            .panel.equipment, .panel.bag { width: 440px; }
+            .equip-layout {
+                grid-template-rows: repeat(4, 100px);
+                grid-template-columns: 100px 1fr 100px;
+                gap: 6px;
+            }
+            .slot-icon { font-size: 32px; }
+            .slot-item-name { font-size: 8px; bottom: 2px; }
+            .stats-summary { gap: 3px; padding: 6px 2px 2px; }
+            .stat-row { padding: 5px 8px; gap: 8px; }
+            .stat-row .stat-icon { font-size: 16px; }
+            .stat-row .stat-value { font-size: 14px; min-width: 30px; }
+            .stat-row .stat-label { font-size: 11px; }
+            .bag-grid { grid-template-columns: repeat(6, 1fr); gap: 4px; }
+            .bag-slot { font-size: 20px; }
+            .panel-header { font-size: 14px; padding: 2px 0 8px; letter-spacing: 3px; }
+        }
+        /* RESPONSIVE_EQUIP_END */
 </style>
 </head>
 <body>

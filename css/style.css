@@ -1439,3 +1439,25 @@ body::after {
     body { zoom: 3; }
 }
 /* ==+ RESPONSIVE_HIGH_RES_END +== */
+
+/* ==+ MENU_SHORT_HEIGHT_START +== */
+/* Su schermi con altezza <= 1200px (tipicamente 1080p) riduciamo
+   la targhetta e i bottoni per far entrare tutto senza tagli. */
+@media (max-height: 1200px) {
+    .menu-panel {
+        top: 1vh;
+        gap: clamp(6px, 1vh, 10px);
+    }
+    .menu-targhetta {
+        width: auto;
+        max-width: 100%;
+        max-height: 18vh;
+        margin: 0 auto clamp(6px, 1vh, 10px) auto;
+        object-fit: contain;
+    }
+    .menu-btn {
+        font-size: clamp(12px, 1.4vw, 17px);
+        padding: clamp(10px, 1.4vh, 14px) clamp(16px, 2vw, 26px);
+    }
+}
+/* ==+ MENU_SHORT_HEIGHT_END +== */
