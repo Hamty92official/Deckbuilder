@@ -1405,26 +1405,6 @@ body::after {
 }
 
 
-/* ==+ RESPONSIVE_HIGH_RES_START +== */
-/* Riferimento: 2K = zoom 1x. Tutto scala in proporzione. */
-@media (max-width: 1919px) {
-    /* 720p: 0.5x */
-    body { zoom: 0.5; }
-}
-@media (min-width: 1920px) and (max-width: 2559px) {
-    /* 1080p: 0.75x */
-    body { zoom: 0.75; }
-}
-/* 2K (2560-3839): zoom 1x (default, nessuna regola) */
-@media (min-width: 3840px) and (max-width: 7679px) {
-    /* 4K: 1.5x */
-    body { zoom: 1.5; }
-}
-@media (min-width: 7680px) {
-    /* 8K: 3x */
-    body { zoom: 3; }
-}
-/* ==+ RESPONSIVE_HIGH_RES_END +== */
 
 
 /* ==+ MENU_TARGHETTA_START +== */
@@ -1445,3 +1425,17 @@ body::after {
     to { opacity: 1; transform: translateY(0); }
 }
 /* ==+ MENU_TARGHETTA_END +== */
+
+/* ==+ RESPONSIVE_HIGH_RES_START +== */
+/* Strategia: il design e' calibrato per ~2K (2560px).
+   Su risoluzioni PIU' BASSE non scaliamo (i px CSS restano leggibili).
+   Su risoluzioni PIU' ALTE scaliamo con zoom per mantenere le proporzioni. */
+@media (min-width: 3840px) and (max-width: 7679px) {
+    /* 4K: 1.5x */
+    body { zoom: 1.5; }
+}
+@media (min-width: 7680px) {
+    /* 8K: 3x */
+    body { zoom: 3; }
+}
+/* ==+ RESPONSIVE_HIGH_RES_END +== */
