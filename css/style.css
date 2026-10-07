@@ -1491,3 +1491,44 @@ body::after {
     .stats-row { gap: 8px; }
 }
 /* ==+ SCREEN_2K_BOOST_END +== */
+
+/* ==+ A1_PLAYER_SIDE_START +== */
+.player-side {
+    position: absolute;
+    top: clamp(8px, 2.5vh, 20px);
+    left: clamp(6px, 2vw, 20px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, 1.4vw, 10px);
+    z-index: 10;
+    align-items: flex-start;
+}
+.player-ui {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+}
+/* ==+ A1_PLAYER_SIDE_END +== */
+
+/* ==+ B_SCROLL_HINT_START +== */
+.deck-grid, .stats-summary { scrollbar-width: none; -ms-overflow-style: none; }
+.deck-grid::-webkit-scrollbar, .stats-summary::-webkit-scrollbar { display: none; }
+.scroll-hint-down {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    font-size: 22px;
+    color: #f0c870;
+    text-shadow: 0 0 10px rgba(216,168,64,0.8), 2px 2px 0 #0a0a1a;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 30;
+    animation: scroll-hint-bounce 1.5s ease-in-out infinite;
+}
+.scroll-hint-down.visible { opacity: 1; }
+@keyframes scroll-hint-bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(6px); }
+}
+/* ==+ B_SCROLL_HINT_END +== */

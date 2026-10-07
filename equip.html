@@ -678,6 +678,45 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
             .panel-header { font-size: 14px; padding: 2px 0 8px; letter-spacing: 3px; }
         }
         /* RESPONSIVE_EQUIP_END */
+        /* ==+ B2_EQUIP_FIX_START +== */
+        /* Neutralizza wrapper HTML rotto: figli come figli diretti del panel */
+        .stats-summary-wrapper { display: contents; }
+        /* Nasconde la vecchia freccia HTML (fuori posto) */
+        .scroll-hint-down { display: none !important; }
+        /* Scroll su stats-summary, senza scrollbar visibile */
+        .stats-summary {
+            flex: 0 1 auto;
+            min-height: 0;
+            max-height: 32vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .stats-summary::-webkit-scrollbar { display: none; }
+        /* Nuova freccia: ::after su .panel.equipment, in basso al centro */
+        .panel.equipment::after {
+            content: '▼';
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            color: #f0c870;
+            text-shadow: 0 0 10px rgba(216,168,64,0.9), 2px 2px 0 #0a0a1a;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+        .panel.equipment.show-scroll-hint::after {
+            opacity: 1;
+            animation: scroll-hint-bounce-eq 1.5s ease-in-out infinite;
+        }
+        @keyframes scroll-hint-bounce-eq {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50%      { transform: translateX(-50%) translateY(5px); }
+        }
+        /* ==+ B2_EQUIP_FIX_END +== */
 </style>
 </head>
 <body>
@@ -715,7 +754,10 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
             <div class="slot" data-slot="pet"></div>
             <div class="slot" data-slot="weapon"></div>
         </div>
-        <div class="stats-summary" id="stats-summary"></div>
+        <div class="stats-summary-wrapper">
+            <div class="stats-summary" id="stats-summary"></div>
+            <div class="scroll-hint-down" id="stats-scroll-hint">▼</div>
+        </div>
     </div>
     <div class="panel bag">
         <div class="corner tl"></div>
@@ -1042,5 +1084,30 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
 })();
 </script>
 
+<script>
+// SCROLL_HINT_FIX_START
+(function() {
+    function setup() {
+        const el = document.getElementById('stats-summary');
+        const panel = el && el.closest('.panel.equipment');
+        if (!el || !panel) return;
+        const update = () => {
+            const canScroll = el.scrollHeight > el.clientHeight + 4;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 4;
+            panel.classList.toggle('show-scroll-hint', canScroll && !atBottom);
+        };
+        el.addEventListener('scroll', update);
+        if (window.MutationObserver) {
+            new MutationObserver(update).observe(el, { childList: true, subtree: true });
+        }
+        window.addEventListener('resize', update);
+        setTimeout(update, 100);
+        setTimeout(update, 500);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+    else setup();
+})();
+// SCROLL_HINT_FIX_END
+</script>
 </body>
 </html>

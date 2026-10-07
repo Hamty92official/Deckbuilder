@@ -559,6 +559,7 @@ if (openDeckBtn && deckModal) {
     openDeckBtn.addEventListener('click', () => {
         renderDeckModal();
         deckModal.classList.add('active');
+        setTimeout(() => document.getElementById('deck-grid')?._updateScrollHint?.(), 80);
     });
 }
 if (closeDeckBtn && deckModal) {

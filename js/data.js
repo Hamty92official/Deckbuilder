@@ -55,8 +55,8 @@ const cardDatabase = [
     { cost: "💎💎",   title: "Colpo Stordente",    art: "Martello",        desc: kw("Stordisci 💫", "Stordisci") + " il nemico",                 fx: "stun",     type: "stun", value: 1 },
     { cost: "💎💎💎", title: "Furia Primordiale",  art: "Fiamma",          desc: kw("Forza 💪", "Forza") + " +5",                              fx: "strength", type: "strength", value: 5 },
     { cost: "💎💎💎", title: "Terrore Abissale",   art: "Spettro",         desc: kw("Stordisci 💫", "Stordisci") + " il nemico per 2 turni",      fx: "stun",     type: "stun", value: 2 },
-    { cost: "💎💎",   title: "Tossina Pura",       art: "Fiala",           desc: "Applica " + kw("Veleno 🧪", "Veleno", "poison"),                                fx: "poisononly", type: "poison", value: 4, poisonTurns: 3 },
-    { cost: "💎💎💎", title: "Combustione Ardente",art: "Braciere",        desc: "Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"),                        fx: "burnonly",   type: "burn",   value: 6, burnTurns: 3 },
+    { cost: "💎💎",   title: "Tossina Pura",       art: "Fiala",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Veleno 🧪", "Veleno", "poison"), fx: "poison", type: "damage", value: 5, poisonTurns: 3 },
+    { cost: "💎💎💎", title: "Combustione Ardente",art: "Braciere",        desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Bruciatura 🔥", "Bruciatura", "burn"), fx: "fire", type: "damage", value: 6, burnTurns: 3 },
     { cost: "💎💎",   title: "Assalto Debilitante",art: "Mazza",           desc: "Infligge {DMG} danni ⚔️. Applica " + kw("Debolezza ⛓️‍💥", "Debolezza") + " per 2 turni", fx: "dmweak", type: "damage", value: 4, weakenValue: 2 },
     { cost: "💎💎",   title: "Colpo Fiammeggiante",art: "Spada Infuocata", desc: "Infligge {DMG} danni ⚔️. Pesca 1 carta 🎴",                       fx: "slash",  type: "damage", value: 8, draw: 1 }
 ];

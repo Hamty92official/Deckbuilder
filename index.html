@@ -64,6 +64,7 @@
                 <button class="modal-close-btn" id="close-deck-btn">&times;</button>
             </div>
             <div class="deck-grid" id="deck-grid"></div>
+            <div class="scroll-hint-down" id="deck-scroll-hint">▼</div>
         </div>
     </div>
 
@@ -103,5 +104,27 @@
     <script src="js/engine.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/main.js"></script>
+<script>
+// SCROLL_HINT_SCRIPT_START
+(function() {
+    function setup() {
+        const grid = document.getElementById('deck-grid');
+        const hint = document.getElementById('deck-scroll-hint');
+        if (!grid || !hint) return;
+        const update = () => {
+            const canScroll = grid.scrollHeight > grid.clientHeight + 4;
+            const atBottom = grid.scrollTop + grid.clientHeight >= grid.scrollHeight - 4;
+            hint.classList.toggle('visible', canScroll && !atBottom);
+        };
+        grid.addEventListener('scroll', update);
+        new MutationObserver(update).observe(grid, { childList: true, subtree: true });
+        grid._updateScrollHint = update;
+        update();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+    else setup();
+})();
+// SCROLL_HINT_SCRIPT_END
+</script>
 </body>
 </html>

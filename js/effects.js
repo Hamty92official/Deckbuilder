@@ -139,8 +139,8 @@ function healPlayer(value) {
 
 function applyBurn(damage, turns) {
     if (monsterHp <= 0) return;
-    burnDamage = damage;
-    burnTicksLeft = turns;
+    burnDamage = Math.max(burnDamage, damage);
+    burnTicksLeft = burnTicksLeft + turns;
     updateUIStats();
     const p = fxPoint(monsterUi);
     floatText(p.x, p.y - 52, 'Bruciatura!', 'fx-burn fx-small');
@@ -168,8 +168,8 @@ function burnTick() {
 
 function applyPoison(damage, turns) {
     if (monsterHp <= 0) return;
-    poisonDamage = damage;
-    poisonTicksLeft = turns;
+    poisonDamage = Math.max(poisonDamage, damage);
+    poisonTicksLeft = poisonTicksLeft + turns;
     updateUIStats();
     const p = fxPoint(monsterUi);
     floatText(p.x, p.y - 52, 'Veleno!', 'fx-poison fx-small');
@@ -196,7 +196,7 @@ function poisonTick() {
 }
 
 function applyMonsterWeak(turns) {
-    monsterWeakTurns = turns;
+    monsterWeakTurns += turns;
     updateUIStats();
     const p = fxPoint(monsterUi);
     const icon = fxEl('fx-emoji', p.x, p.y, '⛓️‍💥');
