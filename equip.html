@@ -678,22 +678,26 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
             .panel-header { font-size: 14px; padding: 2px 0 8px; letter-spacing: 3px; }
         }
         /* RESPONSIVE_EQUIP_END */
-        /* ==+ B2_EQUIP_FIX_START +== */
-        /* Neutralizza wrapper HTML rotto: figli come figli diretti del panel */
+        /* ==+ B2_EQUIP_FIX2_START +== */
+        /* Il wrapper HTML orfano viene neutralizzato */
         .stats-summary-wrapper { display: contents; }
-        /* Nasconde la vecchia freccia HTML (fuori posto) */
+        /* La vecchia freccia HTML fuori posto viene nascosta */
         .scroll-hint-down { display: none !important; }
-        /* Scroll su stats-summary, senza scrollbar visibile */
+        /* Il panel non cresce mai oltre il viewport */
+        .panel.equipment {
+            max-height: calc(100vh - 100px);
+            overflow: hidden;
+        }
+        /* Stats-summary prende lo spazio residuo del panel */
         .stats-summary {
-            flex: 0 1 auto;
+            flex: 1 1 auto;
             min-height: 0;
-            max-height: 32vh;
             overflow-y: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
         .stats-summary::-webkit-scrollbar { display: none; }
-        /* Nuova freccia: ::after su .panel.equipment, in basso al centro */
+        /* Freccia in basso al centro del PANNELLO equipment */
         .panel.equipment::after {
             content: '▼';
             position: absolute;
@@ -716,7 +720,7 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50%      { transform: translateX(-50%) translateY(5px); }
         }
-        /* ==+ B2_EQUIP_FIX_END +== */
+        /* ==+ B2_EQUIP_FIX2_END +== */
 </style>
 </head>
 <body>
