@@ -1440,24 +1440,54 @@ body::after {
 }
 /* ==+ RESPONSIVE_HIGH_RES_END +== */
 
-/* ==+ MENU_SHORT_HEIGHT_START +== */
-/* Su schermi con altezza <= 1200px (tipicamente 1080p) riduciamo
-   la targhetta e i bottoni per far entrare tutto senza tagli. */
-@media (max-height: 1200px) {
+
+/* ==+ SCREEN_LOWRES_START +== */
+/* Regolazioni per schermi <= 2400px (1080p e inferiori).
+   Il 2K (2560px) non e' toccato. Obiettivo: proporzioni visive
+   simili a quelle del 2K, cosi' il 1080p e' godibile. */
+@media (max-width: 2400px) {
+    /* --- MENU --- */
     .menu-panel {
-        top: 1vh;
-        gap: clamp(6px, 1vh, 10px);
+        width: min(480px, 32vw);
+        max-width: 500px;
+        top: 2vh;
     }
     .menu-targhetta {
-        width: auto;
-        max-width: 100%;
-        max-height: 18vh;
-        margin: 0 auto clamp(6px, 1vh, 10px) auto;
-        object-fit: contain;
+        max-height: none;
+        width: 100%;
+        object-fit: initial;
     }
     .menu-btn {
-        font-size: clamp(12px, 1.4vw, 17px);
-        padding: clamp(10px, 1.4vh, 14px) clamp(16px, 2vw, 26px);
+        font-size: clamp(12px, 1.5vw, 17px);
+        padding: clamp(12px, 1.6vh, 16px) clamp(16px, 2vw, 24px);
+        letter-spacing: 2.5px;
     }
+
+    /* --- CARTE IN MANO: proporzionalmente piu' piccole --- */
+    .card {
+        width: clamp(96px, 15vw, 172px);
+        height: clamp(138px, 21.6vw, 249px);
+        padding: clamp(6px, 1.6vw, 11px);
+    }
+    .card-title { font-size: clamp(11px, 2.4vw, 14px); }
+    .card-art { height: clamp(42px, 10vw, 78px); font-size: clamp(9px, 1.9vw, 13px); }
+    .card-description { font-size: clamp(8px, 1.9vw, 11px); }
+    .card-cost { font-size: clamp(13px, 3vw, 19px); }
+    .hand-container { height: clamp(150px, 28vh, 240px); }
 }
-/* ==+ MENU_SHORT_HEIGHT_END +== */
+/* ==+ SCREEN_LOWRES_END +== */
+
+/* ==+ SCREEN_2K_BOOST_START +== */
+/* Ritocco mirato per il 2K (2560-3400px): pannelli HP un po' piu' grandi */
+@media (min-width: 2400px) and (max-width: 3400px) {
+    .player-ui, .monster-ui {
+        width: 275px;
+        padding: 19px;
+    }
+    .entity-name { font-size: 19px; }
+    .health-bar-container { height: 30px; }
+    .health-text { font-size: 13.5px; }
+    .stat-item { font-size: 14px; padding: 5px 12px; }
+    .stats-row { gap: 8px; }
+}
+/* ==+ SCREEN_2K_BOOST_END +== */
