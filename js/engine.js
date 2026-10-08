@@ -255,7 +255,8 @@ function startBattleFromMap(kind) {
     if (_pool.length === 0) { console.error("startBattleFromMap: BOSSES vuoto"); return; }
 
     var _pickIdx = Math.floor(Math.random() * _pool.length);
-    currentBoss = Object.assign({}, _pool[_pickIdx]);
+    // BOSS_REFERENCE_FIX: riferimento diretto (serve a BOSSES.indexOf)
+    currentBoss = _pool[_pickIdx];
     monsterPattern = currentBoss.pattern;
     monsterHp = currentBoss.hp;
     monsterShield = 0;

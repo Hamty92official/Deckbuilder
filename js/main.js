@@ -21,12 +21,18 @@ function serializeGameState() {
         deck: deck, discardPile: discardPile, hand: hand,
         inventory: (typeof LootSystem !== 'undefined') ? LootSystem.getInventory() : [],
         equipped: (typeof LootSystem !== 'undefined') ? LootSystem.getEquipped() : {},
-        unseenItems: parseInt(localStorage.getItem('db_unseen_items') || '0', 10) || 0
+        unseenItems: parseInt(localStorage.getItem('db_unseen_items') || '0', 10) || 0,
+        // MAP_STATE_PERSISTENCE
+        mapState: (typeof MapSystem !== "undefined" && MapSystem.exportState) ? MapSystem.exportState() : null
     };
 }
 
 function applyGameState(data) {
     if (!data) return false;
+    // MAP_STATE_PERSISTENCE
+    if (data && data.mapState && typeof MapSystem !== "undefined" && MapSystem.importState) {
+        MapSystem.importState(data.mapState);
+    }
 
     const bossIdx = Math.min(Math.max(0, data.bossIndex || 0), BOSSES.length - 1);
     currentBoss = BOSSES[bossIdx];

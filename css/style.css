@@ -1549,3 +1549,61 @@ body::after {
 .map-overlay{ z-index: 800; }
 #scene-transition{ z-index: 9999; }
 /* ==+ DROP_MODAL_ZIDX_END +== */
+
+/* ============================================================
+   RARITA CARTE SHOP (Fase 4)
+   Colori: verde / blu / viola / arancione
+   ============================================================ */
+.card.rarity-noncomune {
+    border-color: #6ac86a;
+    box-shadow:
+        5px 5px 0 var(--ink),
+        0 0 20px rgba(106,200,106,.35),
+        inset 0 0 0 2px rgba(106,200,106,.22),
+        inset 0 0 60px rgba(0,0,0,.9);
+}
+.card.rarity-raro {
+    border-color: #5db9ff;
+    box-shadow:
+        5px 5px 0 var(--ink),
+        0 0 22px rgba(93,185,255,.42),
+        inset 0 0 0 2px rgba(93,185,255,.25),
+        inset 0 0 60px rgba(0,0,0,.9);
+}
+.card.rarity-epico {
+    border-color: #d070e0;
+    box-shadow:
+        5px 5px 0 var(--ink),
+        0 0 26px rgba(208,112,224,.5),
+        inset 0 0 0 2px rgba(208,112,224,.3),
+        inset 0 0 60px rgba(0,0,0,.9);
+}
+.card.rarity-leggendario {
+    border-color: #f0a840;
+    box-shadow:
+        5px 5px 0 var(--ink),
+        0 0 26px rgba(240,168,64,.55),
+        inset 0 0 0 2px rgba(240,168,64,.32),
+        inset 0 0 60px rgba(0,0,0,.9);
+    animation: rarity-legendary-pulse 2.8s ease-in-out infinite;
+}
+@keyframes rarity-legendary-pulse {
+    0%,100% {
+        box-shadow:
+            5px 5px 0 var(--ink),
+            0 0 20px rgba(240,168,64,.5),
+            inset 0 0 0 2px rgba(240,168,64,.3),
+            inset 0 0 60px rgba(0,0,0,.9);
+    }
+    50% {
+        box-shadow:
+            5px 5px 0 var(--ink),
+            0 0 40px rgba(240,168,64,.95),
+            inset 0 0 0 2px rgba(240,168,64,.55),
+            inset 0 0 60px rgba(0,0,0,.9);
+    }
+}
+.card.rarity-noncomune   .card-title { color: #c8ffc8; }
+.card.rarity-raro        .card-title { color: #cfe9ff; }
+.card.rarity-epico       .card-title { color: #f2d0ff; }
+.card.rarity-leggendario .card-title { color: #ffe4b0; }

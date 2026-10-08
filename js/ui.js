@@ -229,6 +229,7 @@ function buildCardElement(cardData, extraClass) {
 
     const cardElement = document.createElement('div');
     cardElement.className = extraClass ? `card ${extraClass}` : 'card';
+    if (cardData.rarity) cardElement.classList.add("rarity-" + cardData.rarity);
     cardElement.innerHTML = `
         <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="card-cost">${cardData.cost}</div>
         <div class="card-header">

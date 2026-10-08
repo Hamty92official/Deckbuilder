@@ -305,3 +305,22 @@ function applyPlayerDamageMods(baseDamage) {
 function applyMonsterDamageMods(baseDamage) {
     return monsterWeakTurns > 0 ? Math.round(baseDamage * (1 - WEAK_REDUCTION)) : baseDamage;
 }
+
+// ============================================================
+//  SHOP CARDS INTEGRATION (Fase 4)
+//  Il pool vive in js/shop-cards.js (caricato DOPO data.js).
+//  Queste funzioni sono LAZY: risolvono a runtime, cosi'
+//  l'ordine di caricamento degli script non conta.
+// ============================================================
+function getShopCardPool() {
+    return (typeof SHOP_CARDS !== 'undefined') ? SHOP_CARDS : [];
+}
+function getShopRarityWeights() {
+    return (typeof SHOP_RARITY_WEIGHTS !== 'undefined') ? SHOP_RARITY_WEIGHTS : null;
+}
+function getShopCardsByRarity(rarity) {
+    return getShopCardPool().filter(function (c) { return c.rarity === rarity; });
+}
+function rollShopCardSafe() {
+    return (typeof rollShopCard === 'function') ? rollShopCard() : null;
+}
