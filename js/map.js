@@ -69,6 +69,9 @@
      GENERAZIONE MAPPA
      ============================================================ */
   function generatePositions(floors, W, H) {
+    PAD_X      = Math.max(80,  Math.round(W * 0.13));
+    PAD_TOP    = Math.max(100, Math.round(H * 0.16));
+    PAD_BOTTOM = Math.max(90,  Math.round(H * 0.14));
     var numFloors = floors.length;
     var usableH = H - PAD_TOP - PAD_BOTTOM;
     var stepY = usableH / Math.max(1, numFloors - 1);
@@ -313,6 +316,10 @@
      RENDER
      ============================================================ */
   function renderMap() {
+    var _stage = document.getElementById("map-stage");
+    if (_stage && currentMap && currentMap.floors && _stage.clientWidth > 0 && _stage.clientHeight > 0) {
+      generatePositions(currentMap.floors, _stage.clientWidth, _stage.clientHeight);
+    }
     var svg = document.getElementById('map-svg');
     var nodesEl = document.getElementById('map-nodes');
     if (!svg || !nodesEl || !currentMap) return;
@@ -732,6 +739,23 @@
   /* ============================================================
      EXPORTS
      ============================================================ */
+  function repositionNodes() {
+    if (!currentMap || !currentMap.floors) return;
+    var stage = document.getElementById("map-stage");
+    if (!stage || stage.clientWidth <= 0) return;
+    generatePositions(currentMap.floors, stage.clientWidth, stage.clientHeight);
+    currentMap._edgeGroups = {};
+    renderMap();
+  }
+
+  var _resizeTimer = null;
+  window.addEventListener("resize", function() {
+    if (_resizeTimer) clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function() {
+      if (_overlay && _overlay.classList.contains("active")) repositionNodes();
+    }, 200);
+  });
+
   global.MapSystem = {
     open: open,
     openViewOnly: openViewOnly,
@@ -744,6 +768,7 @@
     setBodyMapOpen: setBodyMapOpen,
     exportState: exportState,
     importState: importState,
+    repositionNodes: repositionNodes,
     isActive: function() { return _overlay && _overlay.classList.contains('active'); }
   };
 

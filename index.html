@@ -100,6 +100,7 @@
     <script src="js/loot.js"></script>
     <script src="js/save.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/shop-cards.js"></script>
     <script src="js/fx-utils.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/effects.js"></script>
@@ -139,12 +140,12 @@
 
     <!-- ============ MAP OVERLAY ============ -->
     <div class="map-overlay" id="map-overlay">
+      <video class="map-bg-video" id="map-bg-video" autoplay muted loop playsinline preload="auto">
+        <source src="bg-mappa.webm" type="video/webm">
+      </video>
       <div id="map-stage">
         <svg id="map-svg"></svg>
         <div id="map-nodes"></div>
-      </div>
-      <div class="map-hud">
-        <div class="map-title">Mappa</div>
       </div>
       <div class="map-stats" id="map-stats"></div>
       <button class="map-close-btn" id="map-close-btn" title="Chiudi mappa">✕</button>
