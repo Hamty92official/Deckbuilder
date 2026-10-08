@@ -217,7 +217,6 @@ function autoSave() {
     // FIX_ONBATTLE_BOOT: registra onBattle PRIMA del ramo autostart
     if (typeof MapSystem !== "undefined" && typeof startBattleFromMap === "function") {
         MapSystem.onBattle(function(kind) {
-            console.log("[FIX_ONBATTLE_BOOT] onBattle chiamato:", kind);
             startBattleFromMap(kind);
         });
     }
