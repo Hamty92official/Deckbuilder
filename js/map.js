@@ -11,12 +11,18 @@
   var PAD_BOTTOM = 110;
 
   var TYPES = {
-    battle:    { icon:'⚔️', label:'Scontro'      },
-    campfire:  { icon:'💤', label:'Accampamento'  },
-    statue:    { icon:'⛲', label:'Fontana'       },
-    shop:      { icon:'🎴', label:"L'antiquario"  },
-    unifier:   { icon:'⚒️', label:'Forgiacarte'   },
-    bossFinal: { icon:'💀', label:'Boss'          }
+    battle:    { icon:'⚔️', label:'Scontro',
+                 desc:'Affronta un nemico. Ogni vittoria ti avvicina al boss finale e può farti ottenere equipaggiamento o risorse.' },
+    campfire:  { icon:'💤', label:'Accampamento',
+                 desc:'Ti riposi accanto al fuoco e recuperi il 50% dei tuoi HP massimi.' },
+    statue:    { icon:'⛲', label:'Fontana',
+                 desc:"Bevi l'acqua sacra e recuperi il 50% dei tuoi HP massimi." },
+    shop:      { icon:'🎴', label:"L'Antiquario",
+                 desc:"Scambia le tue carte con quelle rare del mercante. Puoi ottenere carte Non Comuni, Rare, Epiche o Leggendarie sacrificando carte dal tuo mazzo." },
+    unifier:   { icon:'⚒️', label:'Forgiacarte',
+                 desc:"Fondi due carte in una sola. Danni e valori si sommano, gli effetti si combinano in un'unica carta potenziata." },
+    bossFinal: { icon:'💀', label:'Boss Finale',
+                 desc:'Il guardiano di questo livello. Sconfiggilo per ottenere una carta "Unica" e accedere al livello successivo.' }
   };
 
   var currentMap = null;
@@ -445,7 +451,7 @@
     var totalFloors = currentMap.numFloors;
     var visitedCount = state.visited.size;
     var lvl = (parseInt(localStorage.getItem('db_level_index') || '0', 10) || 0) + 1;
-    el.innerHTML = 'Piano <span>' + Math.min(visitedCount + 1, totalFloors) + '/' + totalFloors + '</span> · Livello <span>' + lvl + '</span>';
+    el.innerHTML = 'Livello <span>' + lvl + '</span>';
   }
 
   function syncAnimations() {
@@ -755,6 +761,54 @@
       if (_overlay && _overlay.classList.contains("active")) repositionNodes();
     }, 200);
   });
+
+  /* ============================================================
+     MAP_TOOLTIP — tooltip corposo sui nodi
+     ============================================================ */
+  function showMapTooltip(node, nodeEl) {
+    var tip = document.getElementById('map-tooltip');
+    if (!tip) return;
+    var info = TYPES[node.type] || { icon: '?', label: '?', desc: '' };
+    var html = '';
+    html += '<div class="tip-icon">' + info.icon + '</div>';
+    html += '<div class="tip-label">' + info.label + '</div>';
+    if (info.desc) html += '<div class="tip-desc">' + info.desc + '</div>';
+    tip.innerHTML = html;
+    var r = nodeEl.getBoundingClientRect();
+    tip.style.left = (r.left + r.width / 2) + 'px';
+    tip.style.top = r.top + 'px';
+    tip.classList.add('visible');
+  }
+
+  function hideMapTooltip() {
+    var tip = document.getElementById('map-tooltip');
+    if (tip) tip.classList.remove('visible');
+  }
+
+  function setupMapTooltips() {
+    if (window.__mapTooltipsSetup) return;
+    window.__mapTooltipsSetup = true;
+    var nodesEl = document.getElementById('map-nodes');
+    if (!nodesEl) return;
+    nodesEl.addEventListener('mouseover', function(e) {
+      var nodeEl = e.target.closest ? e.target.closest('.node') : null;
+      if (!nodeEl) return;
+      var id = nodeEl.dataset.id;
+      var node = currentMap && currentMap.nodeMap ? currentMap.nodeMap[id] : null;
+      if (node) showMapTooltip(node, nodeEl);
+    });
+    nodesEl.addEventListener('mouseout', function(e) {
+      var nodeEl = e.target.closest ? e.target.closest('.node') : null;
+      if (!nodeEl) return;
+      hideMapTooltip();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMapTooltips);
+  } else {
+    setupMapTooltips();
+  }
 
   global.MapSystem = {
     open: open,

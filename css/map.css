@@ -700,3 +700,107 @@ body.map-open .game-table {
         0 0 26px 8px rgba(0,0,0,.45),
         inset 0 0 12px rgba(0,0,0,.30);
 }
+
+/* ============================================================
+   MAP_STATS_TOP_CENTER — sposta il Livello in alto al centro
+   Override delle regole originali (posizione bottom-left).
+   ============================================================ */
+.map-stats{
+  position: absolute !important;
+  top: 20px !important;
+  bottom: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  letter-spacing: 4px !important;
+  text-transform: uppercase !important;
+  padding: 12px 28px !important;
+  border-radius: 12px !important;
+  border: 3px solid var(--ink) !important;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(216,168,64,.08), transparent 70%),
+    linear-gradient(145deg, rgba(26,26,58,.96), rgba(10,10,26,.98)) !important;
+  box-shadow:
+    4px 4px 0 var(--ink),
+    0 10px 22px rgba(0,0,0,.65),
+    0 0 20px rgba(216,168,64,.15) !important;
+  color: var(--moon-bright) !important;
+  text-shadow: 2px 2px 0 var(--ink) !important;
+  z-index: 200 !important;
+  white-space: nowrap;
+}
+.map-stats span{
+  color: var(--gold-light) !important;
+  text-shadow:
+    2px 2px 0 var(--ink),
+    0 0 8px rgba(216,168,64,.6) !important;
+}
+.map-overlay.view-only .map-stats::after{
+  content: ' · sola visualizzazione';
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--moon-shadow);
+  opacity: .75;
+  text-transform: lowercase;
+  margin-left: 4px;
+}
+
+/* ============================================================
+   MAP_TOOLTIP — tooltip corposo sui nodi
+   ============================================================ */
+.map-tooltip{
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  transform: translate(-50%, calc(-100% - 20px));
+  z-index: 9000;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 3px solid var(--ink);
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(216,168,64,.12), transparent 70%),
+    linear-gradient(145deg, rgba(26,26,58,.98), rgba(10,10,26,.99));
+  box-shadow:
+    4px 4px 0 var(--ink),
+    0 18px 34px rgba(0,0,0,.85),
+    0 0 26px rgba(216,168,64,.28),
+    inset 0 0 0 2px rgba(168,213,240,.12);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s ease;
+  text-align: center;
+}
+.map-tooltip.visible{
+  opacity: 1;
+}
+.map-tooltip .tip-icon{
+  font-size: 38px;
+  line-height: 1;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 12px rgba(216,168,64,.55));
+}
+.map-tooltip .tip-label{
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  text-shadow:
+    2px 2px 0 var(--ink),
+    0 0 12px rgba(216,168,64,.7);
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+.map-tooltip .tip-desc{
+  font-family: 'Kalam', cursive;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--moon-bright);
+  text-shadow: 1px 1px 0 var(--ink);
+}
