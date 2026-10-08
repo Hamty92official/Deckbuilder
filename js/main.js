@@ -214,6 +214,13 @@ function autoSave() {
         return;
     }
     MenuSystem.initMenu();
+    // FIX_ONBATTLE_BOOT: registra onBattle PRIMA del ramo autostart
+    if (typeof MapSystem !== "undefined" && typeof startBattleFromMap === "function") {
+        MapSystem.onBattle(function(kind) {
+            console.log("[FIX_ONBATTLE_BOOT] onBattle chiamato:", kind);
+            startBattleFromMap(kind);
+        });
+    }
     // La mappa apre al boot: nascondi il game-table fino ad allora
     if (typeof MapSystem !== "undefined" && MapSystem.setBodyMapOpen) MapSystem.setBodyMapOpen(true);
     MenuSystem.initMenu();

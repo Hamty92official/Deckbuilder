@@ -202,6 +202,13 @@ function startPlayerTurn() {
    MAP INTEGRATION — avvia battaglia dal nodo della mappa
    ============================================================ */
 function startBattleFromMap(kind) {
+    console.log("[DBG_BATTLE] START", {
+        currentBoss: currentBoss ? currentBoss.name : null,
+        monsterHp: monsterHp,
+        playerMana: playerMana,
+        handLength: (typeof hand !== "undefined" ? hand.length : "undef"),
+        battleOver: battleOver
+    });
     if (typeof hideBanner === "function") hideBanner();
 
     // Forza la visibilità del game-table (safety)
@@ -215,16 +222,31 @@ function startBattleFromMap(kind) {
     var _plyUi = document.querySelector(".player-ui");
     [_monUi, _plyUi].forEach(function(el){
         if (!el) return;
+        el.classList.remove('hit','glow','burning','poisoned');
         el.getAnimations().forEach(function(a){
             try { a.cancel(); } catch(e){}
         });
-        el.style.opacity = "";
-        el.style.transform = "";
-        el.style.filter = "";
-        el.style.visibility = "";
-        el.style.display = "";
+        // MAP_FIX_RESET_BRUTAL: rimozione totale stili + reflow forzato
+        el.removeAttribute('style');
+        void el.offsetWidth;
     });
     // === FINE RESET ANIMAZIONI ===
+    // FIX_RESET_AGGRESSIVE: secondo reset ritardato (a prova di blur)
+    setTimeout(function(){
+        var _mn = document.querySelector(".monster-ui");
+        var _pl = document.querySelector(".player-ui");
+        [_mn, _pl].forEach(function(el){
+            if (!el) return;
+            el.getAnimations().forEach(function(a){ try{a.cancel();}catch(e){} });
+            el.style.filter = "";
+            el.style.transform = "";
+            el.style.opacity = "";
+        });
+    }, 150);
+    // FIX_BATTLE_RESET: svuota mano e container vecchi
+    handEls = [];
+    var _handEl = document.getElementById('hand');
+    if (_handEl) _handEl.innerHTML = '';
 
     try { localStorage.removeItem("db_return_to_battle"); } catch(e){}
 
@@ -294,6 +316,16 @@ function startBattleFromMap(kind) {
     if (typeof updateUIStats === "function") updateUIStats();
     if (typeof renderBonusPanel === "function") renderBonusPanel();
 
+    console.log("[DBG_BATTLE] END", {
+        currentBoss: currentBoss ? currentBoss.name : null,
+        currentBossHp: currentBoss ? currentBoss.hp : null,
+        monsterHp: monsterHp,
+        playerMana: playerMana,
+        maxMana: maxMana,
+        handLength: (typeof hand !== "undefined" ? hand.length : "undef"),
+        handElsLength: (typeof handEls !== "undefined" ? handEls.length : "undef"),
+        handDomCount: document.getElementById("hand") ? document.getElementById("hand").children.length : -1
+    });
     // Video di sfondo
     var _bgVideo = document.getElementById("bg-video");
     var _bgSource = document.getElementById("bg-video-source");
@@ -303,3 +335,27 @@ function startBattleFromMap(kind) {
         _bgVideo.play().catch(function(){});
     }
 }
+
+/* DBG_BATTLE: stato battaglia corrente (usa dalla console) */
+window.dbgBattleState = function() {
+    var out = {
+        currentBoss_name: (typeof currentBoss !== 'undefined' && currentBoss) ? currentBoss.name : 'UNDEF',
+        currentBoss_hp: (typeof currentBoss !== 'undefined' && currentBoss) ? currentBoss.hp : 'UNDEF',
+        currentBoss_bgVideo: (typeof currentBoss !== 'undefined' && currentBoss) ? currentBoss.bgVideo : 'UNDEF',
+        monsterHp: typeof monsterHp !== 'undefined' ? monsterHp : 'UNDEF',
+        playerHp: typeof playerHp !== 'undefined' ? playerHp : 'UNDEF',
+        playerMana: typeof playerMana !== 'undefined' ? playerMana : 'UNDEF',
+        maxMana: typeof maxMana !== 'undefined' ? maxMana : 'UNDEF',
+        hand_length: typeof hand !== 'undefined' ? hand.length : 'UNDEF',
+        handEls_length: typeof handEls !== 'undefined' ? handEls.length : 'UNDEF',
+        hand_dom_count: document.getElementById('hand') ? document.getElementById('hand').children.length : -1,
+        battleOver: typeof battleOver !== 'undefined' ? battleOver : 'UNDEF',
+        monster_ui_name: (document.querySelector('.monster-ui .entity-name') || {}).textContent,
+        monster_ui_hp: (document.getElementById('monster-hp') || {}).textContent,
+        monster_ui_maxhp: (document.getElementById('monster-max-hp') || {}).textContent,
+        bg_source_src: (document.getElementById('bg-video-source') || {}).src
+    };
+    console.table(out);
+    return out;
+};
+console.log("[DBG_BATTLE] dbgBattleState() pronto. Chiamala dalla console.");

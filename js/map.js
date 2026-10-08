@@ -15,11 +15,10 @@
       icon: '⚔️',
       label: 'Scontro',
       tagline: 'Sangue e gloria',
-      desc: 'Un nemico ti sbarra la strada. Ogni vittoria ti avvicina al boss finale e può lasciare equipaggiamento, oro o carte.',
+      desc: 'Un nemico ti sbarra la strada. Ad ogni vittoria otterrai un pezzo di equipaggiamento che ti aiuterà ad affrontare i successivi scontri che ti avvicineranno sempre di più al boss finale.',
       bullets: [
-        'Nemici casuali con pattern diversi',
-        'Drop: equipaggiamento, oro, carte',
-        'Necessario per progredire'
+        'Lascia cadere pezzi di equipaggiamento',
+        'Se esci vittorioso proseguirai verso il nodo successivo'
       ]
     },
     campfire: {
@@ -29,8 +28,7 @@
       desc: 'Ti fermi accanto al fuoco, respiri, e le ferite si rimarginano lentamente.',
       bullets: [
         'Recuperi il 50% degli HP massimi',
-        'Puoi proseguire verso il boss',
-        'Un solo uso'
+        'Il fuoco si spegne dopo il riposo, ma il cammino continua'
       ]
     },
     statue: {
@@ -40,30 +38,29 @@
       desc: "Bevi l'acqua sacra che scorre da una fontana antica. Il corpo ringrazia, la mente si schiarisce.",
       bullets: [
         'Recuperi il 50% degli HP massimi',
-        'Effetto rigenerante in arrivo',
-        'Un solo uso'
+        'Ottieni +1 di bonus Rigenerazione per i successivi 3 nodi',
+        'Bere di nuovo da una fontana ne rinnova la durata'
       ]
     },
     shop: {
       icon: '🎴',
       label: "L'Antiquario",
-      tagline: 'Mercante di carte rare',
-      desc: 'Un vecchio mercante ti offre tre carte misteriose. Puoi acquistarle sacrificando carte del tuo mazzo — ma attenzione, le carte sacrificate si perdono per sempre.',
+      tagline: 'Mercante collezionista',
+      desc: 'Un vecchio mercante ti offre tre carte misteriose. Puoi acquistarle sacrificando carte del tuo mazzo.',
       bullets: [
-        '3 carte offerte, pescate per rarità',
-        '1 reroll disponibile per visita',
-        'Costo: 1, 2, 3 o 4 carte da sacrificare'
+        'Il costo di scambio per una carta è dipeso dalla sua rarità',
+        'Il mercante ti metterà a disposizione 3 carte, ma solo una sarà la tua scelta',
+        'È possibile effettuare solo un singolo scambio'
       ]
     },
     unifier: {
       icon: '⚒️',
       label: 'Forgiacarte',
       tagline: 'Dove le carte diventano una',
-      desc: "Un fabbro arcano fonde due carte in una sola. Danni e valori si sommano, gli effetti si combinano in un'unica carta potenziata.",
+      desc: 'Un fabbro arcano provvederà a fondere le tue carte, danni e valori si sommano, gli effetti si accorpano in un\'unica carta potenziata.',
       bullets: [
-        'Scegli 2 carte dal mazzo',
-        'Danni/valori sommati',
-        'Effetti combinati (es. brucia + avvelena)'
+        'Scegli 2 carte dal mazzo da fondere',
+        'Danni, valore ed effetti accorpati'
       ]
     },
     bossFinal: {

@@ -748,15 +748,9 @@ function endBattle(playerWon) {
     hand = [];
     monsterTurnIndex = 0;
 
-    if (playerWon) {
-        const idx = BOSSES.indexOf(currentBoss);
-        currentBoss = BOSSES[(idx + 1) % BOSSES.length];
-        monsterPattern = currentBoss.pattern;
-        monsterHp = currentBoss.hp;
-    } else {
-        playerHp = getPlayerMaxHp();
-        monsterHp = currentBoss.hp;
-    }
+    // FIX_BATTLE_RESET: NON cambio piu' currentBoss qui.
+    // Il boss viene scelto da startBattleFromMap (battle)
+    // o da MapSystem.handleVictory (boss finale).
 
     // Mazzo fresco per la battaglia successiva
     initializeDeck();
@@ -785,11 +779,15 @@ function endBattle(playerWon) {
     const winner = playerWon ? playerUi : monsterUi;
     const p = fxPoint(loser);
 
-    loser.animate([
+    // MAP_FIX_BLUR_LOSER: nessun fill forwards, stili inline dopo onfinish
+    var _loseAnim = loser.animate([
         { opacity: 1, transform: 'scale(1) rotate(0deg)', filter: 'blur(0px) brightness(1)' },
         { opacity: 0.7, transform: 'scale(1.08) rotate(-3deg)', filter: 'blur(2px) brightness(1.3)', offset: 0.35 },
         { opacity: 0, transform: 'scale(0.72) rotate(9deg)', filter: 'blur(9px) brightness(1.6)' }
-    ], { duration: 1400, easing: 'ease-out', fill: 'forwards' });
+    ], { duration: 1400, easing: 'ease-out' });
+    _loseAnim.onfinish = function() {
+        loser.style.opacity = '0';
+    };
 
     winner.animate([
         { filter: 'brightness(1)' },
