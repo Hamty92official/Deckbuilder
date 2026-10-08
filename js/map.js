@@ -11,18 +11,72 @@
   var PAD_BOTTOM = 110;
 
   var TYPES = {
-    battle:    { icon:'⚔️', label:'Scontro',
-                 desc:'Affronta un nemico. Ogni vittoria ti avvicina al boss finale e può farti ottenere equipaggiamento o risorse.' },
-    campfire:  { icon:'💤', label:'Accampamento',
-                 desc:'Ti riposi accanto al fuoco e recuperi il 50% dei tuoi HP massimi.' },
-    statue:    { icon:'⛲', label:'Fontana',
-                 desc:"Bevi l'acqua sacra e recuperi il 50% dei tuoi HP massimi." },
-    shop:      { icon:'🎴', label:"L'Antiquario",
-                 desc:"Scambia le tue carte con quelle rare del mercante. Puoi ottenere carte Non Comuni, Rare, Epiche o Leggendarie sacrificando carte dal tuo mazzo." },
-    unifier:   { icon:'⚒️', label:'Forgiacarte',
-                 desc:"Fondi due carte in una sola. Danni e valori si sommano, gli effetti si combinano in un'unica carta potenziata." },
-    bossFinal: { icon:'💀', label:'Boss Finale',
-                 desc:'Il guardiano di questo livello. Sconfiggilo per ottenere una carta "Unica" e accedere al livello successivo.' }
+    battle: {
+      icon: '⚔️',
+      label: 'Scontro',
+      tagline: 'Sangue e gloria',
+      desc: 'Un nemico ti sbarra la strada. Ogni vittoria ti avvicina al boss finale e può lasciare equipaggiamento, oro o carte.',
+      bullets: [
+        'Nemici casuali con pattern diversi',
+        'Drop: equipaggiamento, oro, carte',
+        'Necessario per progredire'
+      ]
+    },
+    campfire: {
+      icon: '💤',
+      label: 'Accampamento',
+      tagline: 'Riposo del viandante',
+      desc: 'Ti fermi accanto al fuoco, respiri, e le ferite si rimarginano lentamente.',
+      bullets: [
+        'Recuperi il 50% degli HP massimi',
+        'Puoi proseguire verso il boss',
+        'Un solo uso'
+      ]
+    },
+    statue: {
+      icon: '⛲',
+      label: 'Fontana',
+      tagline: 'Acqua benedetta',
+      desc: "Bevi l'acqua sacra che scorre da una fontana antica. Il corpo ringrazia, la mente si schiarisce.",
+      bullets: [
+        'Recuperi il 50% degli HP massimi',
+        'Effetto rigenerante in arrivo',
+        'Un solo uso'
+      ]
+    },
+    shop: {
+      icon: '🎴',
+      label: "L'Antiquario",
+      tagline: 'Mercante di carte rare',
+      desc: 'Un vecchio mercante ti offre tre carte misteriose. Puoi acquistarle sacrificando carte del tuo mazzo — ma attenzione, le carte sacrificate si perdono per sempre.',
+      bullets: [
+        '3 carte offerte, pescate per rarità',
+        '1 reroll disponibile per visita',
+        'Costo: 1, 2, 3 o 4 carte da sacrificare'
+      ]
+    },
+    unifier: {
+      icon: '⚒️',
+      label: 'Forgiacarte',
+      tagline: 'Dove le carte diventano una',
+      desc: "Un fabbro arcano fonde due carte in una sola. Danni e valori si sommano, gli effetti si combinano in un'unica carta potenziata.",
+      bullets: [
+        'Scegli 2 carte dal mazzo',
+        'Danni/valori sommati',
+        'Effetti combinati (es. brucia + avvelena)'
+      ]
+    },
+    bossFinal: {
+      icon: '💀',
+      label: 'Boss Finale',
+      tagline: 'Il guardiano del livello',
+      desc: 'Un essere antico protegge il passaggio al livello successivo. Sconfiggilo per ottenere una carta "Unica" bianca — potente, rara, non ottenibile altrove.',
+      bullets: [
+        'Scontro più duro del livello',
+        'Drop garantito: carta "Unica"',
+        'Vittoria = livello +1'
+      ]
+    }
   };
 
   var currentMap = null;
@@ -768,15 +822,24 @@
   function showMapTooltip(node, nodeEl) {
     var tip = document.getElementById('map-tooltip');
     if (!tip) return;
-    var info = TYPES[node.type] || { icon: '?', label: '?', desc: '' };
+    var info = TYPES[node.type] || { icon: '?', label: '?', desc: '', tagline: '', bullets: [] };
     var html = '';
-    html += '<div class="tip-icon">' + info.icon + '</div>';
-    html += '<div class="tip-label">' + info.label + '</div>';
+    html += '<div class="tip-header">';
+    html +=   '<div class="tip-icon">' + info.icon + '</div>';
+    html +=   '<div class="tip-titles">';
+    html +=     '<div class="tip-label">' + info.label + '</div>';
+    if (info.tagline) html += '<div class="tip-tagline">' + info.tagline + '</div>';
+    html +=   '</div>';
+    html += '</div>';
     if (info.desc) html += '<div class="tip-desc">' + info.desc + '</div>';
+    if (info.bullets && info.bullets.length) {
+      html += '<ul class="tip-bullets">';
+      for (var i = 0; i < info.bullets.length; i++) {
+        html += '<li>' + info.bullets[i] + '</li>';
+      }
+      html += '</ul>';
+    }
     tip.innerHTML = html;
-    var r = nodeEl.getBoundingClientRect();
-    tip.style.left = (r.left + r.width / 2) + 'px';
-    tip.style.top = r.top + 'px';
     tip.classList.add('visible');
   }
 
