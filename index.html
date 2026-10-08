@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Kalam:wght@400;700&family=Cinzel:wght@600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/map.css">
 </head>
 <body>
+    <div id="scene-transition"></div>
     <div class="game-table" id="game-table">
 
         <div class="player-side">
@@ -103,6 +105,7 @@
     <script src="js/effects.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/menu.js"></script>
+    <script src="js/map.js"></script>
     <script src="js/main.js"></script>
 <script>
 // SCROLL_HINT_SCRIPT_START
@@ -126,5 +129,35 @@
 })();
 // SCROLL_HINT_SCRIPT_END
 </script>
+      </div>
+      </div>
+      </div>
+    </div>
+
+
+    <div id="scene-transition"></div>
+
+    <!-- ============ MAP OVERLAY ============ -->
+    <div class="map-overlay" id="map-overlay">
+      <div id="map-stage">
+        <svg id="map-svg"></svg>
+        <div id="map-nodes"></div>
+      </div>
+      <div class="map-hud">
+        <div class="map-title">Mappa</div>
+      </div>
+      <div class="map-stats" id="map-stats"></div>
+      <button class="map-close-btn" id="map-close-btn" title="Chiudi mappa">✕</button>
+      <div class="map-popup" id="map-popup">
+        <div class="popup-icon" id="map-popup-icon">📜</div>
+        <div class="popup-title" id="map-popup-title">Titolo</div>
+        <div class="popup-text" id="map-popup-text">Testo</div>
+        <button class="popup-btn" id="map-popup-btn">Continua</button>
+      </div>
+    </div>
+
+    <!-- ============ SCENE TRANSITION ============ -->
+    <div id="scene-transition"></div>
+
 </body>
 </html>

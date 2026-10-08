@@ -197,6 +197,108 @@ function startPlayerTurn() {
 }
 
 
-function startBattle() {
-    // Avvio partita gestito da main.js + MenuSystem (questa funzione non serve piu')
+
+/* ============================================================
+   MAP INTEGRATION — avvia battaglia dal nodo della mappa
+   ============================================================ */
+function startBattleFromMap(kind) {
+    if (typeof hideBanner === "function") hideBanner();
+
+    // Forza la visibilità del game-table (safety)
+    document.body.classList.remove("map-open");
+    var _gt = document.getElementById("game-table");
+    if (_gt) { _gt.style.visibility = ""; _gt.style.opacity = ""; }
+
+
+    // === RESET ANIMAZIONI MOSTRO/PLAYER ===
+    var _monUi = document.querySelector(".monster-ui");
+    var _plyUi = document.querySelector(".player-ui");
+    [_monUi, _plyUi].forEach(function(el){
+        if (!el) return;
+        el.getAnimations().forEach(function(a){
+            try { a.cancel(); } catch(e){}
+        });
+        el.style.opacity = "";
+        el.style.transform = "";
+        el.style.filter = "";
+        el.style.visibility = "";
+        el.style.display = "";
+    });
+    // === FINE RESET ANIMAZIONI ===
+
+    try { localStorage.removeItem("db_return_to_battle"); } catch(e){}
+
+    // === RESET VISUALE COMPLETO ===
+    // === RESET VISUALE COMPLETO ===
+    document.body.classList.remove("map-open");
+    var _gt = document.getElementById("game-table");
+    if (_gt) { _gt.style.cssText = ""; }
+    var _ui = document.querySelectorAll(".monster-ui, .player-ui, .top-center-ui");
+    for (var _u = 0; _u < _ui.length; _u++) { _ui[_u].style.cssText = ""; }
+    var _hand = document.getElementById("hand");
+    if (_hand) { _hand.style.cssText = ""; }
+    // Forza visibilità esplicita
+    var _monUi = document.querySelector(".monster-ui");
+    if (_monUi) {
+        _monUi.style.visibility = "visible";
+        _monUi.style.opacity = "1";
+        _monUi.style.display = "flex";
+    }
+    // === FINE RESET VISUALE ===
+
+    // Pool: BOSSES (goblin/kraken per ora). Random per ogni scontro.
+    // Pool: BOSSES (goblin/kraken per ora). Random per ogni scontro.
+    // Pool: BOSSES (goblin/kraken per ora). Random per ogni scontro.
+    // Pool: BOSSES (goblin/kraken per ora). Random per ogni scontro.
+    // Pool: BOSSES (goblin/kraken per ora). Random per ogni scontro.
+    var _pool = (typeof BOSSES !== "undefined" && BOSSES.length) ? BOSSES : [];
+    if (_pool.length === 0) { console.error("startBattleFromMap: BOSSES vuoto"); return; }
+
+    var _pickIdx = Math.floor(Math.random() * _pool.length);
+    currentBoss = Object.assign({}, _pool[_pickIdx]);
+    monsterPattern = currentBoss.pattern;
+    monsterHp = currentBoss.hp;
+    monsterShield = 0;
+    monsterTurnIndex = 0;
+
+    burnDamage = 0; burnTicksLeft = 0;
+    poisonDamage = 0; poisonTicksLeft = 0;
+    monsterWeakTurns = 0; monsterStunTurns = 0;
+    playerWeakTurns = 0; playerStrength = 0;
+    playerRegenAmount = 0; playerRegenTurns = 0;
+    playerShield = equippedBonuses.shieldStart;
+
+    maxMana = BASE_MANA + equippedBonuses.manaMax;
+    playerMana = maxMana;
+
+    discardPile = [];
+    hand = [];
+    initializeDeck();
+    var _n = handSize + equippedBonuses.extraDraw;
+    for (var _i = 0; _i < _n; _i++) {
+        var _c = drawCard();
+        if (_c) hand.push(_c);
+    }
+
+    isPlayerTurn = true;
+    battleOver = false;
+    activeCard = null;
+    activeCardIndex = -1;
+    activeCardData = null;
+
+    // UI
+    var _nameEl = document.querySelector(".monster-ui .entity-name");
+    if (_nameEl) _nameEl.textContent = currentBoss.name;
+    if (typeof renderHand === "function") renderHand();
+    if (typeof updateUIStats === "function") updateUIStats();
+    if (typeof renderBonusPanel === "function") renderBonusPanel();
+
+    // Video di sfondo
+    var _bgVideo = document.getElementById("bg-video");
+    var _bgSource = document.getElementById("bg-video-source");
+    if (_bgVideo && _bgSource && currentBoss.bgVideo) {
+        _bgSource.src = currentBoss.bgVideo;
+        _bgVideo.load();
+        _bgVideo.play().catch(function(){});
+    }
 }

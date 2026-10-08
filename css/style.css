@@ -1532,3 +1532,20 @@ body::after {
     50%      { transform: translateX(-50%) translateY(6px); }
 }
 /* ==+ B_SCROLL_HINT_END +== */
+
+/* ==+ BOTTONE_MAPPA_ZIDX +== */
+#open-map-btn{
+  position:relative;
+  z-index:120;
+}
+/* Assicura che i bottoni top-center siano sopra la mappa in view-only */
+.top-center-ui{
+  z-index:1000 !important;
+}
+/* ==+ BOTTONE_MAPPA_ZIDX_END +== */
+
+/* ==+ DROP_MODAL_ZIDX +== */
+.battle-drop-modal{ z-index: 9500 !important; }
+.map-overlay{ z-index: 800; }
+#scene-transition{ z-index: 9999; }
+/* ==+ DROP_MODAL_ZIDX_END +== */

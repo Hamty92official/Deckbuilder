@@ -97,6 +97,7 @@ const BOSSES = [
         name: 'Goblin Corrotto',
         bgVideo: 'bg-goblin.webm',
         hp: 50,
+        isMapBoss: true,
         pattern: [
             { type: 'attack', value: 6 },
             { type: 'attack', value: 6 },
@@ -109,6 +110,7 @@ const BOSSES = [
         name: 'Kraken Abissale',
         bgVideo: 'bg-kraken.webm',
         hp: 85,
+        isMapBoss: true,
         pattern: [
             { type: 'attack', value: 7 },
             { type: 'attack', value: 9 },
@@ -121,6 +123,57 @@ const BOSSES = [
 
 let currentBoss = BOSSES[0];
 let monsterPattern = currentBoss.pattern;
+
+const REGULAR_ENEMIES = [
+    {
+        id: "ratto",
+        name: "Ratto Gigante",
+        bgVideo: "bg-goblin.webm",
+        hp: 25,
+        isMapBoss: false,
+        pattern: [
+            { type: "attack", value: 4 },
+            { type: "attack", value: 5 },
+            { type: "attack", value: 4 }
+        ]
+    },
+    {
+        id: "lupo",
+        name: "Lupo Feroce",
+        bgVideo: "bg-goblin.webm",
+        hp: 30,
+        isMapBoss: false,
+        pattern: [
+            { type: "attack", value: 6 },
+            { type: "attack", value: 5 },
+            { type: "weaken", value: 2 }
+        ]
+    },
+    {
+        id: "scheletro",
+        name: "Scheletro Guerriero",
+        bgVideo: "bg-goblin.webm",
+        hp: 35,
+        isMapBoss: false,
+        pattern: [
+            { type: "attack", value: 5 },
+            { type: "shield", value: 5 },
+            { type: "attack", value: 6 }
+        ]
+    },
+    {
+        id: "bandito",
+        name: "Bandito Mascherato",
+        bgVideo: "bg-goblin.webm",
+        hp: 28,
+        isMapBoss: false,
+        pattern: [
+            { type: "attack", value: 5 },
+            { type: "attack", value: 6 },
+            { type: "attack", value: 7 }
+        ]
+    }
+];
 
 const BOSS_INDEX_KEY = 'db_boss_index';
 const PLAYER_HP_KEY = 'db_player_hp';

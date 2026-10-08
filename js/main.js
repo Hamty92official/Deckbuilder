@@ -76,8 +76,12 @@ function applyGameState(data) {
 }
 
 function refreshGameUI() {
-    const bossNameEl = document.querySelector('.monster-ui .entity-name');
-    if (bossNameEl) bossNameEl.textContent = currentBoss.name;
+    // NB: se la mappa è aperta, non aggiorno il nome mostro (evita flash)
+    const _mapOpen = document.body.classList.contains("map-open");
+    if (!_mapOpen) {
+        const bossNameEl = document.querySelector(".monster-ui .entity-name");
+        if (bossNameEl && typeof currentBoss !== "undefined") bossNameEl.textContent = currentBoss.name;
+    }
 
     const bgVideo = document.getElementById('bg-video');
     const bgSource = document.getElementById('bg-video-source');
@@ -93,6 +97,7 @@ function refreshGameUI() {
 }
 
 function newGameInSlot(slotIndex) {
+    if (typeof MapSystem !== "undefined" && MapSystem.setBodyMapOpen) MapSystem.setBodyMapOpen(true);
     if (typeof LootSystem !== 'undefined') {
         LootSystem.saveInventory([]);
         LootSystem.saveEquipped({});
@@ -135,9 +140,24 @@ function newGameInSlot(slotIndex) {
 
     refreshGameUI();
     autoSave();
+    // Fallback: apri mappa con delay per garantire che tutto sia pronto
+    setTimeout(function(){
+        if (typeof MapSystem !== "undefined" && MapSystem.openInstant) {
+            if (!document.body.classList.contains("map-open")) {
+                console.log("[newGameInSlot] fallback openInstant");
+                MapSystem.openInstant();
+            }
+        }
+    }, 200);
+    autoSave();
+    if (typeof MapSystem !== "undefined" && MapSystem.openInstant) MapSystem.openInstant();
+    autoSave();
+    autoSave();
+    autoSave();
 }
 
-function loadGameFromSlot(slotIndex) {
+function loadGameFromSlot(slotIndex, opts) {
+    const skipMap = !!(opts && opts.skipMap);
     const data = SaveSystem.getSlot(slotIndex);
     if (!data) return false;
 
@@ -145,7 +165,19 @@ function loadGameFromSlot(slotIndex) {
     SaveSystem.setLastPlayedSlot(slotIndex);
 
     applyGameState(data);
-    refreshGameUI();
+
+    if (skipMap) {
+        // Riprendi direttamente la battaglia: NON aprire la mappa
+        if (typeof refreshGameUI === "function") refreshGameUI();
+        if (typeof MapSystem !== "undefined" && MapSystem.setBodyMapOpen) {
+            MapSystem.setBodyMapOpen(false);
+        }
+    } else {
+        refreshGameUI();
+        if (typeof MapSystem !== "undefined" && MapSystem.openInstant) {
+            MapSystem.openInstant();
+        }
+    }
     return true;
 }
 
@@ -176,6 +208,9 @@ function autoSave() {
         return;
     }
     MenuSystem.initMenu();
+    // La mappa apre al boot: nascondi il game-table fino ad allora
+    if (typeof MapSystem !== "undefined" && MapSystem.setBodyMapOpen) MapSystem.setBodyMapOpen(true);
+    MenuSystem.initMenu();
     MenuSystem.setCallbacks({
         onNewGame: (slot) => { MenuSystem.hideMenu(); newGameInSlot(slot); },
         onLoadSlot: (slot) => { MenuSystem.hideMenu(); loadGameFromSlot(slot); },
@@ -187,10 +222,59 @@ function autoSave() {
     const activeSlot = SaveSystem.getActiveSlot();
 
     if (autostart && activeSlot > 0) {
-        history.replaceState({}, '', location.pathname);
-        loadGameFromSlot(activeSlot);
+        history.replaceState({}, "", location.pathname);
+        // Controlla se stiamo tornando da una battaglia (equip o altro)
+        var _returnToBattle = false;
+        try {
+            _returnToBattle = localStorage.getItem("db_return_to_battle") === "1";
+            if (_returnToBattle) localStorage.removeItem("db_return_to_battle");
+        } catch(e) {}
+        var ok;
+        if (_returnToBattle) {
+            console.log("[BOOT] ripresa battaglia dopo equip");
+            ok = loadGameFromSlot(activeSlot, { skipMap: true });
+        } else {
+            ok = loadGameFromSlot(activeSlot);
+        }
+        if (!ok) {
+            if (typeof MapSystem !== "undefined" && MapSystem.setBodyMapOpen) {
+                MapSystem.setBodyMapOpen(false);
+            }
+            MenuSystem.showStartMenu();
+        }
         return;
     }
 
     MenuSystem.showStartMenu();
+    if (typeof MapSystem !== "undefined") {
+        MapSystem.onBattle((kind) => {
+            if (typeof startBattleFromMap === "function") startBattleFromMap(kind);
+        });
+    }
 })();
+
+/* ============================================================
+   SAFETY: apertura mappa al DOMContentLoaded se serve
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        var overlay = document.getElementById('map-overlay');
+        if (!overlay) {
+            console.warn('[SAFETY] #map-overlay non trovato dopo DOM ready');
+            return;
+        }
+        var hasActiveSlot = false;
+        try {
+            var slot = parseInt(localStorage.getItem('db_active_slot') || '', 10);
+            hasActiveSlot = Number.isFinite(slot) && slot > 0;
+        } catch(e) {}
+
+        // Se il body ha map-open ma la mappa non è active, apri
+        if (document.body.classList.contains('map-open') && !overlay.classList.contains('active')) {
+            console.log('[SAFETY] apro mappa ritardata');
+            if (typeof MapSystem !== 'undefined' && MapSystem.openInstant) {
+                MapSystem.openInstant();
+            }
+        }
+    }, 300);
+});

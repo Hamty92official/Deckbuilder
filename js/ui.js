@@ -530,26 +530,6 @@ function markEquipItemsSeen() {
     updateEquipNotification();
 }
 
-function collectBattleDrop() {
-    if (!battleDropItem || typeof LootSystem === 'undefined') return;
-
-    const inventory = LootSystem.getInventory();
-    let emptyIdx = -1;
-    for (let i = 0; i < Math.max(inventory.length, 30); i++) {
-        if (!inventory[i]) { emptyIdx = i; break; }
-    }
-    if (emptyIdx === -1) emptyIdx = inventory.length;
-
-    inventory[emptyIdx] = battleDropItem;
-    LootSystem.saveInventory(inventory);
-    addUnseenEquipItem();
-
-    const modal = document.getElementById('battle-drop-modal');
-    if (modal) modal.classList.remove('active');
-    battleDropItem = null;
-
-    setTimeout(() => { window.location.href = location.pathname + '?autostart=1'; }, 400);
-}
 
 const openDeckBtn = document.getElementById('open-deck-btn');
 const closeDeckBtn = document.getElementById('close-deck-btn');
@@ -572,97 +552,100 @@ if (deckModal) {
 }
 
 const openEquipBtn = document.getElementById('open-equip-btn');
-const openMapBtn = document.getElementById('open-map-btn');
-if (openEquipBtn) {
-    updateEquipNotification();
-    openEquipBtn.addEventListener("click", () => {
-        markEquipItemsSeen();
-        window.location.href = "equip.html";
-    });
-}
-if (openMapBtn) openMapBtn.addEventListener('click', () => console.log("Mappa: da implementare"));
 
-const tooltipPopup = document.getElementById('tooltip-popup');
-let _currentKwEl = null;
-let _mouseX = 0, _mouseY = 0;
+/* ============================================================
+   COLLECT DROP — versione sicura (post-victory → mappa)
+   ============================================================ */
 
-function showTooltip(kwEl, x, y) {
-    if (!tooltipPopup || !kwEl) return;
-    const tipText = kwEl.dataset.tip;
-    if (!tipText) return;
+/* ============================================================
+   COLLECT DROP — versione sicura
+   ============================================================ */
+function collectBattleDrop() {
+    if (!battleDropItem || typeof LootSystem === 'undefined') return;
 
-    _currentKwEl = kwEl;
-    kwEl.classList.add('active');
-    tooltipPopup.innerHTML = tipText;
-
-    tooltipPopup.style.left = '-9999px';
-    tooltipPopup.style.top = '0';
-    tooltipPopup.classList.add('visible');
-
-    const tipRect = tooltipPopup.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    let left = x + 14;
-    let top = y + 14;
-    if (left + tipRect.width > vw - 8) left = x - tipRect.width - 14;
-    if (top + tipRect.height > vh - 8) top = y - tipRect.height - 14;
-    left = Math.max(8, Math.min(vw - tipRect.width - 8, left));
-    top = Math.max(8, Math.min(vh - tipRect.height - 8, top));
-
-    tooltipPopup.style.left = left + 'px';
-    tooltipPopup.style.top = top + 'px';
-}
-
-function hideTooltip() {
-    if (!tooltipPopup) return;
-    tooltipPopup.classList.remove('visible');
-    if (_currentKwEl) {
-        _currentKwEl.classList.remove('active');
-        _currentKwEl = null;
+    const inventory = LootSystem.getInventory();
+    let emptyIdx = -1;
+    for (let i = 0; i < Math.max(inventory.length, 30); i++) {
+        if (!inventory[i]) { emptyIdx = i; break; }
     }
-}
+    if (emptyIdx === -1) emptyIdx = inventory.length;
+    inventory[emptyIdx] = battleDropItem;
+    LootSystem.saveInventory(inventory);
+    if (typeof addUnseenEquipItem === 'function') addUnseenEquipItem();
 
-document.addEventListener('mousemove', (e) => {
-    _mouseX = e.clientX;
-    _mouseY = e.clientY;
-});
+    const modal = document.getElementById('battle-drop-modal');
+    if (modal) modal.classList.remove('active');
+    battleDropItem = null;
 
-document.addEventListener('mouseover', (e) => {
-    const kwEl = e.target.closest('.kw, .dmg-value');
-    if (kwEl && kwEl.dataset.tip) showTooltip(kwEl, _mouseX, _mouseY);
-});
-document.addEventListener('mouseout', (e) => {
-    const kwEl = e.target.closest('.kw, .dmg-value');
-    if (kwEl && kwEl === _currentKwEl) hideTooltip();
-});
-document.addEventListener('click', (e) => {
-    const kwEl = e.target.closest('.kw, .dmg-value');
-    if (kwEl && kwEl.dataset.tip) {
-        e.stopPropagation();
-        e.preventDefault();
-        if (kwEl === _currentKwEl) hideTooltip();
-        else {
-            const touch = e.changedTouches ? e.changedTouches[0] : null;
-            const x = touch ? touch.clientX : e.clientX;
-            const y = touch ? touch.clientY : e.clientY;
-            showTooltip(kwEl, x, y);
+    setTimeout(() => {
+        if (typeof MapSystem !== 'undefined' && MapSystem.openInstant) {
+            console.log('[collectBattleDrop] apro mappa');
+            MapSystem.openInstant();
+        } else {
+            console.warn('[collectBattleDrop] MapSystem non disponibile');
         }
-    } else {
-        hideTooltip();
-    }
-});
-document.addEventListener('touchstart', (e) => {
-    const kwEl = e.target.closest('.kw, .dmg-value');
-    if (!kwEl) hideTooltip();
-}, { passive: true });
-
-const handContainerEl = document.getElementById('hand');
-if (handContainerEl) {
-    handContainerEl.addEventListener('mousemove', (e) => {
-        updateHandHover(e.clientX, e.clientY);
-    });
-    handContainerEl.addEventListener('mouseleave', () => {
-        clearHandHover();
-    });
+    }, 400);
 }
+
+/* ============================================================
+   BOTTONE EQUIP — salva flag se stiamo combattendo
+   ============================================================ */
+(function(){
+    var btn = document.getElementById('open-equip-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function(){
+        // Se la mappa NON è aperta, siamo in battaglia → salva flag
+        var mapActive = false;
+        try {
+            var overlay = document.getElementById('map-overlay');
+            mapActive = overlay && overlay.classList.contains('active');
+        } catch(e) {}
+        if (!mapActive) {
+            try { localStorage.setItem('db_return_to_battle', '1'); } catch(e){}
+            // Autosalva lo stato della battaglia corrente
+            try { if (typeof autoSave === 'function') autoSave(); } catch(e){}
+            console.log('[equip] flag db_return_to_battle impostato');
+        } else {
+            try { localStorage.removeItem('db_return_to_battle'); } catch(e){}
+        }
+        // Vai a equip.html
+        window.location.href = 'equip.html';
+    });
+})();
+
+/* ============================================================
+   BOTTONE MAPPA — view-only durante la battaglia
+   ============================================================ */
+(function(){
+    var btn = document.getElementById('open-map-btn');
+    if (!btn) {
+        console.warn('[map-btn] #open-map-btn non trovato');
+        return;
+    }
+
+    btn.addEventListener('click', function(){
+        console.log('[map-btn] click');
+        if (typeof MapSystem === 'undefined') {
+            console.warn('[map-btn] MapSystem non disponibile');
+            return;
+        }
+        // Se la mappa è già aperta, chiudila
+        if (MapSystem.isActive && MapSystem.isActive()) {
+            console.log('[map-btn] chiudo mappa');
+            if (MapSystem.hide) MapSystem.hide();
+            return;
+        }
+        // Altrimenti apri in view-only
+        if (MapSystem.openViewOnly) {
+            console.log('[map-btn] apro mappa view-only');
+            MapSystem.openViewOnly();
+        } else if (MapSystem.openInstant) {
+            console.log('[map-btn] apro mappa (fallback openInstant)');
+            MapSystem.openInstant({ viewOnly: true });
+        } else {
+            console.warn('[map-btn] nessuna funzione open disponibile');
+        }
+    });
+    console.log('[map-btn] handler registrato');
+})();
