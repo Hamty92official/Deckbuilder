@@ -874,3 +874,20 @@ body.map-open .game-table {
 .node .badge {
     display: none !important;
 }
+
+/* ============================================================
+   FIX_MAP_SMALL_SCREENS — mappa piu' grande SOLO su schermi < 2200px
+   Il 2K (2560) e superiori restano invariati (1100px).
+   ============================================================ */
+@media (max-width: 2200px) {
+    #map-stage {
+        width: min(1500px, 82vw) !important;
+        height: 93vh !important;
+    }
+}
+@media (max-width: 1600px) {
+    #map-stage {
+        width: min(1300px, 88vw) !important;
+        height: 92vh !important;
+    }
+}

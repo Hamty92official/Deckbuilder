@@ -1113,5 +1113,11 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
 })();
 // SCROLL_HINT_FIX_END
 </script>
+<script>
+/* FIX_COUNTER_AND_MAP: azzera counter quando si apre l'equip */
+(function(){
+    try { localStorage.setItem('db_unseen_items', '0'); } catch(e) {}
+})();
+</script>
 </body>
 </html>

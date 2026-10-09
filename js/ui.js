@@ -650,3 +650,29 @@ function collectBattleDrop() {
     });
     console.log('[map-btn] handler registrato');
 })();
+
+
+/* FIX_MAP_SMALL_SCREENS — sync counter robusto (bfcache + visibilitychange) */
+(function(){
+    function syncBadge() {
+        if (typeof updateEquipNotification === 'function') {
+            try { updateEquipNotification(); } catch(e) {}
+        }
+    }
+    function syncBadgeSoon() {
+        setTimeout(syncBadge, 50);
+        setTimeout(syncBadge, 300);
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncBadgeSoon);
+    } else {
+        syncBadgeSoon();
+    }
+    window.addEventListener('pageshow', function(e) {
+        if (e && e.persisted) syncBadgeSoon();
+    });
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) syncBadgeSoon();
+    });
+    window.addEventListener('focus', syncBadgeSoon);
+})();

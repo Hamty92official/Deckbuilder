@@ -21,7 +21,6 @@ function serializeGameState() {
         deck: deck, discardPile: discardPile, hand: hand,
         inventory: (typeof LootSystem !== 'undefined') ? LootSystem.getInventory() : [],
         equipped: (typeof LootSystem !== 'undefined') ? LootSystem.getEquipped() : {},
-        unseenItems: parseInt(localStorage.getItem('db_unseen_items') || '0', 10) || 0,
         // MAP_STATE_PERSISTENCE
         mapState: (typeof MapSystem !== "undefined" && MapSystem.exportState) ? MapSystem.exportState() : null
     };
@@ -38,9 +37,6 @@ function applyGameState(data) {
     currentBoss = BOSSES[bossIdx];
     monsterPattern = currentBoss.pattern;
 
-    if (typeof data.unseenItems === 'number') {
-        try { localStorage.setItem('db_unseen_items', String(data.unseenItems)); } catch(e) {}
-    }
     loadEquippedBonuses();
 
     playerHp = (typeof data.playerHp === 'number') ? data.playerHp : getPlayerMaxHp();
