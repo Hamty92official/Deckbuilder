@@ -820,6 +820,7 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
         manaMax:     { icon: '💎', label: (v) => `Mana massimo aumentato di <b>+${v}</b>` },
         regen:       { icon: '💚', label: (v) => `Rigenerazione di <b>+${v} HP</b> a ogni turno` },
         extraDraw:   { icon: '🎴', label: (v) => `Pesca <b>+${v} carta${v > 1 ? 'e' : ''}</b> extra a inizio turno` }
+        totReroll:   { icon: '🎲', label: (v) => `<b>+${v} reroll</b> disponibili all'antiquario` }
     };
 
     // Usa LootSystem come sorgente dati
@@ -986,7 +987,7 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
     }
 
     function computeEquippedStats() {
-        const totals = { hpMax:0, dmgBonus:0, shieldStart:0, manaMax:0, regen:0, extraDraw:0 };
+        const totals = { hpMax:0, dmgBonus:0, shieldStart:0, manaMax:0, regen:0, extraDraw:0, totReroll:0 };
         SLOTS.forEach(slot => {
             const it = equipped[slot.id];
             if (!it || !it.stats) return;

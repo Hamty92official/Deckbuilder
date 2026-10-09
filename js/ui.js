@@ -111,6 +111,7 @@ function renderBonusPanel() {
     if (equippedBonuses.manaMax > 0) rows.push(`<div class="bonus-item">💎 ${equippedBonuses.manaMax}</div>`);
     if (equippedBonuses.regen > 0) rows.push(`<div class="bonus-item">💚 ${equippedBonuses.regen}</div>`);
     if (equippedBonuses.extraDraw > 0) rows.push(`<div class="bonus-item">🎴 ${equippedBonuses.extraDraw}</div>`);
+    if (equippedBonuses.totReroll > 0) rows.push(`<div class="bonus-item">🎲 ${equippedBonuses.totReroll}</div>`);
 
     if (rows.length === 0) {
         panel.style.display = 'none';

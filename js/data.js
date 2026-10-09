@@ -208,7 +208,7 @@ function clearSavedPlayerHp() {
 // ---------- BONUS EQUIPAGGIAMENTO ----------
 const equippedBonuses = {
     hpMax: 0, dmgBonus: 0, shieldStart: 0,
-    manaMax: 0, regen: 0, extraDraw: 0
+    manaMax: 0, regen: 0, extraDraw: 0, totReroll: 0
 };
 
 function loadEquippedBonuses() {
@@ -218,6 +218,7 @@ function loadEquippedBonuses() {
     equippedBonuses.manaMax = 0;
     equippedBonuses.regen = 0;
     equippedBonuses.extraDraw = 0;
+    equippedBonuses.totReroll = 0;
 
     if (typeof LootSystem === 'undefined') return;
     try {
@@ -363,3 +364,4 @@ function rollShopCardSafe() {
     return (typeof rollShopCard === 'function') ? rollShopCard() : null;
 }
 // FASE5_1_DECK_PERSISTENTE
+/* FASE5_2_REROLL */

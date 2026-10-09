@@ -11,7 +11,7 @@
         { id:'h4', slot:'head', name:'Testa di Rana',       icon:'🐸', rarity:'comune',      effect:'+3 HP, +3 scudo iniziale',         stats:{ hpMax:3, shieldStart:3 } },
         { id:'h5', slot:'head', name:'Maschera della Volpe',icon:'🦊', rarity:'raro',        effect:'+5 HP, +1 carta a inizio turno',   stats:{ hpMax:5, extraDraw:1 } },
         { id:'h6', slot:'head', name:'Elmo del Lupo',       icon:'🐺', rarity:'raro',        effect:'+8 HP, +1 danno',                  stats:{ hpMax:8, dmgBonus:1 } },
-        { id:'h7', slot:'head', name:'Maschera del Tengu',  icon:'👺', rarity:'epico',       effect:'+10 HP, +2 danno',                 stats:{ hpMax:10, dmgBonus:2 } },
+        { id:'h7', slot:'head', name:'Maschera del Tengu',  icon:'👺', rarity:'epico',       effect:'+10 HP, +2 danno, 🎲 +1 reroll',                 stats:{ hpMax:10, dmgBonus:2, totReroll:1 } },
         { id:'h8', slot:'head', name:'Testa di Zucca',      icon:'🎃', rarity:'epico',       effect:'+8 HP, +2 scudo, +1 rigenerazione',stats:{ hpMax:8, shieldStart:2, regen:1 } },
         { id:'h9', slot:'head', name:'Teschio del Re Lich', icon:'💀', rarity:'leggendario', effect:'+15 HP, +2 danno, +1 mana, +1 rigenerazione', stats:{ hpMax:15, dmgBonus:2, manaMax:1, regen:1 } },
 
@@ -32,7 +32,7 @@
         { id:'a6', slot:'amulet', name:'Chiave Antica',      icon:'🗝️', rarity:'raro',        effect:'+1 carta a inizio turno',        stats:{ extraDraw:1 } },
         { id:'a7', slot:'amulet', name:'Amuleto Lunare',     icon:'🌕', rarity:'raro',        effect:'+1 mana massimo',                stats:{ manaMax:1 } },
         { id:'a8', slot:'amulet', name:'Fiore di Loto',      icon:'🪷', rarity:'epico',       effect:'+2 HP a turno',                  stats:{ regen:2 } },
-        { id:'a9', slot:'amulet', name:'Cuore della Fenice', icon:'❤️‍🔥', rarity:'leggendario', effect:'+3 HP a turno, +5 HP massimi', stats:{ regen:3, hpMax:5 } },
+        { id:'a9', slot:'amulet', name:'Cuore della Fenice', icon:'❤️‍🔥', rarity:'leggendario', effect:'+3 HP a turno, +5 HP massimi, 🎲 +2 reroll', stats:{ regen:3, hpMax:5, totReroll:2 } },
 
         { id:'n1', slot:'necklace', name:'Collana di Legno',  icon:'📿', rarity:'comune',      effect:'+3 HP massimi',                  stats:{ hpMax:3 } },
         { id:'n2', slot:'necklace', name:'Collana di Rame',   icon:'📿', rarity:'comune',      effect:'+1 danno',                       stats:{ dmgBonus:1 } },
@@ -47,8 +47,8 @@
         { id:'r3', slot:'ring', name:'Anello di Ferro',   icon:'💍', rarity:'comune',      effect:'+2 scudo iniziale',              stats:{ shieldStart:2 } },
         { id:'r4', slot:'ring', name:'Anello d\'Oro',     icon:'💍', rarity:'raro',        effect:'+6 HP, +1 danno',                stats:{ hpMax:6, dmgBonus:1 } },
         { id:'r5', slot:'ring', name:'Anello Runico',     icon:'💍', rarity:'raro',        effect:'+1 mana massimo',                stats:{ manaMax:1 } },
-        { id:'r6', slot:'ring', name:'Anello del Potere', icon:'💍', rarity:'epico',       effect:'+8 HP, +2 danno, +1 mana',       stats:{ hpMax:8, dmgBonus:2, manaMax:1 } },
-        { id:'r7', slot:'ring', name:'Anello del Fato',   icon:'💍', rarity:'leggendario', effect:'+10 HP, +2 danno, +1 mana, +2 scudo', stats:{ hpMax:10, dmgBonus:2, manaMax:1, shieldStart:2 } },
+        { id:'r6', slot:'ring', name:'Anello del Potere', icon:'💍', rarity:'epico',       effect:'+8 HP, +2 danno, +1 mana, 🎲 +1 reroll',       stats:{ hpMax:8, dmgBonus:2, manaMax:1, totReroll:1 } },
+        { id:'r7', slot:'ring', name:'Anello del Fato',   icon:'💍', rarity:'leggendario', effect:'+10 HP, +2 danno, +1 mana, +2 scudo, 🎲 +2 reroll', stats:{ hpMax:10, dmgBonus:2, manaMax:1, shieldStart:2, totReroll:2 } },
 
         { id:'w1', slot:'weapon', name:'Spada Corta',          icon:'🗡️', rarity:'comune',      effect:'+1 danno',                          stats:{ dmgBonus:1 } },
         { id:'w2', slot:'weapon', name:'Padella',              icon:'🍳', rarity:'comune',      effect:'+1 danno, +1 scudo iniziale',       stats:{ dmgBonus:1, shieldStart:1 } },
@@ -58,7 +58,7 @@
         { id:'w6', slot:'weapon', name:'Arco del Cacciatore',  icon:'🏹', rarity:'raro',        effect:'+2 danno, +1 scudo iniziale',       stats:{ dmgBonus:2, shieldStart:1 } },
         { id:'w7', slot:'weapon', name:'Ascia da Guerra',      icon:'🪓', rarity:'raro',        effect:'+3 danno',                          stats:{ dmgBonus:3 } },
         { id:'w8', slot:'weapon', name:'Pala del Becchino',    icon:'🪏', rarity:'raro',        effect:'+2 danno, +1 rigenerazione',        stats:{ dmgBonus:2, regen:1 } },
-        { id:'w9', slot:'weapon', name:'Martello Runico',      icon:'🔨', rarity:'epico',       effect:'+3 danno, +2 scudo iniziale',       stats:{ dmgBonus:3, shieldStart:2 } },
+        { id:'w9', slot:'weapon', name:'Martello Runico',      icon:'🔨', rarity:'epico',       effect:'+3 danno, +2 scudo, 🎲 +1 reroll',       stats:{ dmgBonus:3, shieldStart:2, totReroll:1 } },
         { id:'w10', slot:'weapon', name:'Lama dell\'Alba',     icon:'⚔️', rarity:'leggendario', effect:'+5 danno, +1 mana, +1 rigenerazione', stats:{ dmgBonus:5, manaMax:1, regen:1 } },
 
         { id:'s1', slot:'shield', name:'Porta',                 icon:'🚪', rarity:'comune',      effect:'+3 scudo iniziale',                stats:{ shieldStart:3 } },
