@@ -611,7 +611,10 @@
     }
 
     if (n.type === 'shop') {
-      showPopup('🎴', "L'antiquario", 'Le carte rare arrivano presto.<br>Per ora riposa, avventuriero.', 'Continua', function() {});
+      sceneTransition(function() {
+        if (typeof autoSave === 'function') autoSave();
+        window.location.href = 'shop.html';
+      });
       return;
     }
 
