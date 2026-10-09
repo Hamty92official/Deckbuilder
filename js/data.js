@@ -253,6 +253,7 @@ let playerRegenAmount = 0;
 let playerRegenTurns = 0;
 
 let isPlayerTurn = true;
+let playerHasPlayedCard = false;  // FIX_ACTION_BUTTONS
 let battleOver = false;
 
 // ---------- FUNZIONI PURE ----------

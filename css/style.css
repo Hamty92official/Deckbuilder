@@ -1607,3 +1607,27 @@ body::after {
 .card.rarity-raro        .card-title { color: #cfe9ff; }
 .card.rarity-epico       .card-title { color: #f2d0ff; }
 .card.rarity-leggendario .card-title { color: #ffe4b0; }
+
+/* ============================================================
+   FIX_ACTION_BUTTONS — stile pulsanti disabilitati
+   ============================================================ */
+.icon-btn:disabled,
+.icon-btn.action-btn-disabled {
+    filter: grayscale(1) brightness(0.45);
+    opacity: 0.55;
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+}
+.icon-btn:disabled:hover,
+.icon-btn.action-btn-disabled:hover {
+    transform: none !important;
+    box-shadow:
+        4px 4px 0 var(--ink),
+        0 10px 20px rgba(0,0,0,0.5),
+        inset 0 0 0 2px rgba(168, 213, 240, 0.12),
+        inset 0 0 0 4px rgba(5, 5, 15, 0.6) !important;
+}
+.icon-btn:disabled:active,
+.icon-btn.action-btn-disabled:active {
+    transform: none !important;
+}

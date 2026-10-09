@@ -77,6 +77,8 @@ function onDragEnd(e) {
         hand.splice(index, 1);
         handEls.splice(index, 1);
         discardPile.push(data);
+        playerHasPlayedCard = true;  // FIX_ACTION_BUTTONS
+        if (typeof updateActionButtonsState === 'function') updateActionButtonsState();
         layoutHand();
         updateUIStats();
 
@@ -110,6 +112,7 @@ function checkEndOfTurn() {
 }
 
 function startEnemyTurn() {
+    if (typeof updateActionButtonsState === 'function') updateActionButtonsState();  // FIX_ACTION_BUTTONS
     isPlayerTurn = false;
     showBanner('Fine del Turno');
 
@@ -178,6 +181,8 @@ function monsterTurn() {
 }
 
 function startPlayerTurn() {
+    playerHasPlayedCard = false;  // FIX_ACTION_BUTTONS
+    if (typeof updateActionButtonsState === 'function') updateActionButtonsState();
     playerShield = equippedBonuses.shieldStart;
     maxMana = BASE_MANA + equippedBonuses.manaMax;
     playerMana = maxMana;
@@ -191,6 +196,8 @@ function startPlayerTurn() {
         if (newCard) hand.push(newCard);
     }
     isPlayerTurn = true;
+    playerHasPlayedCard = false;  // FIX_ACTION_BUTTONS
+    if (typeof updateActionButtonsState === 'function') updateActionButtonsState();
     hideBanner();
     renderHand();
     if (typeof autoSave === "function") autoSave();
@@ -320,3 +327,25 @@ function startBattleFromMap(kind) {
 }
 
 /* CLEANUP_DEBUG_DONE */
+
+/* ============================================================
+   FIX_ACTION_BUTTONS — abilita/disabilita i pulsanti azione
+   Abilitati SOLO se: turno player + no battleOver + no drag + no carta giocata
+   ============================================================ */
+function updateActionButtonsState() {
+    var enabled = false;
+    try {
+        enabled = (typeof isPlayerTurn !== 'undefined' && isPlayerTurn === true) &&
+                  (typeof battleOver !== 'undefined' && battleOver === false) &&
+                  (typeof activeCard === 'undefined' || activeCard === null) &&
+                  (typeof playerHasPlayedCard !== 'undefined' && playerHasPlayedCard === false);
+    } catch (e) { enabled = false; }
+
+    var ids = ['open-deck-btn', 'open-equip-btn', 'open-map-btn'];
+    for (var i = 0; i < ids.length; i++) {
+        var btn = document.getElementById(ids[i]);
+        if (!btn) continue;
+        btn.disabled = !enabled;
+        btn.classList.toggle('action-btn-disabled', !enabled);
+    }
+}

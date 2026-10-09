@@ -892,3 +892,74 @@ body.map-open .game-table {
     }
 }
 
+
+/* ============================================================
+   FIX_CURSOR — forza cursore e pointer-events
+   Le regole usano !important per vincere su qualsiasi conflitto.
+   ============================================================ */
+
+/* --- CARTE in mano: cursore su tutta la card --- */
+.card,
+.card * {
+    cursor: grab !important;
+}
+.card .kw,
+.card .dmg-value {
+    cursor: pointer !important;
+}
+.card:active,
+.card:active * {
+    cursor: grabbing !important;
+}
+/* I corner restano non-intercettanti */
+.card .corner {
+    pointer-events: none !important;
+}
+
+/* --- CARTE non giocabili: not-allowed (feedback visivo) --- */
+.card.unplayable,
+.card.unplayable * {
+    cursor: not-allowed !important;
+}
+.card.unplayable .kw,
+.card.unplayable .dmg-value {
+    cursor: help !important;
+}
+
+/* --- NODI available: cursore + pointer-events --- */
+.node.available,
+.node.available * {
+    cursor: pointer !important;
+}
+.node.available {
+    pointer-events: auto !important;
+}
+.node.available .halo-outer {
+    pointer-events: none !important;
+}
+.node.available::before {
+    pointer-events: none !important;
+}
+
+/* --- NODI current: cliccabile (potrebbe essere gia' visitato ma resta) --- */
+.node.current,
+.node.current * {
+    cursor: pointer !important;
+}
+.node.current {
+    pointer-events: auto !important;
+}
+.node.current .halo-outer {
+    pointer-events: none !important;
+}
+.node.current::before {
+    pointer-events: none !important;
+}
+
+/* --- NODI boss available/current: stessa logica --- */
+.node.boss-final.available,
+.node.boss-final.available *,
+.node.boss-final.current,
+.node.boss-final.current * {
+    cursor: pointer !important;
+}

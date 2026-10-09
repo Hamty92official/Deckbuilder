@@ -733,6 +733,7 @@ function fxMonsterShield(value, done) {
 function endBattle(playerWon) {
     if (battleOver) return;
     battleOver = true;
+    if (typeof updateActionButtonsState === 'function') updateActionButtonsState();  // FIX_ACTION_BUTTONS
     isPlayerTurn = false;
     showBanner(playerWon ? 'Vittoria! 🏆' : 'Sconfitta 💀');
 
