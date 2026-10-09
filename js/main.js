@@ -128,6 +128,10 @@ function newGameInSlot(slotIndex) {
     discardPile = [];
     hand = [];
     clearPersistentDeck();
+    // FIX_NEWGAME_REGENERATE: rigenera la mappa per la nuova partita
+    if (typeof MapSystem !== "undefined" && MapSystem.regenerate) {
+        MapSystem.regenerate();
+    }
     initializeDeck();
     const n = handSize + equippedBonuses.extraDraw;
     for (let i = 0; i < n; i++) {
