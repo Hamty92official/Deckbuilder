@@ -263,12 +263,50 @@ function shuffle(array) {
     }
 }
 
+// ============================================================
+//  FASE5_1_DECK_PERSISTENTE — deck modificabile che sopravvive
+//  tra battaglie, shop e forge. Salvato in localStorage.
+// ============================================================
+const PERSISTENT_DECK_KEY = 'db_deck_custom';
+
+function getPersistentDeck() {
+    try {
+        const raw = localStorage.getItem(PERSISTENT_DECK_KEY);
+        if (!raw) return null;
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) && arr.length > 0 ? arr : null;
+    } catch (e) { return null; }
+}
+
+function savePersistentDeck(newDeck) {
+    try {
+        if (!Array.isArray(newDeck)) return false;
+        localStorage.setItem(PERSISTENT_DECK_KEY, JSON.stringify(newDeck));
+        return true;
+    } catch (e) { return false; }
+}
+
+function clearPersistentDeck() {
+    try { localStorage.removeItem(PERSISTENT_DECK_KEY); } catch (e) {}
+}
+
+function isDeckCustom() {
+    return getPersistentDeck() !== null;
+}
+
 function initializeDeck() {
-    deck = [];
-    cardDatabase.forEach(card => {
-        const n = CARD_COPIES[card.title] || 1;
-        for (let i = 0; i < n; i++) deck.push({ ...card });
-    });
+    const persistent = getPersistentDeck();
+    if (persistent) {
+        // Usa il deck persistente (copia per non mutare l'originale)
+        deck = persistent.map(c => Object.assign({}, c));
+    } else {
+        // Deck di default
+        deck = [];
+        cardDatabase.forEach(card => {
+            const n = CARD_COPIES[card.title] || 1;
+            for (let i = 0; i < n; i++) deck.push({ ...card });
+        });
+    }
     shuffle(deck);
 }
 
@@ -324,3 +362,4 @@ function getShopCardsByRarity(rarity) {
 function rollShopCardSafe() {
     return (typeof rollShopCard === 'function') ? rollShopCard() : null;
 }
+// FASE5_1_DECK_PERSISTENTE

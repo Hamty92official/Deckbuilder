@@ -127,6 +127,7 @@ function newGameInSlot(slotIndex) {
 
     discardPile = [];
     hand = [];
+    clearPersistentDeck();
     initializeDeck();
     const n = handSize + equippedBonuses.extraDraw;
     for (let i = 0; i < n; i++) {
