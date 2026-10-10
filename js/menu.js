@@ -87,8 +87,8 @@
     function setMenuVideo() {
         const src = document.getElementById('menu-bg-source');
         const vid = document.getElementById('menu-bg-video');
-        if (src && vid && src.src.indexOf('bg-menu.webm') === -1) {
-            src.src = 'bg-menu.webm';
+        if (src && vid && src.src.indexOf('assets/bg-menu.webm') === -1) {
+            src.src = 'assets/bg-menu.webm';
             vid.load();
             vid.play().catch(() => {});
         }

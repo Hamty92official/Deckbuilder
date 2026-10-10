@@ -95,7 +95,7 @@ const BOSSES = [
     {
         id: 'goblin',
         name: 'Goblin Corrotto',
-        bgVideo: 'bg-goblin.webm',
+        bgVideo: 'assets/bg-goblin.webm',
         hp: 50,
         isMapBoss: true,
         pattern: [
@@ -108,7 +108,7 @@ const BOSSES = [
     {
         id: 'kraken',
         name: 'Kraken Abissale',
-        bgVideo: 'bg-kraken.webm',
+        bgVideo: 'assets/bg-kraken.webm',
         hp: 85,
         isMapBoss: true,
         pattern: [
@@ -128,7 +128,7 @@ const REGULAR_ENEMIES = [
     {
         id: "ratto",
         name: "Ratto Gigante",
-        bgVideo: "bg-goblin.webm",
+        bgVideo: "assets/bg-goblin.webm",
         hp: 25,
         isMapBoss: false,
         pattern: [
@@ -140,7 +140,7 @@ const REGULAR_ENEMIES = [
     {
         id: "lupo",
         name: "Lupo Feroce",
-        bgVideo: "bg-goblin.webm",
+        bgVideo: "assets/bg-goblin.webm",
         hp: 30,
         isMapBoss: false,
         pattern: [
@@ -152,7 +152,7 @@ const REGULAR_ENEMIES = [
     {
         id: "scheletro",
         name: "Scheletro Guerriero",
-        bgVideo: "bg-goblin.webm",
+        bgVideo: "assets/bg-goblin.webm",
         hp: 35,
         isMapBoss: false,
         pattern: [
@@ -164,7 +164,7 @@ const REGULAR_ENEMIES = [
     {
         id: "bandito",
         name: "Bandito Mascherato",
-        bgVideo: "bg-goblin.webm",
+        bgVideo: "assets/bg-goblin.webm",
         hp: 28,
         isMapBoss: false,
         pattern: [

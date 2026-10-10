@@ -1,0 +1,18 @@
+# Backup temporanei script (mai committare)
+*.work
+*.tmp
+*.bak
+*.orig
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Repomix output (locale)
+repomix-output*.xml
