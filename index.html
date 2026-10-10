@@ -9,8 +9,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Kalam:wght@400;700&family=Cinzel:wght@600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/map.css">
+<style id="page-transition-style">
+#page-transition {
+    position: fixed;
+    inset: 0;
+    background: #0a0a1a;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+}
+#page-transition.boot {
+    opacity: 1;
+    pointer-events: auto;
+}
+</style>
 </head>
 <body>
+<div id="page-transition" class="boot"></div>
     <div id="scene-transition"></div>
     <div class="game-table" id="game-table">
 
@@ -97,6 +114,7 @@
         </div>
     </div>
 
+    <script src="js/page-transition.js"></script>
     <script src="js/loot.js"></script>
     <script src="js/save.js"></script>
     <script src="js/data.js"></script>

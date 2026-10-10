@@ -126,9 +126,9 @@
      GENERAZIONE MAPPA
      ============================================================ */
   function generatePositions(floors, W, H) {
-    PAD_X      = Math.max(80,  Math.round(W * 0.13));
-    PAD_TOP    = Math.max(100, Math.round(H * 0.16));
-    PAD_BOTTOM = Math.max(90,  Math.round(H * 0.14));
+    PAD_X      = Math.max(110, Math.round(W * 0.17));
+    PAD_TOP    = Math.max(140, Math.round(H * 0.20));
+    PAD_BOTTOM = Math.max(130, Math.round(H * 0.18));
     var numFloors = floors.length;
     var usableH = H - PAD_TOP - PAD_BOTTOM;
     var stepY = usableH / Math.max(1, numFloors - 1);
@@ -552,10 +552,33 @@
      ============================================================ */
   function onNodeClick(id) {
     var n = currentMap.nodeMap[id];
-    if (!n) return;
+    if (!n) { console.warn("[MapSystem] node not found:", id); return; }
+    var el = n.el;
+    if (!el) { console.warn("[MapSystem] node has no DOM el:", id); return; }
+
     var isStart = n.floor === 0 && state.current === null;
-    var isAvail = state.available.has(id);
-    if (!isStart && !isAvail) return;
+    var hasAvail = el.classList.contains("available");
+    var hasCurrent = el.classList.contains("current");
+
+    if (hasCurrent) {
+      console.warn("[MapSystem] click on current node (già visitato):", id);
+      return;
+    }
+    if (!isStart && !hasAvail) {
+      console.warn("[MapSystem] click ignorato:", {
+        id: id,
+        isStart: isStart,
+        hasAvail: hasAvail,
+        state_current: state.current,
+        available: Array.from(state.available)
+      });
+      return;
+    }
+
+    if (!isStart && !state.available.has(id)) {
+      console.warn("[MapSystem] DOM/state mismatch su available, sync:", id);
+      state.available.add(id);
+    }
 
     state.current = id;
     state.visited.add(id);
@@ -613,7 +636,7 @@
     if (n.type === 'shop') {
       sceneTransition(function() {
         if (typeof autoSave === 'function') autoSave();
-        window.location.href = 'shop.html';
+        (window.navigateTo ? window.navigateTo('shop.html') : (window.location.href = 'shop.html'));
       });
       return;
     }
@@ -632,8 +655,10 @@
       currentMap = generateMap();
       state = { current: null, visited: new Set(), available: new Set() };
     }
-    var nodesCount = document.querySelectorAll('#map-nodes .node').length;
-    if (nodesCount === 0) {
+    var expectedCount = 0;
+    currentMap.floors.forEach(function(row) { expectedCount += row.length; });
+    var nodesCount = document.querySelectorAll("#map-nodes .node").length;
+    if (nodesCount !== expectedCount || (currentMap.floors[0] && currentMap.floors[0][0] && !currentMap.floors[0][0].el)) {
       currentMap._edgeGroups = {};
       renderMap();
     }
@@ -722,6 +747,9 @@
         state = { current: null, visited: new Set(), available: new Set() };
         var lvl = (parseInt(localStorage.getItem('db_level_index') || '0', 10) || 0) + 1;
         try { localStorage.setItem('db_level_index', String(lvl)); } catch (e) { /* ignore */ }
+        /* MAP_FIX_HANDLE_VICTORY */
+        var _ne = document.getElementById("map-nodes"); if (_ne) _ne.innerHTML = "";
+        var _se = document.getElementById("map-svg"); if (_se) _se.innerHTML = "";
       }
       openInstant();
     });

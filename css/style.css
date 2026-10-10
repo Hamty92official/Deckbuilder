@@ -1631,3 +1631,9 @@ body::after {
 .icon-btn.action-btn-disabled:active {
     transform: none !important;
 }
+
+/* ============================================================
+   FIX_VELO_RIMOSSO — richiesta utente: nessun velo scuro sopra il video.
+   Per riattivare il velo: elimina le 3 righe sotto.
+   ============================================================ */
+body::after { display: none !important; }

@@ -233,16 +233,400 @@ body::before {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
+        /* FIX_VELO_RIMOSSO — rimuove il velo scuro sopra il video */
+        body::before { display: none !important; }
+        body::after  { display: none !important; }
+
+
+
+
+
+
+        /* ============================================================
+           SHOP_CLEAN — layout definitivo:
+           - back-btn in alto a sinistra (fuori pannello)
+           - panel a destra, 2 colonne: info (sinistra) + carte (destra)
+           - info: .shop-section(290) + reroll(290) + notes(290), gap 14
+           - carte: 3 × 290, gap 14 → colonne allineate 1:1
+           ============================================================ */
+
+        /* --- Back button --- */
+        .shop-btn-back-fixed {
+            position: fixed !important;
+            top: 16px !important; left: 16px !important;
+            z-index: 300 !important;
+            font-family: 'IM Fell English SC', serif !important;
+            font-size: 13px !important; letter-spacing: 1px !important;
+            color: var(--moon-bright) !important;
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 50%, #0f0f28 100%) !important;
+            border: 3px solid var(--ink) !important;
+            cursor: pointer !important;
+            box-shadow: 4px 4px 0 var(--ink), 0 0 20px rgba(168,213,240,.5) !important;
+            padding: 10px 18px !important; border-radius: 10px !important;
+            text-shadow: 2px 2px 0 var(--ink), 0 0 8px rgba(168,213,240,.4) !important;
+            transition: transform .22s cubic-bezier(.25,1,.5,1), box-shadow .22s ease !important;
+            text-transform: none !important;
+        }
+        .shop-btn-back-fixed:hover {
+            transform: translateY(-3px) scale(1.05) !important;
+            box-shadow: 5px 5px 0 var(--ink), 0 15px 28px rgba(0,0,0,.6), 0 0 22px rgba(168,213,240,.6) !important;
+        }
+
+        /* --- Layout generale --- */
+        .shop-page {
+            align-items: flex-end !important;
+            justify-content: flex-start !important;
+            padding: 3vh 3vw 20px 20px !important;
+        }
+        .shop-panel {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 22px !important;
+            align-items: flex-start !important;
+            width: auto !important;
+            max-width: min(660px, 62vw) !important;
+            padding: 22px 24px !important;
+            border: 3px solid var(--ink) !important;
+            border-radius: 18px !important;
+            background:
+                radial-gradient(ellipse 60% 40% at 50% 0%, rgba(216,168,64,.14), transparent 70%),
+                radial-gradient(ellipse 70% 40% at 50% 100%, rgba(216,64,128,.10), transparent 70%),
+                linear-gradient(145deg, rgba(26,26,58,.82), rgba(10,10,26,.88)) !important;
+            backdrop-filter: blur(10px) saturate(1.05) !important;
+            -webkit-backdrop-filter: blur(10px) saturate(1.05) !important;
+            box-shadow: 6px 6px 0 var(--ink), 0 22px 44px rgba(0,0,0,.75), 0 0 40px rgba(216,168,64,.28), inset 0 0 0 2px rgba(168,213,240,.14) !important;
+            overflow: visible !important;
+        }
+
+        /* --- Colonna sinistra (info) --- */
+        .shop-info {
+            flex: 0 0 300px !important;
+            width: 300px !important;
+            height: 898px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 14px !important;
+            align-self: flex-start !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Blocco 1: header + desc + costi (290px) */
+        .shop-section {
+            flex: 0 0 290px !important;
+            height: 290px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            overflow: hidden !important;
+        }
+
+        .shop-header {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 0 0 10px 0 !important;
+            border-bottom: 2px solid rgba(168,213,240,.18) !important;
+            margin: 0 !important;
+        }
+        .shop-icon {
+            font-size: 34px !important;
+            filter: drop-shadow(2px 2px 0 var(--ink)) drop-shadow(0 0 14px rgba(216,168,64,.7)) !important;
+        }
+        .shop-title { font-size: 15px !important; letter-spacing: 2px !important; }
+        .shop-tagline { font-size: 10.5px !important; }
+
+        .shop-desc {
+            margin: 0 !important;
+            padding: 0 !important;
+            text-align: left !important;
+            font-size: 12px !important;
+            line-height: 1.45 !important;
+            opacity: .92;
+        }
+
+        .shop-costs {
+            flex: 1 1 auto !important;
+            min-height: 0 !important;
+            width: 100% !important;
+            padding: 10px 12px !important;
+            border: 2px solid rgba(168,213,240,.15) !important;
+            border-radius: 12px !important;
+            background: linear-gradient(180deg, rgba(5,5,15,.45), rgba(15,15,40,.25)) !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.4) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 6px !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+        }
+        .shop-costs-title {
+            font-family: 'Cinzel', serif !important;
+            font-size: 11px !important; font-weight: 900 !important;
+            letter-spacing: 2.5px !important; text-transform: uppercase !important;
+            color: var(--gold-light) !important;
+            text-shadow: 1px 1px 0 var(--ink), 0 0 10px rgba(216,168,64,.5) !important;
+        }
+        .shop-costs-list {
+            list-style: none !important;
+            padding: 0 !important; margin: 0 !important;
+            display: flex !important; flex-direction: column !important; gap: 4px !important;
+        }
+        .shop-costs-list li {
+            font-family: 'Kalam', cursive !important;
+            font-size: 12px !important;
+            color: var(--moon-bright) !important;
+            text-shadow: 1px 1px 0 var(--ink) !important;
+            display: flex !important; align-items: center !important; gap: 7px !important;
+        }
+        .shop-costs-list li b { color: var(--moon-bright) !important; font-weight: 700 !important; }
+
+        .rarity-dot { display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 12px !important; height: 12px !important; font-size: 9px !important; line-height: 1 !important; flex-shrink: 0 !important; }
+        .rarity-dot.nc { color: #6ac86a !important; text-shadow: 0 0 6px rgba(106,200,106,.85) !important; }
+        .rarity-dot.r  { color: #5db9ff !important; text-shadow: 0 0 6px rgba(93,185,255,.85) !important; }
+        .rarity-dot.e  { color: #d070e0 !important; text-shadow: 0 0 6px rgba(208,112,224,.85) !important; }
+        .rarity-dot.l  { color: #f0a840 !important; text-shadow: 0 0 6px rgba(240,168,64,.85) !important; }
+
+        /* Blocco 2: reroll (290px) */
+        .shop-info > .shop-btn-reroll {
+            flex: 0 0 290px !important;
+            height: 290px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            padding: 20px !important;
+            margin: 0 !important;
+            border-radius: 14px !important;
+            letter-spacing: 1px !important;
+            text-transform: none !important;
+            font-size: inherit !important;
+            text-shadow: none !important;
+        }
+        .shop-info > .shop-btn-reroll .reroll-icon {
+            font-size: 64px !important; line-height: 1 !important;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,.75)) drop-shadow(0 0 22px rgba(216,64,128,.55)) !important;
+            transition: filter .25s ease, transform .25s ease !important;
+        }
+        .shop-info > .shop-btn-reroll .reroll-title {
+            font-family: 'Cinzel', serif !important;
+            font-size: 22px !important; font-weight: 900 !important;
+            letter-spacing: 4px !important; text-transform: uppercase !important;
+            color: var(--gold-light) !important;
+            text-shadow: 2px 2px 0 var(--ink), 0 0 14px rgba(216,168,64,.7) !important;
+            line-height: 1 !important;
+        }
+        .shop-info > .shop-btn-reroll .reroll-subtitle {
+            font-family: 'IM Fell English', serif !important;
+            font-style: italic !important;
+            font-size: 12px !important; letter-spacing: 1px !important;
+            color: var(--moon-shadow) !important;
+            text-shadow: 1px 1px 0 var(--ink) !important;
+        }
+        .shop-info > .shop-btn-reroll .reroll-count {
+            font-family: 'Cinzel', serif !important;
+            font-size: 60px !important; font-weight: 900 !important;
+            color: var(--gold-light) !important;
+            text-shadow: 3px 3px 0 var(--ink), 0 0 22px rgba(216,168,64,.85), 0 0 44px rgba(216,168,64,.4) !important;
+            margin-top: 2px !important;
+            line-height: 1 !important;
+        }
+        .shop-info > .shop-btn-reroll:disabled {
+            opacity: 0.58 !important; cursor: not-allowed !important;
+        }
+        .shop-info > .shop-btn-reroll:disabled .reroll-icon {
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,.75)) grayscale(0.75) !important;
+        }
+        .shop-info > .shop-btn-reroll:disabled .reroll-count {
+            color: var(--moon-shadow) !important;
+            text-shadow: 2px 2px 0 var(--ink) !important;
+        }
+        .shop-info > .shop-btn-reroll:not(:disabled):hover {
+            transform: translateY(-3px) scale(1.015) !important;
+        }
+        .shop-info > .shop-btn-reroll:not(:disabled):hover .reroll-icon {
+            transform: scale(1.12) rotate(-8deg) !important;
+        }
+
+        /* Blocco 3: note (290px) */
+        .shop-info > .shop-notes {
+            flex: 0 0 290px !important;
+            height: 290px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 12px 14px !important;
+            border: 2px solid rgba(168,213,240,.15) !important;
+            border-radius: 12px !important;
+            background: linear-gradient(180deg, rgba(5,5,15,.45), rgba(15,15,40,.25)) !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.4) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 6px !important;
+            overflow: hidden !important;
+        }
+        .shop-notes-title {
+            font-family: 'Cinzel', serif !important;
+            font-size: 11px !important; font-weight: 900 !important;
+            letter-spacing: 2.5px !important; text-transform: uppercase !important;
+            color: var(--gold-light) !important;
+            text-shadow: 1px 1px 0 var(--ink), 0 0 10px rgba(216,168,64,.5) !important;
+        }
+        .shop-notes-list {
+            list-style: none !important;
+            padding: 0 !important; margin: 0 !important;
+            display: flex !important; flex-direction: column !important; gap: 5px !important;
+        }
+        .shop-notes-list li {
+            font-family: 'Kalam', cursive !important;
+            font-size: 11.5px !important; line-height: 1.45 !important;
+            color: var(--moon-bright) !important;
+            text-shadow: 1px 1px 0 var(--ink) !important;
+            padding-left: 14px !important;
+            position: relative !important;
+        }
+        .shop-notes-list li::before {
+            content: '◆' !important;
+            position: absolute !important;
+            left: 0 !important; top: 1px !important;
+            color: var(--gold-light) !important;
+            font-size: 9px !important;
+            text-shadow: 0 0 6px rgba(216,168,64,.7) !important;
+        }
+        .shop-notes-list li b {
+            color: var(--gold-light) !important; font-weight: 700 !important;
+            text-shadow: 1px 1px 0 var(--ink), 0 0 8px rgba(216,168,64,.5) !important;
+        }
+
+        /* --- Colonna destra: carte --- */
+        .shop-cards {
+            flex: 0 0 auto !important;
+            height: 898px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            gap: 14px !important;
+            margin: 0 !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            align-self: flex-start !important;
+            box-sizing: border-box !important;
+        }
+        .shop-cards .card {
+            position: relative !important;
+            width: 200px !important;
+            height: 290px !important;
+            max-width: 200px !important;
+            flex-shrink: 0 !important;
+            transform: none !important;
+            transition: transform .22s cubic-bezier(.25,1,.5,1), box-shadow .22s ease !important;
+        }
+        .shop-cards .card:hover {
+            transform: translateY(-4px) scale(1.025) !important;
+            box-shadow: 5px 5px 0 var(--ink), 0 20px 38px rgba(0,0,0,.7), 0 0 34px rgba(216,168,64,.6), inset 0 0 0 2px rgba(168,213,240,.22) !important;
+        }
+
+        @media (max-height: 950px) {
+            .shop-panel { transform: scale(0.9); transform-origin: top right; }
+        }
+        @media (max-height: 820px) {
+            .shop-panel { transform: scale(0.8); transform-origin: top right; }
+        }
+
+        /* ============================================================
+           SHOP_REROLL_COUNT_FIX — numero reroll senza cerchio rosso
+           ============================================================ */
+        .shop-info > .shop-btn-reroll .reroll-count {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 0 !important;
+            padding: 0 !important;
+            display: inline-block !important;
+        }
+
+        /* ============================================================
+           SHOP_GLOW_FIX — niente overflow hidden su .shop-section
+           così il glow del titolo "L'ANTIQUARIO" non viene tagliato.
+           ============================================================ */
+        .shop-info > .shop-section {
+            overflow: visible !important;
+        }
+        .shop-section > .shop-header {
+            overflow: visible !important;
+        }
+        .shop-section > .shop-header .shop-title {
+            overflow: visible !important;
+            padding-bottom: 2px !important;
+        }
+
+        /* ============================================================
+           SHOP_CENTER_V_FIX — centra verticalmente + sposta a sinistra
+           ============================================================ */
+        .shop-page {
+            align-items: flex-end !important;
+            justify-content: center !important;
+            padding: 20px 10vw 20px 20px !important;
+        }
+
+
+        /* ============================================================
+           SHOP_SACRIFICE_CARD_V2 — carte nel modal a dimensione
+           "mano" (200×290). Non tocco il layout interno: uso quello
+           di default di .card (che funziona bene in mano).
+           ============================================================ */
+        #sacrifice-modal .deck-grid .card {
+            width: 200px !important;
+            height: 290px !important;
+            max-width: 200px !important;
+            min-width: 200px !important;
+        }
+        @media (max-width: 1400px) {
+            #sacrifice-modal .deck-grid .card {
+                width: 180px !important;
+                height: 260px !important;
+                max-width: 180px !important;
+                min-width: 180px !important;
+            }
+        }
+</style>
+<style id="page-transition-style">
+#page-transition {
+    position: fixed;
+    inset: 0;
+    background: #0a0a1a;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+}
+#page-transition.boot {
+    opacity: 1;
+    pointer-events: auto;
+}
 </style>
 </head>
 <body>
+<div id="page-transition" class="boot"></div>
 
 <video class="bg-loop" autoplay muted loop playsinline preload="auto">
     <source src="bg-antiquario.webm" type="video/webm">
 </video>
 
+<button class="shop-btn shop-btn-back-fixed" id="shop-exit-btn">← Torna alla mappa</button>
+
 <div class="shop-page">
     <div class="shop-panel">
+        <div class="shop-info">
+        <div class="shop-section">
         <div class="shop-header">
             <div class="shop-icon">🎴</div>
             <div class="shop-titles">
@@ -253,18 +637,37 @@ body::before {
         <div class="shop-desc">
             Il mercante ti offre <b>tre carte misteriose</b>. Scegline una e sacrifica alcune carte del tuo mazzo per ottenerla.
         </div>
-        <div class="shop-cards" id="shop-cards"></div>
-        <div class="shop-actions">
-            <button class="shop-btn shop-btn-reroll" id="shop-reroll-btn" disabled>
-                <span>🎲</span>
-                <span>Reroll</span>
-                <span class="reroll-count" id="shop-reroll-count">0</span>
-            </button>
-            <button class="shop-btn shop-btn-exit" id="shop-exit-btn">Torna al gioco</button>
+        <div class="shop-costs">
+            <div class="shop-costs-title">Costo di scambio</div>
+            <ul class="shop-costs-list">
+                <li><span class="rarity-dot nc">◆</span><b>Non comune</b> · 1 carta</li>
+                <li><span class="rarity-dot r">◆</span><b>Raro</b> · 2 carte</li>
+                <li><span class="rarity-dot e">◆</span><b>Epico</b> · 3 carte</li>
+                <li><span class="rarity-dot l">◆</span><b>Leggendario</b> · 4 carte</li>
+            </ul>
         </div>
+        </div><!-- /.shop-section -->
+        <button class="shop-btn shop-btn-reroll" id="shop-reroll-btn" disabled>
+            <span class="reroll-icon">🎲</span>
+            <span class="reroll-title">Reroll</span>
+            <span class="reroll-subtitle">Reroll disponibili</span>
+            <span class="reroll-count" id="shop-reroll-count">0</span>
+        </button>
+        <div class="shop-notes">
+            <div class="shop-notes-title">Note</div>
+            <ul class="shop-notes-list">
+                <li>Il tuo mazzo deve contenere almeno <b>15 carte</b> per poter effettuare uno scambio.</li>
+                <li>Le carte sacrificate vengono <b>rimosse definitivamente</b> dal mazzo.</li>
+                <li>Puoi ottenere nuove carte combattendo i <b>boss di fine livello</b>.</li>
+            </ul>
+        </div>
+        </div><!-- /.shop-info -->
+
+        <div class="shop-cards" id="shop-cards"></div>
     </div>
 </div>
 
+    <script src="js/page-transition.js"></script>
 <script src="js/data.js"></script>
 <script src="js/shop-cards.js"></script>
 <script>
@@ -551,7 +954,7 @@ body::before {
 
     function doExit() {
         clearState();
-        window.location.href = 'index.html?autostart=1';
+        (window.navigateTo ? window.navigateTo('index.html?autostart=1') : (window.location.href = 'index.html?autostart=1'));
     }
 
     function init() {

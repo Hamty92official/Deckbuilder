@@ -308,6 +308,9 @@ function startBattleFromMap(kind) {
     activeCard = null;
     activeCardIndex = -1;
     activeCardData = null;
+    /* FIX_ACTION_BUTTONS_ON_BATTLE_START */
+    playerHasPlayedCard = false;
+    if (typeof updateActionButtonsState === "function") updateActionButtonsState();
 
     // UI
     var _nameEl = document.querySelector(".monster-ui .entity-name");

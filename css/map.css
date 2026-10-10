@@ -963,3 +963,35 @@ body.map-open .game-table {
 .node.boss-final.current * {
     cursor: pointer !important;
 }
+
+/* ============================================================
+   MAP_PERGAMENA_FILL — la pergamena riempie esattamente lo stage
+   così i nodi restano all'interno del bordo disegnato.
+   ============================================================ */
+#map-stage {
+    background-size: 100% 100% !important;
+    background-position: center center !important;
+}
+
+
+/* ============================================================
+   MAP_CURRENT_STATIC — il nodo "current" (dove ti trovi) non pulsa
+   e non ha anelli. Solo i nodi "available" (da raggiungere) hanno
+   pulsazione e anelli.
+   ============================================================ */
+.node.current,
+.node.boss-final.current {
+    animation: none !important;
+}
+.node.current::before,
+.node.boss-final.current::before {
+    display: none !important;
+    animation: none !important;
+}
+.node.current .halo-outer,
+.node.boss-final.current .halo-outer {
+    display: none !important;
+    animation: none !important;
+}
+/* Manteniamo l'aspetto visivo del current (background sabbia chiara
+   + bordi + glow) tramite le regole già esistenti senza animazione. */

@@ -721,9 +721,29 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
             50%      { transform: translateX(-50%) translateY(5px); }
         }
         /* ==+ B2_EQUIP_FIX2_END +== */
+        /* FIX_VELO_RIMOSSO — rimuove il velo scuro sopra il video */
+        body::before { display: none !important; }
+        body::after  { display: none !important; }
+</style>
+<style id="page-transition-style">
+#page-transition {
+    position: fixed;
+    inset: 0;
+    background: #0a0a1a;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+}
+#page-transition.boot {
+    opacity: 1;
+    pointer-events: auto;
+}
 </style>
 </head>
 <body>
+<div id="page-transition" class="boot"></div>
 
 <video class="bg-loop" autoplay muted loop playsinline preload="auto">
     <source src="bg-zaino.webm" type="video/webm">
@@ -782,6 +802,7 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
 
 <div class="toast" id="toast"></div>
 
+    <script src="js/page-transition.js"></script>
 <script src="js/loot.js"></script>
 <script>
 (function() {
@@ -1081,7 +1102,7 @@ body.stat-highlight .panel.equipment .stat-row:not(:hover) { filter: brightness(
     renderStatsSummary();
 
     document.getElementById('btn-back').addEventListener('click', () => {
-        window.location.href = 'index.html?autostart=1';
+        (window.navigateTo ? window.navigateTo('index.html?autostart=1') : (window.location.href = 'index.html?autostart=1'));
     });
 
     // Il bottino viene mostrato e raccolto direttamente nella schermata di vittoria.

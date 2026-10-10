@@ -612,7 +612,7 @@ function collectBattleDrop() {
             try { localStorage.removeItem('db_return_to_battle'); } catch(e){}
         }
         // Vai a equip.html
-        window.location.href = 'equip.html';
+        (window.navigateTo ? window.navigateTo('equip.html') : (window.location.href = 'equip.html'));
     });
 })();
 
